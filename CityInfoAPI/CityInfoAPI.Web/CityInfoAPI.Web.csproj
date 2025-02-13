@@ -15,4 +15,16 @@
     <ProjectReference Include="..\CityInfoAPI.Dtos\CityInfoAPI.Dtos.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Downloads\Chicken-Recipe.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Downloads\Shrimp-Receipe.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Downloads\Test.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

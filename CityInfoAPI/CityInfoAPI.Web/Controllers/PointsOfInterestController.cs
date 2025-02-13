@@ -18,7 +18,6 @@ namespace CityInfoAPI.Controllers
             var cities = CityInfoMemoryDataStore.Current.Cities;
 
             var city = cities.FirstOrDefault(c => c.Id == cityId);
-
             if (city == null)
             {
                 return NotFound();
@@ -37,14 +36,12 @@ namespace CityInfoAPI.Controllers
             var cities = CityInfoMemoryDataStore.Current.Cities;
 
             var city = cities.FirstOrDefault(c => c.Id == cityId);
-
             if (city == null)
             {
                 return NotFound();
             }
 
             var pointOfInterest = city.PointsOfInterest.FirstOrDefault(p => p.Id == pointOfInterestId);
-
             if (pointOfInterest == null)
             {
                 return NotFound();

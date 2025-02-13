@@ -34,7 +34,6 @@ namespace CityInfoAPI.Controllers
             }
 
             return Ok(city);
-
         }
     }
 }
