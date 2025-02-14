@@ -4,9 +4,11 @@
     {
         public int Id { get; set; }
 
-        public Guid PointId { get; set; } = new Guid();
+        public Guid PointGuid { get; set; } = new Guid();
 
-        public Guid CityId { get; set; } = new Guid();
+        public int CityId { get; set; }
+
+        public Guid CityGuid { get; set; } = new Guid();
 
         public string Name { get; set; } = string.Empty;
 

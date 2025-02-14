@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
 
-        public Guid CityId { get; set; } = new Guid();
+        public Guid CityGuid { get; set; } = new Guid();
 
         public string Name { get; set; } = string.Empty;
         

@@ -25,7 +25,7 @@ namespace CityInfoAPI.Web.Controllers
         /// <param name="fileId"></param>
         /// <returns></returns>
         [HttpGet("{fileId}", Name = "GetFile")]
-        public ActionResult GetFile(string fileId)
+        public ActionResult GetFile([FromRoute] string fileId)
         {
             // choices..
             // FileContentResult

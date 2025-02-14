@@ -7,7 +7,13 @@ builder.Services.AddControllers(options =>
 {
     //  media types: don't blindly return json regardless of what they asked for.
     options.ReturnHttpNotAcceptable = true;
-}).AddXmlDataContractSerializerFormatters();
+})
+
+// replaces default json input and output formatters with Json.NET
+.AddNewtonsoftJson()
+
+// enables XML input and output formatters
+.AddXmlDataContractSerializerFormatters();
 
 // adding to the default ProblemDetailsResponse
 builder.Services.AddProblemDetails(options =>
