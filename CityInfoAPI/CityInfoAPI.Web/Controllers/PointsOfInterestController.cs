@@ -166,5 +166,37 @@ namespace CityInfoAPI.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="cityGuid"></param>
+        /// <param name="pointOfInterestGuid"></param>
+        /// <returns></returns>
+        [HttpDelete("{pointOfInterestGuid}", Name = "DeletePointOfInterest")]
+        public ActionResult DeletePointOfInterest([FromRoute] Guid cityGuid, [FromRoute] Guid pointOfInterestGuid)
+        {
+            var existingCity = CityInfoMemoryDataStore.Current.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
+            if (existingCity == null)
+            {
+                return NotFound();
+            }
+
+            // find the point of interest
+            var existingPointOfInterest = existingCity.PointsOfInterest.Where(p => p.PointGuid == pointOfInterestGuid).FirstOrDefault();
+            if (existingPointOfInterest == null)
+            {
+                return NotFound();
+            }
+
+            // does the point of interest belong to the city?
+            if (existingPointOfInterest.CityGuid != cityGuid)
+            {
+                return NotFound();
+            }
+
+            existingCity.PointsOfInterest.Remove(existingPointOfInterest);
+
+            return NoContent();
+        }
     }
 }

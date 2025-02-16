@@ -64,5 +64,31 @@ namespace CityInfoAPI.Web.Controllers
             var bytes = System.IO.File.ReadAllBytes(file);
             return File(bytes, contentType, Path.GetFileName(file));
         }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> CreateFile(IFormFile file)
+        {
+            // validate input
+            if (file.Length == 0 || file.Length > 20971520 || file.ContentType != "application/pdf")
+            {
+                return BadRequest("Invalid file.");
+            }
+
+            // ideally, you would store files on a separate disk which does not have execute permissions
+            // is also better NOT to use the name of the file uploaded by the user.
+            var path = Path.Combine(Directory.GetCurrentDirectory(), $"uploaded_file_{Guid.NewGuid()}.pdf");
+
+            using (var steam = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(steam);
+            }
+
+            return Ok("Your file has been uploaded.");
+        }
     }
 }

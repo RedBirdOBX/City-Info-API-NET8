@@ -111,5 +111,19 @@ namespace CityInfoAPI.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("{cityGuid}", Name = "DeleteCity")]
+        public ActionResult<PointOfInterestDto> DeleteCity([FromRoute] Guid cityGuid)
+        {
+            var existingCity = CityInfoMemoryDataStore.Current.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
+            if (existingCity == null)
+            {
+                return NotFound();
+            }
+
+            CityInfoMemoryDataStore.Current.Cities.Remove(existingCity);
+
+            return NoContent();
+        }
     }
 }
