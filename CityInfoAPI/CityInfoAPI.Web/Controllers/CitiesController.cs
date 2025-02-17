@@ -9,121 +9,189 @@ namespace CityInfoAPI.Controllers
     [ApiController]
     public class CitiesController : ControllerBase
     {
+        private readonly ILogger<CitiesController> _logger;
+
         /// <summary>
-        /// Gets all Cities
+        /// Constructor
         /// </summary>
-        /// <returns></returns>
+        /// <param name="logger"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public CitiesController(ILogger<CitiesController> logger)
+        {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
+        /// <summary>Gets all Cities</summary>
+        /// <returns>collection of CityDto</returns>
+        /// <example>{baseUrl}/api/cities</example>
         [HttpGet("", Name = "GetCities")]
         public ActionResult<IEnumerable<CityDto>> GetCities()
         {
-            return Ok(CityInfoMemoryDataStore.Current.Cities);
+            try
+            {
+                return Ok(CityInfoMemoryDataStore.Current.Cities);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting cities.");
+                return StatusCode(500, "An error occurred while getting cities.");
+            }
         }
 
-        /// <summary>
-        /// Gets a City by Id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet("{cityGuid}", Name = "GetCityById")]
+        /// <summary>Gets a City by Id</summary>
+        /// <param name="cityGuid"></param>
+        /// <returns>CityDto</returns>
+        /// <example>{baseUrl}/api/cities/{cityGuid}</example>
+         [HttpGet("{cityGuid}", Name = "GetCityById")]
         public ActionResult<CityDto> GetCity([FromRoute] Guid cityGuid)
         {
-            var city = CityInfoMemoryDataStore.Current.Cities.FirstOrDefault(c => c.CityGuid == cityGuid);
-
-            if (city == null)
+            try
             {
-                return NotFound();
-            }
+                var city = CityInfoMemoryDataStore.Current.Cities.FirstOrDefault(c => c.CityGuid == cityGuid);
+                if (city == null)
+                {
+                    _logger.LogWarning($"City with id {cityGuid} wasn't found.");
+                    return NotFound();
+                }
 
-            return Ok(city);
+                return Ok(city);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting city.");
+                return StatusCode(500, "An error occurred while getting city.");
+            }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
+        /// <summary>creates a City</summary>
         /// <param name="createCity"></param>
-        /// <returns></returns>
+        /// <returns>new city at details route</returns>
+        /// <example>{baseUrl}/api/cities</example>
         [HttpPost("", Name = "CreateCity")]
         public ActionResult<PointOfInterestDto> CreateCity([FromBody] CityCreateDto createCity)
         {
-            // temp
-            var cities = CityInfoMemoryDataStore.Current.Cities;
-            int max = cities.Max(c => c.Id);
-
-            var finalCity = new CityDto
+            try
             {
-                Id = ++max,
-                Name = createCity.Name,
-                Description = createCity.Description,
-                CreatedOn = createCity.CreatedOn.Date,
-                CityGuid = createCity.CityGuid
-            };
+                // temp
+                var cities = CityInfoMemoryDataStore.Current.Cities;
+                int max = cities.Max(c => c.Id);
 
-            cities.Add(finalCity);
+                var finalCity = new CityDto
+                {
+                    Id = ++max,
+                    Name = createCity.Name,
+                    Description = createCity.Description,
+                    CreatedOn = createCity.CreatedOn.Date,
+                    CityGuid = createCity.CityGuid
+                };
 
-            return CreatedAtRoute("GetCityById", new { cityGuid = finalCity.CityGuid }, finalCity );
+                cities.Add(finalCity);
+
+                return CreatedAtRoute("GetCityById", new { cityGuid = finalCity.CityGuid }, finalCity );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while creating city.");
+                return StatusCode(500, "An error occurred while creating city.");
+            }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
+        /// <summary>updates city through PUT</summary>
         /// <param name="updateCity"></param>
-        /// <returns></returns>
+        /// <returns>No Content</returns>
+        /// <example>{baseUrl}/api/cities/{cityGuid}</example>
         [HttpPut("{cityGuid}", Name = "UpdateCity")]
         public ActionResult<PointOfInterestDto> UpdateCity([FromRoute] Guid cityGuid, [FromBody] CityUpdateDto updateCity)
         {
-            var existingCity = CityInfoMemoryDataStore.Current.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
-            if (existingCity == null)
+            try
             {
-                return NotFound();
+                var existingCity = CityInfoMemoryDataStore.Current.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
+                if (existingCity == null)
+                {
+                    _logger.LogWarning($"City with id {cityGuid} wasn't found.");
+                    return NotFound();
+                }
+
+                existingCity.Name = updateCity.Name;
+                existingCity.Description = updateCity.Description;
+
+                return NoContent();
             }
-
-            existingCity.Name = updateCity.Name;
-            existingCity.Description = updateCity.Description;
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating city.");
+                return StatusCode(500, "An error occurred while updating city.");
+            }
         }
 
+        /// <summary>patches city object</summary>
+        /// <param name="cityGuid"></param>
+        /// <param name="patchDocument"></param>
+        /// <returns>No Content</returns>
+        /// <example>{baseUrl}/api/cities/{cityGuid}</example>
         [HttpPatch("{cityGuid}", Name = "PatchCity")]
         public ActionResult<CityDto> PatchCity([FromRoute] Guid cityGuid, [FromBody] JsonPatchDocument<CityUpdateDto> patchDocument)
         {
-            var existingCity = CityInfoMemoryDataStore.Current.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
-            if (existingCity == null)
+            try
             {
-                return NotFound();
+                var existingCity = CityInfoMemoryDataStore.Current.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
+                if (existingCity == null)
+                {
+                    _logger.LogWarning($"City with id {cityGuid} wasn't found.");
+                    return NotFound();
+                }
+
+                var cityToPatch = new CityUpdateDto
+                {
+                    Name = existingCity.Name,
+                    Description = existingCity.Description
+                };
+
+                patchDocument.ApplyTo(cityToPatch, ModelState);
+
+                // validate the final version
+                if (!TryValidateModel(cityToPatch))
+                {
+                    return BadRequest(ModelState);
+                }
+
+                existingCity.Name = cityToPatch.Name;
+                existingCity.Description = cityToPatch.Description;
+
+                return NoContent();
             }
-
-            var cityToPatch = new CityUpdateDto
+            catch (Exception ex)
             {
-                Name = existingCity.Name,
-                Description = existingCity.Description
-            };
-
-            patchDocument.ApplyTo(cityToPatch, ModelState);
-
-            // validate the final version
-            if (!TryValidateModel(cityToPatch))
-            {
-                return BadRequest(ModelState);
+                _logger.LogError(ex, "An error occurred while patching city.");
+                return StatusCode(500, "An error occurred while patching city.");
             }
-
-            existingCity.Name = cityToPatch.Name;
-            existingCity.Description = cityToPatch.Description;
-
-            return NoContent();
         }
 
+        /// <summary>deletes city object</summary>
+        /// <param name="cityGuid"></param>
+        /// <returns>no content</returns>
+        /// <example>{baseUrl}/api/cities/{cityGuid}</example>
         [HttpDelete("{cityGuid}", Name = "DeleteCity")]
         public ActionResult<PointOfInterestDto> DeleteCity([FromRoute] Guid cityGuid)
         {
-            var existingCity = CityInfoMemoryDataStore.Current.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
-            if (existingCity == null)
+            try
             {
-                return NotFound();
+                var existingCity = CityInfoMemoryDataStore.Current.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
+                if (existingCity == null)
+                {
+                    _logger.LogWarning($"City with id {cityGuid} wasn't found.");
+                    return NotFound();
+                }
+
+                CityInfoMemoryDataStore.Current.Cities.Remove(existingCity);
+
+                return NoContent();
             }
-
-            CityInfoMemoryDataStore.Current.Cities.Remove(existingCity);
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting city.");
+                return StatusCode(500, "An error occurred while deleting city.");
+            }
         }
     }
 }

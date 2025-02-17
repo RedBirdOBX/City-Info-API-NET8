@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CityInfoAPI.Web", "CityInfo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CityInfoAPI.Dtos", "CityInfoAPI.Dtos\CityInfoAPI.Dtos.csproj", "{84CE9E27-629D-4B6C-824E-DCD0520904F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityInfoAPI.Data", "CityInfoAPI.Data\CityInfoAPI.Data.csproj", "{A072CE6A-A59A-4AC1-86AA-5DABB80FFCC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CityInfoAPI.Data", "CityInfoAPI.Data\CityInfoAPI.Data.csproj", "{A072CE6A-A59A-4AC1-86AA-5DABB80FFCC4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{E4B6C4F6-AE1A-4A65-B2B5-52F93B06EE6D}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
