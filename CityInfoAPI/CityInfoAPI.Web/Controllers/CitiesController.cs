@@ -29,6 +29,7 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
+                _logger.LogInformation("Getting cities.");
                 return Ok(CityInfoMemoryDataStore.Current.Cities);
             }
             catch (Exception ex)

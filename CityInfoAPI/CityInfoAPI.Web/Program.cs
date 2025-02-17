@@ -1,10 +1,37 @@
 using Microsoft.AspNetCore.StaticFiles;
+using Serilog.Events;
+using Serilog;
+
+
+//--LOGGING--//
+Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                //.WriteTo.MSSqlServer
+                //(
+                //    connectionString: builder.Configuration["ConnectionStrings:drummersDbConnectionString"],
+                //    sinkOptions: new MSSqlServerSinkOptions
+                //    {
+                //        TableName = "Logs",
+                //        SchemaName = "dbo",
+                //        AutoCreateSqlTable = true
+                //    },
+                //    restrictedToMinimumLevel: LogEventLevel.Information,
+                //    formatProvider: null,
+                //    columnOptions: null,
+                //    logEventFormatter: null
+                //)
+                .WriteTo.Console()
+                .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
+builder.Host.UseSerilog();
 
-// Add services to the container //
+
+//--SERVICES--//
+// Media Types
 builder.Services.AddControllers(options =>
 {
     //  media types: don't blindly return json regardless of what they asked for.
@@ -27,6 +54,7 @@ builder.Services.AddProblemDetails(options =>
 });
 
 // sets content type to return based on file extension of file.
+// custom services: inject interfaceX, provide an implementation of concrete type Y
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -34,13 +62,21 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
+// https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-6.0
+builder.Services.AddHealthChecks();
 
-// building and running the app //
+
+//--APPLICATION--//
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Configure the HTTP request pipeline. //
+if (!app.Environment.IsDevelopment())
 {
+    app.UseExceptionHandler();
+}
+else
+{
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
