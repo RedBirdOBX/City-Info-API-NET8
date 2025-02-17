@@ -32,3 +32,151 @@
 2025-02-17 12:39:15.337 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_vs/browserLink - 200 null text/javascript; charset=UTF-8 258.2149ms
 2025-02-17 12:39:15.479 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - null null
 2025-02-17 12:39:15.829 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 349.4283ms
+2025-02-17 12:45:35.015 -05:00 [INF] Now listening on: https://localhost:7024
+2025-02-17 12:45:35.070 -05:00 [INF] Now listening on: http://localhost:5047
+2025-02-17 12:45:35.160 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-02-17 12:45:35.162 -05:00 [INF] Hosting environment: Development
+2025-02-17 12:45:35.163 -05:00 [INF] Content root path: C:\Data\Projects\GitHubRepos\City-Info-API-NET8\CityInfoAPI\CityInfoAPI.Web
+2025-02-17 12:45:36.046 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/index.html - null null
+2025-02-17 12:45:36.327 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/index.html - 200 null text/html;charset=utf-8 285.9593ms
+2025-02-17 12:45:36.386 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - null null
+2025-02-17 12:45:36.386 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_vs/browserLink - null null
+2025-02-17 12:45:36.395 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 9.072ms
+2025-02-17 12:45:36.559 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_vs/browserLink - 200 null text/javascript; charset=UTF-8 173.663ms
+2025-02-17 12:45:36.639 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - null null
+2025-02-17 12:45:36.820 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 182.2856ms
+2025-02-17 12:45:55.415 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/health - null null
+2025-02-17 12:45:55.445 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/health - 404 0 null 30.4648ms
+2025-02-17 12:45:55.451 -05:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7024/api/health, Response status code: 404
+2025-02-17 12:46:27.866 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/health - null null
+2025-02-17 12:46:27.873 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/health - 404 0 null 7.9055ms
+2025-02-17 12:46:27.878 -05:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7024/api/health, Response status code: 404
+2025-02-17 12:46:32.537 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/health - null null
+2025-02-17 12:46:32.542 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/health - 404 0 null 4.5389ms
+2025-02-17 12:46:32.546 -05:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7024/health, Response status code: 404
+2025-02-17 12:47:51.068 -05:00 [INF] Now listening on: https://localhost:7024
+2025-02-17 12:47:51.098 -05:00 [INF] Now listening on: http://localhost:5047
+2025-02-17 12:47:51.151 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-02-17 12:47:51.153 -05:00 [INF] Hosting environment: Development
+2025-02-17 12:47:51.154 -05:00 [INF] Content root path: C:\Data\Projects\GitHubRepos\City-Info-API-NET8\CityInfoAPI\CityInfoAPI.Web
+2025-02-17 12:47:52.205 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/index.html - null null
+2025-02-17 12:47:52.438 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/index.html - 200 null text/html;charset=utf-8 261.0877ms
+2025-02-17 12:47:52.503 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - null null
+2025-02-17 12:47:52.503 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_vs/browserLink - null null
+2025-02-17 12:47:52.532 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 28.9083ms
+2025-02-17 12:47:52.595 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_vs/browserLink - 200 null text/javascript; charset=UTF-8 91.7279ms
+2025-02-17 12:47:52.631 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - null null
+2025-02-17 12:47:52.774 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 143.2156ms
+2025-02-17 12:47:57.785 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/health - null null
+2025-02-17 12:47:57.821 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/health - 404 0 null 36.3119ms
+2025-02-17 12:47:57.830 -05:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7024/api/health, Response status code: 404
+2025-02-17 12:47:59.497 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/health - null null
+2025-02-17 12:47:59.503 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/health - 404 0 null 5.3264ms
+2025-02-17 12:47:59.507 -05:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7024/api/health, Response status code: 404
+2025-02-17 12:48:35.239 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/health - null null
+2025-02-17 12:48:35.245 -05:00 [INF] Executing endpoint 'Health checks'
+2025-02-17 12:48:35.279 -05:00 [INF] Executed endpoint 'Health checks'
+2025-02-17 12:48:35.283 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/health - 200 null text/plain 43.5526ms
+2025-02-17 12:49:01.022 -05:00 [INF] Now listening on: https://localhost:7024
+2025-02-17 12:49:01.080 -05:00 [INF] Now listening on: http://localhost:5047
+2025-02-17 12:49:01.138 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-02-17 12:49:01.140 -05:00 [INF] Hosting environment: Development
+2025-02-17 12:49:01.141 -05:00 [INF] Content root path: C:\Data\Projects\GitHubRepos\City-Info-API-NET8\CityInfoAPI\CityInfoAPI.Web
+2025-02-17 12:49:01.709 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/index.html - null null
+2025-02-17 12:49:02.014 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/index.html - 200 null text/html;charset=utf-8 308.3765ms
+2025-02-17 12:49:02.063 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - null null
+2025-02-17 12:49:02.063 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_vs/browserLink - null null
+2025-02-17 12:49:02.078 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 15.0061ms
+2025-02-17 12:49:02.143 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_vs/browserLink - 200 null text/javascript; charset=UTF-8 80.1785ms
+2025-02-17 12:49:02.205 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - null null
+2025-02-17 12:49:02.354 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 149.2394ms
+2025-02-17 12:49:03.244 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/health - null null
+2025-02-17 12:49:03.266 -05:00 [INF] Executing endpoint 'Health checks'
+2025-02-17 12:49:03.279 -05:00 [INF] Executed endpoint 'Health checks'
+2025-02-17 12:49:03.281 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/health - 200 null text/plain 36.6158ms
+2025-02-17 12:52:54.094 -05:00 [INF] Now listening on: https://localhost:7024
+2025-02-17 12:52:54.127 -05:00 [INF] Now listening on: http://localhost:5047
+2025-02-17 12:52:54.197 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-02-17 12:52:54.199 -05:00 [INF] Hosting environment: Development
+2025-02-17 12:52:54.201 -05:00 [INF] Content root path: C:\Data\Projects\GitHubRepos\City-Info-API-NET8\CityInfoAPI\CityInfoAPI.Web
+2025-02-17 12:52:55.497 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/index.html - null null
+2025-02-17 12:52:55.765 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/index.html - 200 null text/html;charset=utf-8 274.3143ms
+2025-02-17 12:52:55.799 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - null null
+2025-02-17 12:52:55.813 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_vs/browserLink - null null
+2025-02-17 12:52:55.814 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 15.1579ms
+2025-02-17 12:52:55.914 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_vs/browserLink - 200 null text/javascript; charset=UTF-8 102.1987ms
+2025-02-17 12:52:56.020 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - null null
+2025-02-17 12:52:56.185 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 165.2004ms
+2025-02-17 12:53:11.864 -05:00 [INF] Request starting HTTP/1.1 DELETE https://localhost:7024/api/cities/38276231-1918-452d-a3e9-6f50873a95d2/pointsofinterest/e5a5f605-627d-4aec-9f5c-e9939ea0a6cf - null null
+2025-02-17 12:53:11.890 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web)'
+2025-02-17 12:53:11.912 -05:00 [INF] Route matched with {action = "DeletePointOfInterest", controller = "PointsOfInterest"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult DeletePointOfInterest(System.Guid, System.Guid) on controller CityInfoAPI.Controllers.PointsOfInterestController (CityInfoAPI.Web).
+2025-02-17 12:53:11.944 -05:00 [WRN] Point of interest with id 00000000-0000-0000-0000-000000000000 wasn't found.
+2025-02-17 12:53:11.950 -05:00 [INF] Executing ObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ProblemDetails'.
+2025-02-17 12:53:12.035 -05:00 [INF] Executed action CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web) in 117.3057ms
+2025-02-17 12:53:12.038 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web)'
+2025-02-17 12:53:12.040 -05:00 [INF] Request finished HTTP/1.1 DELETE https://localhost:7024/api/cities/38276231-1918-452d-a3e9-6f50873a95d2/pointsofinterest/e5a5f605-627d-4aec-9f5c-e9939ea0a6cf - 404 193 application/problem+json; charset=utf-8 176.4258ms
+2025-02-17 12:53:47.728 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/cities/38276231-1918-452d-a3e9-6f50873a95d2/pointsofinterest - null null
+2025-02-17 12:53:47.736 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.GetPointsOfInterestForCity (CityInfoAPI.Web)'
+2025-02-17 12:53:47.740 -05:00 [INF] Route matched with {action = "GetPointsOfInterestForCity", controller = "PointsOfInterest"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.IEnumerable`1[CityInfoAPI.Dtos.Models.PointOfInterestDto]] GetPointsOfInterestForCity(System.Guid) on controller CityInfoAPI.Controllers.PointsOfInterestController (CityInfoAPI.Web).
+2025-02-17 12:53:47.744 -05:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[CityInfoAPI.Dtos.Models.PointOfInterestDto, CityInfoAPI.Dtos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-02-17 12:53:47.756 -05:00 [INF] Executed action CityInfoAPI.Controllers.PointsOfInterestController.GetPointsOfInterestForCity (CityInfoAPI.Web) in 13.3292ms
+2025-02-17 12:53:47.760 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.GetPointsOfInterestForCity (CityInfoAPI.Web)'
+2025-02-17 12:53:47.764 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/cities/38276231-1918-452d-a3e9-6f50873a95d2/pointsofinterest - 200 418 application/json; charset=utf-8 40.6557ms
+2025-02-17 12:54:26.529 -05:00 [INF] Request starting HTTP/1.1 DELETE https://localhost:7024/api/cities/38276231-1918-452d-a3e9-6f50873a95d2/pointsofinterest/e5a5f605-627d-4aec-9f5c-e9939ea0a6cf - null null
+2025-02-17 12:54:26.535 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web)'
+2025-02-17 12:54:26.537 -05:00 [INF] Route matched with {action = "DeletePointOfInterest", controller = "PointsOfInterest"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult DeletePointOfInterest(System.Guid, System.Guid) on controller CityInfoAPI.Controllers.PointsOfInterestController (CityInfoAPI.Web).
+2025-02-17 12:55:18.678 -05:00 [WRN] Point of interest with id 00000000-0000-0000-0000-000000000000 wasn't found.
+2025-02-17 12:55:18.692 -05:00 [INF] Executing ObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ProblemDetails'.
+2025-02-17 12:55:18.694 -05:00 [INF] Executed action CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web) in 52154.1651ms
+2025-02-17 12:55:18.696 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web)'
+2025-02-17 12:55:18.698 -05:00 [INF] Request finished HTTP/1.1 DELETE https://localhost:7024/api/cities/38276231-1918-452d-a3e9-6f50873a95d2/pointsofinterest/e5a5f605-627d-4aec-9f5c-e9939ea0a6cf - 404 193 application/problem+json; charset=utf-8 52169.1397ms
+2025-02-17 12:55:36.403 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/cities/38276231-1918-452d-a3e9-6f50873a95d2 - null null
+2025-02-17 12:55:36.442 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.GetCity (CityInfoAPI.Web)'
+2025-02-17 12:55:36.445 -05:00 [INF] Route matched with {action = "GetCity", controller = "Cities"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult`1[CityInfoAPI.Dtos.Models.CityDto] GetCity(System.Guid) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-17 12:55:36.450 -05:00 [INF] Executing OkObjectResult, writing value of type 'CityInfoAPI.Dtos.Models.CityDto'.
+2025-02-17 12:55:36.456 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.GetCity (CityInfoAPI.Web) in 7.0185ms
+2025-02-17 12:55:36.461 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.GetCity (CityInfoAPI.Web)'
+2025-02-17 12:55:36.463 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/cities/38276231-1918-452d-a3e9-6f50873a95d2 - 200 622 application/json; charset=utf-8 60.2089ms
+2025-02-17 12:56:13.619 -05:00 [INF] Request starting HTTP/1.1 DELETE https://localhost:7024/api/cities/38276231-1918-452d-a3e9-6f50873a95d2/pointsofinterest/e5a5f605-627d-4aec-9f5c-e9939ea0a6cf - null null
+2025-02-17 12:56:13.630 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web)'
+2025-02-17 12:56:13.631 -05:00 [INF] Route matched with {action = "DeletePointOfInterest", controller = "PointsOfInterest"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult DeletePointOfInterest(System.Guid, System.Guid) on controller CityInfoAPI.Controllers.PointsOfInterestController (CityInfoAPI.Web).
+2025-02-17 12:57:01.820 -05:00 [INF] Now listening on: https://localhost:7024
+2025-02-17 12:57:01.853 -05:00 [INF] Now listening on: http://localhost:5047
+2025-02-17 12:57:01.906 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-02-17 12:57:01.908 -05:00 [INF] Hosting environment: Development
+2025-02-17 12:57:01.910 -05:00 [INF] Content root path: C:\Data\Projects\GitHubRepos\City-Info-API-NET8\CityInfoAPI\CityInfoAPI.Web
+2025-02-17 12:57:03.473 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/index.html - null null
+2025-02-17 12:57:03.698 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/index.html - 200 null text/html;charset=utf-8 246.3081ms
+2025-02-17 12:57:03.770 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_vs/browserLink - null null
+2025-02-17 12:57:03.770 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - null null
+2025-02-17 12:57:03.804 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 35.0202ms
+2025-02-17 12:57:03.855 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_vs/browserLink - 200 null text/javascript; charset=UTF-8 85.5804ms
+2025-02-17 12:57:03.893 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - null null
+2025-02-17 12:57:04.091 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 198.9747ms
+2025-02-17 12:57:07.419 -05:00 [INF] Request starting HTTP/1.1 DELETE https://localhost:7024/api/cities/38276231-1918-452d-a3e9-6f50873a95d2/pointsofinterest/e5a5f605-627d-4aec-9f5c-e9939ea0a6cf - null null
+2025-02-17 12:57:07.449 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web)'
+2025-02-17 12:57:07.468 -05:00 [INF] Route matched with {action = "DeletePointOfInterest", controller = "PointsOfInterest"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult DeletePointOfInterest(System.Guid, System.Guid) on controller CityInfoAPI.Controllers.PointsOfInterestController (CityInfoAPI.Web).
+2025-02-17 12:57:15.483 -05:00 [INF] Executing StatusCodeResult, setting HTTP status code 204
+2025-02-17 12:57:15.488 -05:00 [INF] Executed action CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web) in 8014.9056ms
+2025-02-17 12:57:15.490 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web)'
+2025-02-17 12:57:15.493 -05:00 [INF] Request finished HTTP/1.1 DELETE https://localhost:7024/api/cities/38276231-1918-452d-a3e9-6f50873a95d2/pointsofinterest/e5a5f605-627d-4aec-9f5c-e9939ea0a6cf - 204 null null 8073.7354ms
+2025-02-17 12:58:13.014 -05:00 [INF] Now listening on: https://localhost:7024
+2025-02-17 12:58:13.052 -05:00 [INF] Now listening on: http://localhost:5047
+2025-02-17 12:58:13.123 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-02-17 12:58:13.125 -05:00 [INF] Hosting environment: Development
+2025-02-17 12:58:13.126 -05:00 [INF] Content root path: C:\Data\Projects\GitHubRepos\City-Info-API-NET8\CityInfoAPI\CityInfoAPI.Web
+2025-02-17 12:58:14.433 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/index.html - null null
+2025-02-17 12:58:14.668 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/index.html - 200 null text/html;charset=utf-8 248.2542ms
+2025-02-17 12:58:14.725 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - null null
+2025-02-17 12:58:14.726 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_vs/browserLink - null null
+2025-02-17 12:58:14.743 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 17.7158ms
+2025-02-17 12:58:14.813 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_vs/browserLink - 200 null text/javascript; charset=UTF-8 88.0959ms
+2025-02-17 12:58:14.864 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - null null
+2025-02-17 12:58:15.044 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 179.8176ms
+2025-02-17 12:58:16.049 -05:00 [INF] Request starting HTTP/1.1 DELETE https://localhost:7024/api/cities/38276231-1918-452d-a3e9-6f50873a95d2/pointsofinterest/e5a5f605-627d-4aec-9f5c-e9939ea0a6cf - null null
+2025-02-17 12:58:16.079 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web)'
+2025-02-17 12:58:16.097 -05:00 [INF] Route matched with {action = "DeletePointOfInterest", controller = "PointsOfInterest"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.ActionResult DeletePointOfInterest(System.Guid, System.Guid) on controller CityInfoAPI.Controllers.PointsOfInterestController (CityInfoAPI.Web).
+2025-02-17 12:58:21.281 -05:00 [INF] Executing StatusCodeResult, setting HTTP status code 204
+2025-02-17 12:58:21.286 -05:00 [INF] Executed action CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web) in 5183.9198ms
+2025-02-17 12:58:21.289 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web)'
+2025-02-17 12:58:21.292 -05:00 [INF] Request finished HTTP/1.1 DELETE https://localhost:7024/api/cities/38276231-1918-452d-a3e9-6f50873a95d2/pointsofinterest/e5a5f605-627d-4aec-9f5c-e9939ea0a6cf - 204 null null 5243.3055ms

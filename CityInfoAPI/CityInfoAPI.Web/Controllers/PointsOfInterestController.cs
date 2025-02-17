@@ -1,5 +1,6 @@
 ﻿using CityInfoAPI.Data;
 using CityInfoAPI.Dtos.Models;
+using CityInfoAPI.Web.Services;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,13 +11,15 @@ namespace CityInfoAPI.Controllers
     public class PointsOfInterestController : ControllerBase
     {
         private readonly ILogger<PointsOfInterestController> _logger;
+        private readonly LocalMailService _mailService;
 
         /// <summary>constructor</summary>
         /// <param name="logger"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public PointsOfInterestController(ILogger<PointsOfInterestController> logger)
+        public PointsOfInterestController(ILogger<PointsOfInterestController> logger, LocalMailService mailService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mailService = mailService ?? throw new ArgumentNullException(nameof(mailService));
         }
 
         /// <summary>Gets all Points of Interest for City</summary>
@@ -174,7 +177,7 @@ namespace CityInfoAPI.Controllers
         /// <param name="patchDocument"></param>
         /// <returns></returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
-        [HttpPatch("{pointOfInterestGuid}", Name = "PatchPointOfInterest")]
+        [HttpPatch("{pointGuid}", Name = "PatchPointOfInterest")]
         public ActionResult<PointOfInterestDto> PatchPointOfInterest([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid, [FromBody] JsonPatchDocument<PointOfInterestUpdateDto> patchDocument)
         {
             try
@@ -233,7 +236,7 @@ namespace CityInfoAPI.Controllers
         /// <param name="pointGuid"></param>
         /// <returns></returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
-        [HttpDelete("{pointOfInterestGuid}", Name = "DeletePointOfInterest")]
+        [HttpDelete("{pointGuid}", Name = "DeletePointOfInterest")]
         public ActionResult DeletePointOfInterest([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid)
         {
             try
@@ -261,6 +264,9 @@ namespace CityInfoAPI.Controllers
                 }
 
                 existingCity.PointsOfInterest.Remove(existingPointOfInterest);
+
+                // test / demo svc
+                _mailService.Send("Point of interest deleted.", $"Point of interest {existingPointOfInterest.Name} with id {existingPointOfInterest.PointGuid} was deleted.");
 
                 return NoContent();
             }

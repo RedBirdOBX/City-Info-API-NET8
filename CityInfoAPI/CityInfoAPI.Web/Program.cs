@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.StaticFiles;
 using Serilog.Events;
 using Serilog;
+using CityInfoAPI.Web.Services;
 
 
 //--LOGGING--//
@@ -56,13 +57,12 @@ builder.Services.AddProblemDetails(options =>
 // sets content type to return based on file extension of file.
 // custom services: inject interfaceX, provide an implementation of concrete type Y
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
+builder.Services.AddTransient<LocalMailService>();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
-// https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-6.0
+// https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-8.0
 builder.Services.AddHealthChecks();
 
 
@@ -90,5 +90,7 @@ app.UseAuthorization();
 
 // MapControllers will add endpoints to controller actions by using attributes
 app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+app.MapHealthChecks("/api/health");
 
 app.Run();
