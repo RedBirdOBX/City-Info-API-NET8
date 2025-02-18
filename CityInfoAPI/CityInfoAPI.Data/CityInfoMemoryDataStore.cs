@@ -7,9 +7,6 @@ namespace CityInfoAPI.Data
         // fields
         public List<CityDto> Cities;
 
-        public static CityInfoMemoryDataStore Current { get; } = new CityInfoMemoryDataStore();
-
-
         // constructor
         public CityInfoMemoryDataStore()
         {

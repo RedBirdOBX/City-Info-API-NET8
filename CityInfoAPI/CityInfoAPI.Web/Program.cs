@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using Serilog.Events;
 using Serilog;
 using CityInfoAPI.Web.Services;
+using CityInfoAPI.Data;
 
 
 //--LOGGING--//
@@ -57,7 +58,8 @@ builder.Services.AddProblemDetails(options =>
 // sets content type to return based on file extension of file.
 // custom services: inject interfaceX, provide an implementation of concrete type Y
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
-builder.Services.AddTransient<LocalMailService>();
+builder.Services.AddTransient<IMailService, CloudMailService>();
+builder.Services.AddSingleton<CityInfoMemoryDataStore>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

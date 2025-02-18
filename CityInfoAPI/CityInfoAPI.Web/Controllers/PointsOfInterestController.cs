@@ -10,14 +10,16 @@ namespace CityInfoAPI.Controllers
     [ApiController]
     public class PointsOfInterestController : ControllerBase
     {
+        private readonly CityInfoMemoryDataStore _citiesDataStore;
         private readonly ILogger<PointsOfInterestController> _logger;
-        private readonly LocalMailService _mailService;
+        private readonly IMailService _mailService;
 
         /// <summary>constructor</summary>
         /// <param name="logger"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public PointsOfInterestController(ILogger<PointsOfInterestController> logger, LocalMailService mailService)
+        public PointsOfInterestController(CityInfoMemoryDataStore citiesDataStore, ILogger<PointsOfInterestController> logger, IMailService mailService)
         {
+            _citiesDataStore = citiesDataStore ?? throw new ArgumentNullException(nameof(citiesDataStore));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mailService = mailService ?? throw new ArgumentNullException(nameof(mailService));
         }
@@ -31,7 +33,7 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
-                var cities = CityInfoMemoryDataStore.Current.Cities;
+                var cities = _citiesDataStore.Cities;
 
                 var city = cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
                 if (city == null)
@@ -59,7 +61,7 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
-                var cities = CityInfoMemoryDataStore.Current.Cities;
+                var cities = _citiesDataStore.Cities;
 
                 var city = cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
                 if (city == null)
@@ -94,7 +96,7 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
-                var city = CityInfoMemoryDataStore.Current.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
+                var city = _citiesDataStore.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
                 if (city == null)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found when creating point of interest.");
@@ -102,7 +104,7 @@ namespace CityInfoAPI.Controllers
                 }
 
                 // temp
-                int max = CityInfoMemoryDataStore.Current.Cities.SelectMany(c => c.PointsOfInterest).Max(p => p.Id) + 1;
+                int max = _citiesDataStore.Cities.SelectMany(c => c.PointsOfInterest).Max(p => p.Id) + 1;
 
                 var finalPointOfInterest = new PointOfInterestDto
                 {
@@ -137,7 +139,7 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
-                var city = CityInfoMemoryDataStore.Current.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
+                var city = _citiesDataStore.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
                 if (city == null)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found when updating point of interest.");
@@ -182,7 +184,7 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
-                var city = CityInfoMemoryDataStore.Current.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
+                var city = _citiesDataStore.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
                 if (city == null)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found when patching point of interest.");
@@ -241,7 +243,7 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
-                var existingCity = CityInfoMemoryDataStore.Current.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
+                var existingCity = _citiesDataStore.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
                 if (existingCity == null)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found when deleting point of interest.");

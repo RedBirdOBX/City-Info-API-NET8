@@ -10,15 +10,17 @@ namespace CityInfoAPI.Controllers
     public class CitiesController : ControllerBase
     {
         private readonly ILogger<CitiesController> _logger;
+        private readonly CityInfoMemoryDataStore _citiesDataStore;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="logger"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public CitiesController(ILogger<CitiesController> logger)
+        public CitiesController(ILogger<CitiesController> logger, CityInfoMemoryDataStore citiesDataStore)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _citiesDataStore = citiesDataStore ?? throw new ArgumentNullException(nameof(_citiesDataStore));
         }
 
         /// <summary>Gets all Cities</summary>
@@ -30,7 +32,7 @@ namespace CityInfoAPI.Controllers
             try
             {
                 _logger.LogInformation("Getting cities.");
-                return Ok(CityInfoMemoryDataStore.Current.Cities);
+                return Ok(_citiesDataStore.Cities);
             }
             catch (Exception ex)
             {
@@ -48,7 +50,7 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
-                var city = CityInfoMemoryDataStore.Current.Cities.FirstOrDefault(c => c.CityGuid == cityGuid);
+                var city = _citiesDataStore.Cities.FirstOrDefault(c => c.CityGuid == cityGuid);
                 if (city == null)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found.");
@@ -74,7 +76,7 @@ namespace CityInfoAPI.Controllers
             try
             {
                 // temp
-                var cities = CityInfoMemoryDataStore.Current.Cities;
+                var cities = _citiesDataStore.Cities;
                 int max = cities.Max(c => c.Id);
 
                 var finalCity = new CityDto
@@ -106,7 +108,7 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
-                var existingCity = CityInfoMemoryDataStore.Current.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
+                var existingCity = _citiesDataStore.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
                 if (existingCity == null)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found.");
@@ -135,7 +137,7 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
-                var existingCity = CityInfoMemoryDataStore.Current.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
+                var existingCity = _citiesDataStore.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
                 if (existingCity == null)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found.");
@@ -177,14 +179,14 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
-                var existingCity = CityInfoMemoryDataStore.Current.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
+                var existingCity = _citiesDataStore.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
                 if (existingCity == null)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found.");
                     return NotFound();
                 }
 
-                CityInfoMemoryDataStore.Current.Cities.Remove(existingCity);
+                _citiesDataStore.Cities.Remove(existingCity);
 
                 return NoContent();
             }
