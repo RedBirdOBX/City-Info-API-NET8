@@ -9,10 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CityInfoAPI.Dtos", "CityInf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CityInfoAPI.Data", "CityInfoAPI.Data\CityInfoAPI.Data.csproj", "{A072CE6A-A59A-4AC1-86AA-5DABB80FFCC4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{E4B6C4F6-AE1A-4A65-B2B5-52F93B06EE6D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{26EDF3EA-95D6-474D-9FC3-C9A1EAF14B38}"
 	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
 		..\README.md = ..\README.md
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sql-Scripts", "Sql-Scripts", "{530724D6-85F3-4BAD-BCF4-966751CEF182}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +38,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{530724D6-85F3-4BAD-BCF4-966751CEF182} = {26EDF3EA-95D6-474D-9FC3-C9A1EAF14B38}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B7EB108E-F67C-47B1-9502-43ECFE0F3950}

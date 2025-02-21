@@ -10,6 +10,5 @@ namespace CityInfoAPI.Dtos.Models
 
         [MaxLength(ErrorMessage = $"Max length for {nameof(Description)} is 500 chars.")]
         public string? Description { get; set; }
-
     }
 }

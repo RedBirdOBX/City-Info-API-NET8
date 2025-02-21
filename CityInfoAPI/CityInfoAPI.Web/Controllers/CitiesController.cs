@@ -1,4 +1,7 @@
-﻿using CityInfoAPI.Data;
+﻿using AutoMapper;
+using CityInfoAPI.Data;
+using CityInfoAPI.Data.Entities;
+using CityInfoAPI.Data.Repositories;
 using CityInfoAPI.Dtos.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -11,28 +14,35 @@ namespace CityInfoAPI.Controllers
     {
         private readonly ILogger<CitiesController> _logger;
         private readonly CityInfoMemoryDataStore _citiesDataStore;
+        private readonly ICityInfoRepository _repo;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="logger"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public CitiesController(ILogger<CitiesController> logger, CityInfoMemoryDataStore citiesDataStore)
+        public CitiesController(ILogger<CitiesController> logger, CityInfoMemoryDataStore citiesDataStore, ICityInfoRepository repo, IMapper mapper)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _citiesDataStore = citiesDataStore ?? throw new ArgumentNullException(nameof(_citiesDataStore));
+            _repo = repo ?? throw new ArgumentNullException(nameof(repo));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         /// <summary>Gets all Cities</summary>
         /// <returns>collection of CityDto</returns>
         /// <example>{baseUrl}/api/cities</example>
         [HttpGet("", Name = "GetCities")]
-        public ActionResult<IEnumerable<CityDto>> GetCities()
+        public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities(bool includePointsOfInterest = true)
         {
             try
             {
+                var cities = await _repo.GetCitiesAsync();
+                var results = _mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cities);
+
                 _logger.LogInformation("Getting cities.");
-                return Ok(_citiesDataStore.Cities);
+                return Ok(results);
             }
             catch (Exception ex)
             {
@@ -43,54 +53,75 @@ namespace CityInfoAPI.Controllers
 
         /// <summary>Gets a City by Id</summary>
         /// <param name="cityGuid"></param>
+        /// <param name="includePointsOfInterest"></param>
         /// <returns>CityDto</returns>
-        /// <example>{baseUrl}/api/cities/{cityGuid}</example>
-         [HttpGet("{cityGuid}", Name = "GetCityById")]
-        public ActionResult<CityDto> GetCity([FromRoute] Guid cityGuid)
+        /// <example>{baseUrl}/api/cities/{cityGuid}?includePointsOfInterest={bool}</example>
+        [HttpGet("{cityGuid}", Name = "GetCityByCityId")]
+        public async Task<IActionResult> GetCityByCityId([FromRoute] Guid cityGuid, [FromQuery] bool includePointsOfInterest = true)
         {
             try
             {
-                var city = _citiesDataStore.Cities.FirstOrDefault(c => c.CityGuid == cityGuid);
-                if (city == null)
+                var cityExists = await _repo.CityExistsAsync(cityGuid);
+                if (!cityExists)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found.");
                     return NotFound();
                 }
 
-                return Ok(city);
+                var city = await _repo.GetCityByCityIdAsync(cityGuid, includePointsOfInterest);
+                if (includePointsOfInterest)
+                {
+                    var results = _mapper.Map<CityDto>(city);
+                    return Ok(results);
+                }
+                else
+                {
+                    var results = _mapper.Map<CityWithoutPointsOfInterestDto>(city);
+                    return Ok(results);
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while getting city.");
-                return StatusCode(500, "An error occurred while getting city.");
+                return StatusCode(500, $"An error occurred while getting city. {ex}");
             }
         }
 
         /// <summary>creates a City</summary>
-        /// <param name="createCity"></param>
-        /// <returns>new city at details route</returns>
+        /// <param name="request"></param>
+        /// <returns>CityDto at details route</returns>
         /// <example>{baseUrl}/api/cities</example>
         [HttpPost("", Name = "CreateCity")]
-        public ActionResult<PointOfInterestDto> CreateCity([FromBody] CityCreateDto createCity)
+        public async Task<ActionResult<CityWithoutPointsOfInterestDto>> CreateCity([FromBody] CityCreateDto request)
         {
             try
             {
-                // temp
-                var cities = _citiesDataStore.Cities;
-                int max = cities.Max(c => c.Id);
-
-                var finalCity = new CityDto
+                // guids are auto-generated and not provided by client. unlikely but just in case.
+                var cityExists = await _repo.CityExistsAsync(request.CityGuid);
+                if (cityExists)
                 {
-                    Id = ++max,
-                    Name = createCity.Name,
-                    Description = createCity.Description,
-                    CreatedOn = createCity.CreatedOn.Date,
-                    CityGuid = createCity.CityGuid
-                };
+                    return Conflict($"City {request.CityGuid} already exists.");
+                }
 
-                cities.Add(finalCity);
+                // map the request
+                var newCityRequest = _mapper.Map<City>(request);
 
-                return CreatedAtRoute("GetCityById", new { cityGuid = finalCity.CityGuid }, finalCity );
+                // create new call
+                var newCity = await _repo.CreateCityAsync(newCityRequest);
+
+                // save changes
+                var success = await _repo.SaveChangesAsync();
+
+                if (!success)
+                {
+                    _logger.LogError("An error occurred while creating city.");
+                    return StatusCode(500, "An error occurred while creating city.");
+                }
+
+                // build proper results
+                var results = _mapper.Map<CityWithoutPointsOfInterestDto>(newCity);
+
+                return CreatedAtRoute("GetCityByCityId", new { cityGuid = results.CityGuid }, results);
             }
             catch (Exception ex)
             {
@@ -100,23 +131,32 @@ namespace CityInfoAPI.Controllers
         }
 
         /// <summary>updates city through PUT</summary>
-        /// <param name="updateCity"></param>
+        /// <param name="request"></param>
         /// <returns>No Content</returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}</example>
         [HttpPut("{cityGuid}", Name = "UpdateCity")]
-        public ActionResult<PointOfInterestDto> UpdateCity([FromRoute] Guid cityGuid, [FromBody] CityUpdateDto updateCity)
+        public async Task<ActionResult> UpdateCity([FromRoute] Guid cityGuid, [FromBody] CityUpdateDto request)
         {
             try
             {
-                var existingCity = _citiesDataStore.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
-                if (existingCity == null)
+                var cityExists = await _repo.CityExistsAsync(cityGuid);
+                if (!cityExists)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found.");
                     return NotFound();
                 }
 
-                existingCity.Name = updateCity.Name;
-                existingCity.Description = updateCity.Description;
+                var city = await _repo.GetCityByCityIdAsync(cityGuid, false);
+
+                // map the request - override the values of the destination object w/ source
+                _mapper.Map(request, city);
+
+                var success = await _repo.SaveChangesAsync();
+                if (!success)
+                {
+                    _logger.LogError("An error occurred while updating city.");
+                    return StatusCode(500, "An error occurred while updating city.");
+                }
 
                 return NoContent();
             }
@@ -133,33 +173,41 @@ namespace CityInfoAPI.Controllers
         /// <returns>No Content</returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}</example>
         [HttpPatch("{cityGuid}", Name = "PatchCity")]
-        public ActionResult<CityDto> PatchCity([FromRoute] Guid cityGuid, [FromBody] JsonPatchDocument<CityUpdateDto> patchDocument)
+        public async Task<ActionResult<CityDto>> PatchCity([FromRoute] Guid cityGuid, [FromBody] JsonPatchDocument<CityUpdateDto> patchDocument)
         {
             try
             {
-                var existingCity = _citiesDataStore.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
-                if (existingCity == null)
+                var cityExists = await _repo.CityExistsAsync(cityGuid);
+                if (!cityExists)
                 {
-                    _logger.LogWarning($"City with id {cityGuid} wasn't found.");
+                    _logger.LogWarning($"City with id {cityGuid} wasn't found when patching city.");
                     return NotFound();
                 }
 
-                var cityToPatch = new CityUpdateDto
-                {
-                    Name = existingCity.Name,
-                    Description = existingCity.Description
-                };
+                var existingCity = await _repo.GetCityByCityIdAsync(cityGuid, false);
 
+                // map the request - override the values of the destination object w/ source
+                var cityToPatch = _mapper.Map<CityUpdateDto>(existingCity);
+
+                // apply the patch - grab the updates and update the dto
                 patchDocument.ApplyTo(cityToPatch, ModelState);
 
                 // validate the final version
                 if (!TryValidateModel(cityToPatch))
                 {
+                    _logger.LogWarning($"Invalid model state for the patch.");
                     return BadRequest(ModelState);
                 }
 
-                existingCity.Name = cityToPatch.Name;
-                existingCity.Description = cityToPatch.Description;
+                // map changes back to the entity
+                _mapper.Map(cityToPatch, existingCity);
+
+                var success = await _repo.SaveChangesAsync();
+                if (!success)
+                {
+                    _logger.LogError("An error occurred while patching city.");
+                    return StatusCode(500, "An error occurred while patching city.");
+                }
 
                 return NoContent();
             }
@@ -175,18 +223,27 @@ namespace CityInfoAPI.Controllers
         /// <returns>no content</returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}</example>
         [HttpDelete("{cityGuid}", Name = "DeleteCity")]
-        public ActionResult<PointOfInterestDto> DeleteCity([FromRoute] Guid cityGuid)
+        public async Task<ActionResult> DeleteCity([FromRoute] Guid cityGuid)
         {
             try
             {
-                var existingCity = _citiesDataStore.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
-                if (existingCity == null)
+                // does the city exist?
+                var cityExists = await _repo.CityExistsAsync(cityGuid);
+                if (!cityExists)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found.");
                     return NotFound();
                 }
 
-                _citiesDataStore.Cities.Remove(existingCity);
+                // delete the city
+                await _repo.DeleteCityAsync(cityGuid);
+
+                var success = await _repo.SaveChangesAsync();
+                if (!success)
+                {
+                    _logger.LogError("An error occurred while deleting city.");
+                    return StatusCode(500, "An error occurred while deleting city.");
+                }
 
                 return NoContent();
             }

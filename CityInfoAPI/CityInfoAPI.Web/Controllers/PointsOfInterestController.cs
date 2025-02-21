@@ -1,4 +1,7 @@
-﻿using CityInfoAPI.Data;
+﻿using AutoMapper;
+using CityInfoAPI.Data;
+using CityInfoAPI.Data.Entities;
+using CityInfoAPI.Data.Repositories;
 using CityInfoAPI.Dtos.Models;
 using CityInfoAPI.Web.Services;
 using Microsoft.AspNetCore.JsonPatch;
@@ -11,17 +14,21 @@ namespace CityInfoAPI.Controllers
     public class PointsOfInterestController : ControllerBase
     {
         private readonly CityInfoMemoryDataStore _citiesDataStore;
+        private readonly ICityInfoRepository _repo;
         private readonly ILogger<PointsOfInterestController> _logger;
         private readonly IMailService _mailService;
+        private readonly IMapper _mapper;
 
         /// <summary>constructor</summary>
         /// <param name="logger"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public PointsOfInterestController(CityInfoMemoryDataStore citiesDataStore, ILogger<PointsOfInterestController> logger, IMailService mailService)
+        public PointsOfInterestController(CityInfoMemoryDataStore citiesDataStore, ICityInfoRepository repo, ILogger<PointsOfInterestController> logger, IMailService mailService, IMapper mapper)
         {
             _citiesDataStore = citiesDataStore ?? throw new ArgumentNullException(nameof(citiesDataStore));
+            _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mailService = mailService ?? throw new ArgumentNullException(nameof(mailService));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         /// <summary>Gets all Points of Interest for City</summary>
@@ -29,20 +36,21 @@ namespace CityInfoAPI.Controllers
         /// <param name="cityGuid"></param>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest</example>
         [HttpGet("", Name = "GetPointsOfInterestForCity")]
-        public ActionResult<IEnumerable<PointOfInterestDto>> GetPointsOfInterestForCity([FromRoute] Guid cityGuid)
+        public async Task<ActionResult<IEnumerable<PointOfInterestDto>>> GetPointsOfInterestForCity([FromRoute] Guid cityGuid)
         {
             try
             {
-                var cities = _citiesDataStore.Cities;
-
-                var city = cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
-                if (city == null)
+                var cityExists = await _repo.CityExistsAsync(cityGuid);
+                if (!cityExists)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found when accessing points of interest.");
                     return NotFound();
                 }
 
-                return Ok(city.PointsOfInterest);
+                var pointsOfInterest = await _repo.GetPointsOfInterestForCityAsync(cityGuid);
+                var results = _mapper.Map<IEnumerable<PointOfInterestDto>>(pointsOfInterest);
+
+                return Ok(results);
             }
             catch (Exception ex)
             {
@@ -57,27 +65,34 @@ namespace CityInfoAPI.Controllers
         /// <returns>point of interest</returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
         [HttpGet("{pointGuid}", Name = "GetPointOfInterestById")]
-        public ActionResult<PointOfInterestDto> GetPointOfInterestById([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid)
+        public async Task<ActionResult<PointOfInterestDto>> GetPointOfInterestById([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid)
         {
             try
             {
-                var cities = _citiesDataStore.Cities;
-
-                var city = cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
-                if (city == null)
+                var cityExists = await _repo.CityExistsAsync(cityGuid);
+                if (!cityExists)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found when accessing points of interest.");
                     return NotFound();
                 }
 
-                var pointOfInterest = city.PointsOfInterest.Where(p => p.PointGuid == pointGuid).FirstOrDefault();
-                if (pointOfInterest == null)
+                var pointExists = await _repo.PointOfInterestExistsAsync(pointGuid);
+                if (!pointExists)
                 {
-                    _logger.LogWarning($"Point of interest with id {pointGuid} wasn't found.");
+                    _logger.LogWarning($"Point of Interest with id {pointGuid} was not found.");
                     return NotFound();
                 }
 
-                return Ok(pointOfInterest);
+                var city = await _repo.GetCityByCityIdAsync(cityGuid, true);
+                var pointOfInterest = city.PointsOfInterest.Where(p => p.PointGuid == pointGuid).FirstOrDefault();
+                if (pointOfInterest == null)
+                {
+                    _logger.LogWarning($"Point of interest with id {pointGuid}  for City {cityGuid} wasn't found.");
+                    return NotFound();
+                }
+
+                var result = _mapper.Map<PointOfInterestDto>(pointOfInterest);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -92,34 +107,37 @@ namespace CityInfoAPI.Controllers
         /// <returns>new point of interest at route</returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest</example>
         [HttpPost("", Name = "CreatePointOfInterest")]
-        public ActionResult CreatePointOfInterest([FromRoute] Guid cityGuid, [FromBody] PointOfInterestCreateDto createPointOfInterest)
+        public async Task<ActionResult<PointOfInterestDto>> CreatePointOfInterest([FromRoute] Guid cityGuid, [FromBody] PointOfInterestCreateDto request)
         {
             try
             {
-                var city = _citiesDataStore.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
-                if (city == null)
+                var cityExists = await _repo.CityExistsAsync(cityGuid);
+                if (!cityExists)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found when creating point of interest.");
                     return NotFound();
                 }
 
-                // temp
-                int max = _citiesDataStore.Cities.SelectMany(c => c.PointsOfInterest).Max(p => p.Id) + 1;
+                // map the request
+                var newPointRequest = _mapper.Map<PointOfInterest>(request);
 
-                var finalPointOfInterest = new PointOfInterestDto
+                // create new call
+                var newPointResults = await _repo.CreatePointOfInterestAsync(newPointRequest);
+
+                // save it
+                var success = await _repo.SaveChangesAsync();
+
+                if (!success)
                 {
-                    Id = max,
-                    PointGuid = createPointOfInterest.PointGuid,
-                    CityId = createPointOfInterest.CityId,
-                    CityGuid = cityGuid,
-                    Name = createPointOfInterest.Name,
-                    Description = createPointOfInterest.Description,
-                    CreatedOn = createPointOfInterest.CreatedOn.Date
-                };
+                    _logger.LogError("An error occurred while point of interest.");
+                    return StatusCode(500, "An error occurred while creating point of interest.");
+                }
 
-                city.PointsOfInterest.Add(finalPointOfInterest);
+                // map the results
+                var results = _mapper.Map<PointOfInterestDto>(newPointResults);
 
-                return CreatedAtRoute("GetPointOfInterestById", new { cityGuid = cityGuid, pointOfInterestGuid = finalPointOfInterest.PointGuid }, finalPointOfInterest);
+                // new guid coming back empty.  Why does city work but not this....
+                return CreatedAtRoute("GetPointOfInterestById", new { cityGuid = cityGuid, pointGuid = results.PointGuid }, results);
             }
             catch (Exception ex)
             {
@@ -130,40 +148,47 @@ namespace CityInfoAPI.Controllers
 
         /// <summary>updates point of interest through PUT</summary>
         /// <param name="cityGuid"></param>
-        /// <param name="pointOfInterestGuid"></param>
+        /// <param name="pointGuid"></param>
         /// <param name="updatePointOfInterest"></param>
         /// <returns></returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
         [HttpPut("{pointGuid}", Name = "UpdatePointOfInterest")]
-        public ActionResult<PointOfInterestDto> UpdatePointOfInterest([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid, [FromBody] PointOfInterestUpdateDto updatePointOfInterest)
+        public async Task<ActionResult> UpdatePointOfInterest([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid, [FromBody] PointOfInterestUpdateDto updatePointOfInterest)
         {
             try
             {
-                var city = _citiesDataStore.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
-                if (city == null)
+                var cityExists = await _repo.CityExistsAsync(cityGuid);
+                if (!cityExists)
                 {
-                    _logger.LogWarning($"City with id {cityGuid} wasn't found when updating point of interest.");
+                    _logger.LogWarning($"City with id {cityGuid} wasn't found when creating point of interest.");
                     return NotFound();
                 }
 
                 // find the point of interest
-                var existingPointOfInterest = city.PointsOfInterest.Where(p => p.PointGuid == pointGuid).FirstOrDefault();
-                if (existingPointOfInterest == null)
+                var pointExists = await _repo.PointOfInterestExistsAsync(pointGuid);
+                if (!pointExists)
                 {
                     _logger.LogWarning($"Point of interest with id {pointGuid} wasn't found.");
                     return NotFound();
                 }
 
                 // does the point of interest belong to the city?
+                var existingPointOfInterest = await _repo.GetPointOfInterestById(pointGuid);
                 if (existingPointOfInterest.CityGuid != cityGuid)
                 {
                     _logger.LogWarning($"Point of interest with id {pointGuid} doesn't belong to city with id {cityGuid}.");
                     return NotFound();
                 }
 
-                existingPointOfInterest.Name = updatePointOfInterest.Name;
-                existingPointOfInterest.Description = updatePointOfInterest.Description;
+                // map the request - override the values of the destination object w/ source
+                _mapper.Map(updatePointOfInterest, existingPointOfInterest);
 
+                var success = await _repo.SaveChangesAsync();
+                if (!success)
+                {
+                    _logger.LogError("An error occurred while updating point of interest.");
+                    return StatusCode(500, "An error occurred while updating point of interest.");
+                }
                 return NoContent();
             }
             catch (Exception ex)
@@ -180,38 +205,37 @@ namespace CityInfoAPI.Controllers
         /// <returns></returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
         [HttpPatch("{pointGuid}", Name = "PatchPointOfInterest")]
-        public ActionResult<PointOfInterestDto> PatchPointOfInterest([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid, [FromBody] JsonPatchDocument<PointOfInterestUpdateDto> patchDocument)
+        public async Task<ActionResult<PointOfInterestDto>> PatchPointOfInterest([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid, [FromBody] JsonPatchDocument<PointOfInterestUpdateDto> patchDocument)
         {
             try
             {
-                var city = _citiesDataStore.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
-                if (city == null)
+                var cityExists = await _repo.CityExistsAsync(cityGuid);
+                if (!cityExists)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found when patching point of interest.");
                     return NotFound();
                 }
 
                 // find the point of interest
-                var existingPointOfInterest = city.PointsOfInterest.Where(p => p.PointGuid == pointGuid).FirstOrDefault();
-                if (existingPointOfInterest == null)
+                var pointExists = await _repo.PointOfInterestExistsAsync(pointGuid);
+                if (!pointExists)
                 {
                     _logger.LogWarning($"Point of interest with id {pointGuid} wasn't found.");
                     return NotFound();
                 }
 
                 // does the point of interest belong to the city?
+                var existingPointOfInterest = await _repo.GetPointOfInterestById(pointGuid);
                 if (existingPointOfInterest.CityGuid != cityGuid)
                 {
                     _logger.LogWarning($"Point of interest with id {pointGuid} doesn't belong to city with id {cityGuid}.");
                     return NotFound();
                 }
 
-                var pointOfInterestToPatch = new PointOfInterestUpdateDto
-                {
-                    Name = existingPointOfInterest.Name,
-                    Description = existingPointOfInterest.Description
-                };
+                // map the request - override the values of the destination object w/ source
+                var pointOfInterestToPatch = _mapper.Map<PointOfInterestUpdateDto>(existingPointOfInterest);
 
+                // apply the patch - grab the updates and update the dto
                 patchDocument.ApplyTo(pointOfInterestToPatch, ModelState);
 
                 // validate the final version
@@ -221,8 +245,15 @@ namespace CityInfoAPI.Controllers
                     return BadRequest(ModelState);
                 }
 
-                existingPointOfInterest.Name = pointOfInterestToPatch.Name;
-                existingPointOfInterest.Description = pointOfInterestToPatch.Description;
+                // map changes back to the entity
+                _mapper.Map(pointOfInterestToPatch, existingPointOfInterest);
+
+                var success = await _repo.SaveChangesAsync();
+                if (!success)
+                {
+                    _logger.LogError("An error occurred while patching point of interest.");
+                    return StatusCode(500, "An error occurred while patching point of interest.");
+                }
 
                 return NoContent();
             }
@@ -239,33 +270,43 @@ namespace CityInfoAPI.Controllers
         /// <returns></returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
         [HttpDelete("{pointGuid}", Name = "DeletePointOfInterest")]
-        public ActionResult DeletePointOfInterest([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid)
+        public async Task<ActionResult> DeletePointOfInterest([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid)
         {
             try
             {
-                var existingCity = _citiesDataStore.Cities.Where(c => c.CityGuid == cityGuid).FirstOrDefault();
-                if (existingCity == null)
+                // does the city exist?
+                var cityExists = await _repo.CityExistsAsync(cityGuid);
+                if (!cityExists)
                 {
-                    _logger.LogWarning($"City with id {cityGuid} wasn't found when deleting point of interest.");
+                    _logger.LogWarning($"City with id {cityGuid} wasn't found when patching point of interest.");
                     return NotFound();
                 }
 
                 // find the point of interest
-                var existingPointOfInterest = existingCity.PointsOfInterest.Where(p => p.PointGuid == pointGuid).FirstOrDefault();
-                if (existingPointOfInterest == null)
+                var pointExists = await _repo.PointOfInterestExistsAsync(pointGuid);
+                if (!pointExists)
                 {
                     _logger.LogWarning($"Point of interest with id {pointGuid} wasn't found.");
                     return NotFound();
                 }
 
                 // does the point of interest belong to the city?
+                var existingPointOfInterest = await _repo.GetPointOfInterestById(pointGuid);
                 if (existingPointOfInterest.CityGuid != cityGuid)
                 {
                     _logger.LogWarning($"Point of interest with id {pointGuid} doesn't belong to city with id {cityGuid}.");
                     return NotFound();
                 }
 
-                existingCity.PointsOfInterest.Remove(existingPointOfInterest);
+                // delete the point of interest
+                await _repo.DeletePointOfInterestAsync(pointGuid);
+
+                var success = await _repo.SaveChangesAsync();
+                if (!success)
+                {
+                    _logger.LogError("An error occurred while deleting point of interest.");
+                    return StatusCode(500, "An error occurred while deleting point of interest.");
+                }
 
                 // test / demo svc
                 _mailService.Send("Point of interest deleted.", $"Point of interest {existingPointOfInterest.Name} with id {existingPointOfInterest.PointGuid} was deleted.");

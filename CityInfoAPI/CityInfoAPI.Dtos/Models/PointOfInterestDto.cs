@@ -2,11 +2,11 @@
 {
     public class PointOfInterestDto
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
 
         public Guid PointGuid { get; set; } = new Guid();
 
-        public int CityId { get; set; }
+        //public int CityId { get; set; }
 
         public Guid CityGuid { get; set; } = new Guid();
 

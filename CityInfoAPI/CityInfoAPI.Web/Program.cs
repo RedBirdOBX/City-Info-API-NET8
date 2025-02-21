@@ -3,6 +3,9 @@ using Serilog.Events;
 using Serilog;
 using CityInfoAPI.Web.Services;
 using CityInfoAPI.Data;
+using CityInfoAPI.Data.DbContents;
+using Microsoft.EntityFrameworkCore;
+using CityInfoAPI.Data.Repositories;
 
 
 //--LOGGING--//
@@ -60,6 +63,11 @@ builder.Services.AddProblemDetails(options =>
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 builder.Services.AddTransient<IMailService, CloudMailService>();
 builder.Services.AddSingleton<CityInfoMemoryDataStore>();
+builder.Services.AddDbContext<CityInfoDbContext>(dbContextOptions => dbContextOptions.UseSqlServer(builder.Configuration["DbConnectionString"]));
+builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>();
+
+// AutoMapper.  Scan for profiles.
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

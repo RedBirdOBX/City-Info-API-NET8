@@ -1,6 +1,6 @@
 ﻿namespace CityInfoAPI.Dtos.Models
 {
-    public class CityDto
+    public class CityWithoutPointsOfInterestDto
     {
         //public int Id { get; set; }
 
@@ -11,9 +11,5 @@
         public string? Description { get; set; }
 
         public DateTime CreatedOn { get; set; } = DateTime.Now;
-
-        public int NumberOfPointsOfInterest { get { return PointsOfInterest.Count;  }  }
-
-        public ICollection<PointOfInterestDto> PointsOfInterest { get; set; } = new List<PointOfInterestDto>();
     }
 }

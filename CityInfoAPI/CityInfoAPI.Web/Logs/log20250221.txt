@@ -1,0 +1,747 @@
+2025-02-21 07:16:15.609 -05:00 [INF] Now listening on: https://localhost:7024
+2025-02-21 07:16:15.756 -05:00 [INF] Now listening on: http://localhost:5047
+2025-02-21 07:16:16.199 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-02-21 07:16:16.201 -05:00 [INF] Hosting environment: Development
+2025-02-21 07:16:16.202 -05:00 [INF] Content root path: C:\Data\Projects\GitHubRepos\City-Info-API-NET8\CityInfoAPI\CityInfoAPI.Web
+2025-02-21 07:16:19.665 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/index.html - null null
+2025-02-21 07:16:20.373 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/index.html - 200 null text/html;charset=utf-8 937.3418ms
+2025-02-21 07:16:20.432 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - null null
+2025-02-21 07:16:20.432 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_vs/browserLink - null null
+2025-02-21 07:16:20.469 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 32.1574ms
+2025-02-21 07:16:20.708 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_vs/browserLink - 200 null text/javascript; charset=UTF-8 276.3904ms
+2025-02-21 07:16:20.873 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - null null
+2025-02-21 07:16:21.131 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 258.4325ms
+2025-02-21 07:16:22.747 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/cities - null null
+2025-02-21 07:16:22.840 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.GetCities (CityInfoAPI.Web)'
+2025-02-21 07:16:22.903 -05:00 [INF] Route matched with {action = "GetCities", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.IEnumerable`1[CityInfoAPI.Dtos.Models.CityWithoutPointsOfInterestDto]]] GetCities(Boolean) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 07:16:26.263 -05:00 [INF] Executed DbCommand (54ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[Id], [c].[CityGuid], [c].[CreatedOn], [c].[Description], [c].[Name]
+FROM [Cities] AS [c]
+2025-02-21 07:16:26.508 -05:00 [INF] Getting cities.
+2025-02-21 07:16:26.517 -05:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[CityInfoAPI.Dtos.Models.CityWithoutPointsOfInterestDto, CityInfoAPI.Dtos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-02-21 07:16:26.697 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.GetCities (CityInfoAPI.Web) in 3788.705ms
+2025-02-21 07:16:26.700 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.GetCities (CityInfoAPI.Web)'
+2025-02-21 07:16:26.707 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/cities - 200 2717 application/json; charset=utf-8 3959.7952ms
+2025-02-21 07:16:35.837 -05:00 [INF] Request starting HTTP/1.1 POST https://localhost:7024/api/cities - application/json 58
+2025-02-21 07:16:35.842 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.CreateCity (CityInfoAPI.Web)'
+2025-02-21 07:16:35.847 -05:00 [INF] Route matched with {action = "CreateCity", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[CityInfoAPI.Dtos.Models.CityWithoutPointsOfInterestDto]] CreateCity(CityInfoAPI.Dtos.Models.CityCreateDto) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 07:16:36.146 -05:00 [INF] Executed DbCommand (56ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:16:36.460 -05:00 [INF] Executed DbCommand (36ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = DateTime2), @p2='?' (Size = 200), @p3='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [Cities] ([CityGuid], [CreatedOn], [Description], [Name])
+OUTPUT INSERTED.[Id]
+VALUES (@p0, @p1, @p2, @p3);
+2025-02-21 07:16:36.501 -05:00 [INF] Executing CreatedAtRouteResult, writing value of type 'CityInfoAPI.Dtos.Models.CityWithoutPointsOfInterestDto'.
+2025-02-21 07:16:36.542 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.CreateCity (CityInfoAPI.Web) in 691.3706ms
+2025-02-21 07:16:36.545 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.CreateCity (CityInfoAPI.Web)'
+2025-02-21 07:16:36.548 -05:00 [INF] Request finished HTTP/1.1 POST https://localhost:7024/api/cities - 201 144 application/json; charset=utf-8 711.1245ms
+2025-02-21 07:16:56.154 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - null null
+2025-02-21 07:16:56.158 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:16:56.181 -05:00 [INF] Route matched with {action = "GetCityByCityId", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCityByCityId(System.Guid, Boolean) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 07:16:56.286 -05:00 [INF] Executed DbCommand (15ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:16:56.415 -05:00 [INF] Executed DbCommand (17ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[CityGuid], [t].[CreatedOn], [t].[Description], [t].[Name], [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM (
+    SELECT TOP(1) [c].[Id], [c].[CityGuid], [c].[CreatedOn], [c].[Description], [c].[Name]
+    FROM [Cities] AS [c]
+    WHERE [c].[CityGuid] = @__cityGuid_0
+) AS [t]
+LEFT JOIN [PointsOfInterest] AS [p] ON [t].[Id] = [p].[CityId]
+ORDER BY [t].[Id]
+2025-02-21 07:16:56.460 -05:00 [INF] Executing OkObjectResult, writing value of type 'CityInfoAPI.Dtos.Models.CityDto'.
+2025-02-21 07:16:56.467 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web) in 281.6914ms
+2025-02-21 07:16:56.469 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:16:56.471 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - 200 185 application/json; charset=utf-8 316.5611ms
+2025-02-21 07:17:11.916 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - null null
+2025-02-21 07:17:11.921 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:17:11.922 -05:00 [INF] Route matched with {action = "GetCityByCityId", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCityByCityId(System.Guid, Boolean) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 07:17:11.946 -05:00 [INF] Executed DbCommand (19ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:17:11.977 -05:00 [INF] Executed DbCommand (23ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[CityGuid], [t].[CreatedOn], [t].[Description], [t].[Name], [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM (
+    SELECT TOP(1) [c].[Id], [c].[CityGuid], [c].[CreatedOn], [c].[Description], [c].[Name]
+    FROM [Cities] AS [c]
+    WHERE [c].[CityGuid] = @__cityGuid_0
+) AS [t]
+LEFT JOIN [PointsOfInterest] AS [p] ON [t].[Id] = [p].[CityId]
+ORDER BY [t].[Id]
+2025-02-21 07:17:11.982 -05:00 [INF] Executing OkObjectResult, writing value of type 'CityInfoAPI.Dtos.Models.CityDto'.
+2025-02-21 07:17:11.984 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web) in 59.7089ms
+2025-02-21 07:17:11.986 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:17:11.987 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - 200 185 application/json; charset=utf-8 71.7713ms
+2025-02-21 07:17:33.999 -05:00 [INF] Request starting HTTP/1.1 POST https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd/pointsofinterest - application/json 115
+2025-02-21 07:17:34.003 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.CreatePointOfInterest (CityInfoAPI.Web)'
+2025-02-21 07:17:34.007 -05:00 [INF] Route matched with {action = "CreatePointOfInterest", controller = "PointsOfInterest"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[CityInfoAPI.Dtos.Models.PointOfInterestDto]] CreatePointOfInterest(System.Guid, CityInfoAPI.Dtos.Models.PointOfInterestCreateDto) on controller CityInfoAPI.Controllers.PointsOfInterestController (CityInfoAPI.Web).
+2025-02-21 07:17:34.040 -05:00 [INF] Executed DbCommand (18ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:17:34.081 -05:00 [INF] Executed DbCommand (17ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [c].[Id], [c].[CityGuid], [c].[CreatedOn], [c].[Description], [c].[Name]
+FROM [Cities] AS [c]
+WHERE [c].[CityGuid] = @__cityGuid_0
+2025-02-21 07:17:34.130 -05:00 [INF] Executed DbCommand (21ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = Int32), @p2='?' (DbType = DateTime2), @p3='?' (Size = 200), @p4='?' (Size = 50), @p5='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+INSERT INTO [PointsOfInterest] ([CityGuid], [CityId], [CreatedOn], [Description], [Name], [PointGuid])
+OUTPUT INSERTED.[Id]
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5);
+2025-02-21 07:17:34.138 -05:00 [INF] Executing CreatedAtRouteResult, writing value of type 'CityInfoAPI.Dtos.Models.PointOfInterestDto'.
+2025-02-21 07:17:34.141 -05:00 [INF] Executed action CityInfoAPI.Controllers.PointsOfInterestController.CreatePointOfInterest (CityInfoAPI.Web) in 131.2532ms
+2025-02-21 07:17:34.143 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.CreatePointOfInterest (CityInfoAPI.Web)'
+2025-02-21 07:17:34.145 -05:00 [INF] Request finished HTTP/1.1 POST https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd/pointsofinterest - 201 197 application/json; charset=utf-8 146.0133ms
+2025-02-21 07:17:37.449 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - null null
+2025-02-21 07:17:37.453 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:17:37.454 -05:00 [INF] Route matched with {action = "GetCityByCityId", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCityByCityId(System.Guid, Boolean) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 07:17:37.470 -05:00 [INF] Executed DbCommand (13ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:17:37.491 -05:00 [INF] Executed DbCommand (17ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[CityGuid], [t].[CreatedOn], [t].[Description], [t].[Name], [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM (
+    SELECT TOP(1) [c].[Id], [c].[CityGuid], [c].[CreatedOn], [c].[Description], [c].[Name]
+    FROM [Cities] AS [c]
+    WHERE [c].[CityGuid] = @__cityGuid_0
+) AS [t]
+LEFT JOIN [PointsOfInterest] AS [p] ON [t].[Id] = [p].[CityId]
+ORDER BY [t].[Id]
+2025-02-21 07:17:37.498 -05:00 [INF] Executing OkObjectResult, writing value of type 'CityInfoAPI.Dtos.Models.CityDto'.
+2025-02-21 07:17:37.501 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web) in 44.9548ms
+2025-02-21 07:17:37.502 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:17:37.504 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - 200 371 application/json; charset=utf-8 55.7364ms
+2025-02-21 07:17:58.200 -05:00 [INF] Request starting HTTP/1.1 PUT https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd - application/json 76
+2025-02-21 07:17:58.206 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.UpdateCity (CityInfoAPI.Web)'
+2025-02-21 07:17:58.209 -05:00 [INF] Route matched with {action = "UpdateCity", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] UpdateCity(System.Guid, CityInfoAPI.Dtos.Models.CityUpdateDto) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 07:17:58.234 -05:00 [INF] Executed DbCommand (15ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:17:58.254 -05:00 [INF] Executed DbCommand (16ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [c].[Id], [c].[CityGuid], [c].[CreatedOn], [c].[Description], [c].[Name]
+FROM [Cities] AS [c]
+WHERE [c].[CityGuid] = @__cityGuid_0
+2025-02-21 07:17:58.295 -05:00 [INF] Executed DbCommand (24ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 200), @p1='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+UPDATE [Cities] SET [Description] = @p0, [Name] = @p1
+OUTPUT 1
+WHERE [Id] = @p2;
+2025-02-21 07:17:58.303 -05:00 [INF] Executing StatusCodeResult, setting HTTP status code 204
+2025-02-21 07:17:58.305 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.UpdateCity (CityInfoAPI.Web) in 92.8483ms
+2025-02-21 07:17:58.307 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.UpdateCity (CityInfoAPI.Web)'
+2025-02-21 07:17:58.308 -05:00 [INF] Request finished HTTP/1.1 PUT https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd - 204 null null 108.0196ms
+2025-02-21 07:18:01.797 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - null null
+2025-02-21 07:18:01.805 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:18:01.808 -05:00 [INF] Route matched with {action = "GetCityByCityId", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCityByCityId(System.Guid, Boolean) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 07:18:01.825 -05:00 [INF] Executed DbCommand (13ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:18:01.844 -05:00 [INF] Executed DbCommand (14ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[CityGuid], [t].[CreatedOn], [t].[Description], [t].[Name], [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM (
+    SELECT TOP(1) [c].[Id], [c].[CityGuid], [c].[CreatedOn], [c].[Description], [c].[Name]
+    FROM [Cities] AS [c]
+    WHERE [c].[CityGuid] = @__cityGuid_0
+) AS [t]
+LEFT JOIN [PointsOfInterest] AS [p] ON [t].[Id] = [p].[CityId]
+ORDER BY [t].[Id]
+2025-02-21 07:18:01.849 -05:00 [INF] Executing OkObjectResult, writing value of type 'CityInfoAPI.Dtos.Models.CityDto'.
+2025-02-21 07:18:01.851 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web) in 40.7593ms
+2025-02-21 07:18:01.853 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:18:01.857 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - 200 389 application/json; charset=utf-8 60.255ms
+2025-02-21 07:19:08.269 -05:00 [INF] Request starting HTTP/1.1 PUT https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd/pointsofinterest/53a872b7-39cf-43fc-b80d-4db05347b81f - application/json 80
+2025-02-21 07:19:08.273 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.UpdatePointOfInterest (CityInfoAPI.Web)'
+2025-02-21 07:19:08.278 -05:00 [INF] Route matched with {action = "UpdatePointOfInterest", controller = "PointsOfInterest"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] UpdatePointOfInterest(System.Guid, System.Guid, CityInfoAPI.Dtos.Models.PointOfInterestUpdateDto) on controller CityInfoAPI.Controllers.PointsOfInterestController (CityInfoAPI.Web).
+2025-02-21 07:19:08.301 -05:00 [INF] Executed DbCommand (14ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:19:08.327 -05:00 [INF] Executed DbCommand (16ms) [Parameters=[@__pointGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [PointsOfInterest] AS [p]
+        WHERE [p].[PointGuid] = @__pointGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:19:08.352 -05:00 [INF] Executed DbCommand (16ms) [Parameters=[@__pointGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM [PointsOfInterest] AS [p]
+WHERE [p].[PointGuid] = @__pointGuid_0
+2025-02-21 07:19:08.575 -05:00 [ERR] An error occurred while updating point of interest.
+AutoMapper.AutoMapperMappingException: Missing type map configuration or unsupported mapping.
+
+Mapping types:
+PointOfInterestUpdateDto -> PointOfInterest
+CityInfoAPI.Dtos.Models.PointOfInterestUpdateDto -> CityInfoAPI.Data.Entities.PointOfInterest
+   at lambda_method250(Closure, PointOfInterestUpdateDto, PointOfInterest, ResolutionContext)
+   at CityInfoAPI.Controllers.PointsOfInterestController.UpdatePointOfInterest(Guid cityGuid, Guid pointGuid, PointOfInterestUpdateDto updatePointOfInterest) in C:\Data\Projects\GitHubRepos\City-Info-API-NET8\CityInfoAPI\CityInfoAPI.Web\Controllers\PointsOfInterestController.cs:line 183
+2025-02-21 07:19:08.635 -05:00 [INF] Executing ObjectResult, writing value of type 'System.String'.
+2025-02-21 07:19:08.637 -05:00 [INF] Executed action CityInfoAPI.Controllers.PointsOfInterestController.UpdatePointOfInterest (CityInfoAPI.Web) in 355.1914ms
+2025-02-21 07:19:08.639 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.UpdatePointOfInterest (CityInfoAPI.Web)'
+2025-02-21 07:19:08.641 -05:00 [INF] Request finished HTTP/1.1 PUT https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd/pointsofinterest/53a872b7-39cf-43fc-b80d-4db05347b81f - 500 null text/plain; charset=utf-8 371.6163ms
+2025-02-21 07:19:56.115 -05:00 [INF] Now listening on: https://localhost:7024
+2025-02-21 07:19:56.147 -05:00 [INF] Now listening on: http://localhost:5047
+2025-02-21 07:19:56.207 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-02-21 07:19:56.214 -05:00 [INF] Hosting environment: Development
+2025-02-21 07:19:56.215 -05:00 [INF] Content root path: C:\Data\Projects\GitHubRepos\City-Info-API-NET8\CityInfoAPI\CityInfoAPI.Web
+2025-02-21 07:19:56.729 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/index.html - null null
+2025-02-21 07:19:56.893 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/index.html - 200 null text/html;charset=utf-8 179.4013ms
+2025-02-21 07:19:56.942 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_vs/browserLink - null null
+2025-02-21 07:19:56.942 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - null null
+2025-02-21 07:19:56.960 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 18.7163ms
+2025-02-21 07:19:56.994 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_vs/browserLink - 200 null text/javascript; charset=UTF-8 52.278ms
+2025-02-21 07:19:57.138 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - null null
+2025-02-21 07:19:57.275 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 137.1303ms
+2025-02-21 07:19:59.794 -05:00 [INF] Request starting HTTP/1.1 PUT https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd/pointsofinterest/53a872b7-39cf-43fc-b80d-4db05347b81f - application/json 80
+2025-02-21 07:19:59.817 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.UpdatePointOfInterest (CityInfoAPI.Web)'
+2025-02-21 07:19:59.841 -05:00 [INF] Route matched with {action = "UpdatePointOfInterest", controller = "PointsOfInterest"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] UpdatePointOfInterest(System.Guid, System.Guid, CityInfoAPI.Dtos.Models.PointOfInterestUpdateDto) on controller CityInfoAPI.Controllers.PointsOfInterestController (CityInfoAPI.Web).
+2025-02-21 07:20:01.262 -05:00 [INF] Executed DbCommand (53ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:20:01.313 -05:00 [INF] Executed DbCommand (20ms) [Parameters=[@__pointGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [PointsOfInterest] AS [p]
+        WHERE [p].[PointGuid] = @__pointGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:20:01.385 -05:00 [INF] Executed DbCommand (33ms) [Parameters=[@__pointGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM [PointsOfInterest] AS [p]
+WHERE [p].[PointGuid] = @__pointGuid_0
+2025-02-21 07:20:01.512 -05:00 [INF] Executed DbCommand (22ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 200), @p1='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+UPDATE [PointsOfInterest] SET [Description] = @p0, [Name] = @p1
+OUTPUT 1
+WHERE [Id] = @p2;
+2025-02-21 07:20:01.530 -05:00 [INF] Executing StatusCodeResult, setting HTTP status code 204
+2025-02-21 07:20:01.536 -05:00 [INF] Executed action CityInfoAPI.Controllers.PointsOfInterestController.UpdatePointOfInterest (CityInfoAPI.Web) in 1689.0632ms
+2025-02-21 07:20:01.538 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.UpdatePointOfInterest (CityInfoAPI.Web)'
+2025-02-21 07:20:01.546 -05:00 [INF] Request finished HTTP/1.1 PUT https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd/pointsofinterest/53a872b7-39cf-43fc-b80d-4db05347b81f - 204 null null 1751.8245ms
+2025-02-21 07:20:05.432 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - null null
+2025-02-21 07:20:05.437 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:20:05.444 -05:00 [INF] Route matched with {action = "GetCityByCityId", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCityByCityId(System.Guid, Boolean) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 07:20:05.499 -05:00 [INF] Executed DbCommand (32ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:20:05.602 -05:00 [INF] Executed DbCommand (18ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[CityGuid], [t].[CreatedOn], [t].[Description], [t].[Name], [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM (
+    SELECT TOP(1) [c].[Id], [c].[CityGuid], [c].[CreatedOn], [c].[Description], [c].[Name]
+    FROM [Cities] AS [c]
+    WHERE [c].[CityGuid] = @__cityGuid_0
+) AS [t]
+LEFT JOIN [PointsOfInterest] AS [p] ON [t].[Id] = [p].[CityId]
+ORDER BY [t].[Id]
+2025-02-21 07:20:05.632 -05:00 [INF] Executing OkObjectResult, writing value of type 'CityInfoAPI.Dtos.Models.CityDto'.
+2025-02-21 07:20:05.668 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web) in 220.5027ms
+2025-02-21 07:20:05.672 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:20:05.674 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - 200 405 application/json; charset=utf-8 242.7104ms
+2025-02-21 07:32:09.536 -05:00 [INF] Now listening on: https://localhost:7024
+2025-02-21 07:32:09.565 -05:00 [INF] Now listening on: http://localhost:5047
+2025-02-21 07:32:09.608 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-02-21 07:32:09.610 -05:00 [INF] Hosting environment: Development
+2025-02-21 07:32:09.611 -05:00 [INF] Content root path: C:\Data\Projects\GitHubRepos\City-Info-API-NET8\CityInfoAPI\CityInfoAPI.Web
+2025-02-21 07:32:10.376 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/index.html - null null
+2025-02-21 07:32:10.553 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/index.html - 200 null text/html;charset=utf-8 185.5099ms
+2025-02-21 07:32:10.607 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - null null
+2025-02-21 07:32:10.608 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_vs/browserLink - null null
+2025-02-21 07:32:10.626 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 19.0113ms
+2025-02-21 07:32:10.687 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_vs/browserLink - 200 null text/javascript; charset=UTF-8 79.4531ms
+2025-02-21 07:32:10.733 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - null null
+2025-02-21 07:32:10.917 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 184.0711ms
+2025-02-21 07:33:23.674 -05:00 [INF] Request starting HTTP/1.1 PATCH https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd/pointsofinterest/53a872b7-39cf-43fc-b80d-4db05347b81f - application/json 234
+2025-02-21 07:33:23.699 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.PatchPointOfInterest (CityInfoAPI.Web)'
+2025-02-21 07:33:23.721 -05:00 [INF] Route matched with {action = "PatchPointOfInterest", controller = "PointsOfInterest"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[CityInfoAPI.Dtos.Models.PointOfInterestDto]] PatchPointOfInterest(System.Guid, System.Guid, Microsoft.AspNetCore.JsonPatch.JsonPatchDocument`1[CityInfoAPI.Dtos.Models.PointOfInterestUpdateDto]) on controller CityInfoAPI.Controllers.PointsOfInterestController (CityInfoAPI.Web).
+2025-02-21 07:33:25.282 -05:00 [INF] Executed DbCommand (62ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:33:25.334 -05:00 [INF] Executed DbCommand (18ms) [Parameters=[@__pointGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [PointsOfInterest] AS [p]
+        WHERE [p].[PointGuid] = @__pointGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:33:25.403 -05:00 [INF] Executed DbCommand (34ms) [Parameters=[@__pointGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM [PointsOfInterest] AS [p]
+WHERE [p].[PointGuid] = @__pointGuid_0
+2025-02-21 07:33:25.575 -05:00 [INF] Executed DbCommand (50ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 200), @p1='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+UPDATE [PointsOfInterest] SET [Description] = @p0, [Name] = @p1
+OUTPUT 1
+WHERE [Id] = @p2;
+2025-02-21 07:33:25.593 -05:00 [INF] Executing StatusCodeResult, setting HTTP status code 204
+2025-02-21 07:33:25.598 -05:00 [INF] Executed action CityInfoAPI.Controllers.PointsOfInterestController.PatchPointOfInterest (CityInfoAPI.Web) in 1871.3896ms
+2025-02-21 07:33:25.601 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.PatchPointOfInterest (CityInfoAPI.Web)'
+2025-02-21 07:33:25.609 -05:00 [INF] Request finished HTTP/1.1 PATCH https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd/pointsofinterest/53a872b7-39cf-43fc-b80d-4db05347b81f - 204 null null 1934.3811ms
+2025-02-21 07:33:29.607 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - null null
+2025-02-21 07:33:29.612 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:33:29.617 -05:00 [INF] Route matched with {action = "GetCityByCityId", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCityByCityId(System.Guid, Boolean) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 07:33:29.656 -05:00 [INF] Executed DbCommand (16ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:33:29.757 -05:00 [INF] Executed DbCommand (28ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[CityGuid], [t].[CreatedOn], [t].[Description], [t].[Name], [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM (
+    SELECT TOP(1) [c].[Id], [c].[CityGuid], [c].[CreatedOn], [c].[Description], [c].[Name]
+    FROM [Cities] AS [c]
+    WHERE [c].[CityGuid] = @__cityGuid_0
+) AS [t]
+LEFT JOIN [PointsOfInterest] AS [p] ON [t].[Id] = [p].[CityId]
+ORDER BY [t].[Id]
+2025-02-21 07:33:29.790 -05:00 [INF] Executing OkObjectResult, writing value of type 'CityInfoAPI.Dtos.Models.CityDto'.
+2025-02-21 07:33:29.820 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web) in 199.2094ms
+2025-02-21 07:33:29.823 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:33:29.824 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - 200 417 application/json; charset=utf-8 217.0498ms
+2025-02-21 07:38:26.986 -05:00 [INF] Now listening on: https://localhost:7024
+2025-02-21 07:38:27.035 -05:00 [INF] Now listening on: http://localhost:5047
+2025-02-21 07:38:27.096 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-02-21 07:38:27.098 -05:00 [INF] Hosting environment: Development
+2025-02-21 07:38:27.099 -05:00 [INF] Content root path: C:\Data\Projects\GitHubRepos\City-Info-API-NET8\CityInfoAPI\CityInfoAPI.Web
+2025-02-21 07:38:27.619 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/index.html - null null
+2025-02-21 07:38:27.857 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/index.html - 200 null text/html;charset=utf-8 244.7637ms
+2025-02-21 07:38:27.901 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_vs/browserLink - null null
+2025-02-21 07:38:27.901 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - null null
+2025-02-21 07:38:27.923 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 22.6037ms
+2025-02-21 07:38:27.969 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_vs/browserLink - 200 null text/javascript; charset=UTF-8 68.2528ms
+2025-02-21 07:38:28.028 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - null null
+2025-02-21 07:38:28.153 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 126.0587ms
+2025-02-21 07:38:58.763 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - null null
+2025-02-21 07:38:58.786 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:38:58.809 -05:00 [INF] Route matched with {action = "GetCityByCityId", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCityByCityId(System.Guid, Boolean) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 07:39:00.244 -05:00 [INF] Executed DbCommand (57ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:39:00.383 -05:00 [INF] Executed DbCommand (17ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[CityGuid], [t].[CreatedOn], [t].[Description], [t].[Name], [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM (
+    SELECT TOP(1) [c].[Id], [c].[CityGuid], [c].[CreatedOn], [c].[Description], [c].[Name]
+    FROM [Cities] AS [c]
+    WHERE [c].[CityGuid] = @__cityGuid_0
+) AS [t]
+LEFT JOIN [PointsOfInterest] AS [p] ON [t].[Id] = [p].[CityId]
+ORDER BY [t].[Id]
+2025-02-21 07:39:00.466 -05:00 [INF] Executing OkObjectResult, writing value of type 'CityInfoAPI.Dtos.Models.CityDto'.
+2025-02-21 07:39:00.533 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web) in 1718.4089ms
+2025-02-21 07:39:00.536 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:39:00.544 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - 200 417 application/json; charset=utf-8 1781.2558ms
+2025-02-21 07:39:29.342 -05:00 [INF] Request starting HTTP/1.1 PATCH https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd - application/json 222
+2025-02-21 07:39:29.347 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.PatchCity (CityInfoAPI.Web)'
+2025-02-21 07:39:29.354 -05:00 [INF] Route matched with {action = "PatchCity", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[CityInfoAPI.Dtos.Models.CityDto]] PatchCity(System.Guid, Microsoft.AspNetCore.JsonPatch.JsonPatchDocument`1[CityInfoAPI.Dtos.Models.CityUpdateDto]) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 07:39:29.438 -05:00 [INF] Executed DbCommand (21ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:39:29.460 -05:00 [INF] Executed DbCommand (14ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [c].[Id], [c].[CityGuid], [c].[CreatedOn], [c].[Description], [c].[Name]
+FROM [Cities] AS [c]
+WHERE [c].[CityGuid] = @__cityGuid_0
+2025-02-21 07:39:29.542 -05:00 [ERR] An error occurred while patching city.
+AutoMapper.AutoMapperMappingException: Missing type map configuration or unsupported mapping.
+
+Mapping types:
+City -> CityUpdateDto
+CityInfoAPI.Data.Entities.City -> CityInfoAPI.Dtos.Models.CityUpdateDto
+   at lambda_method125(Closure, Object, CityUpdateDto, ResolutionContext)
+   at CityInfoAPI.Controllers.CitiesController.PatchCity(Guid cityGuid, JsonPatchDocument`1 patchDocument) in C:\Data\Projects\GitHubRepos\City-Info-API-NET8\CityInfoAPI\CityInfoAPI.Web\Controllers\CitiesController.cs:line 190
+2025-02-21 07:39:29.575 -05:00 [INF] Executing ObjectResult, writing value of type 'System.String'.
+2025-02-21 07:39:29.577 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.PatchCity (CityInfoAPI.Web) in 220.2525ms
+2025-02-21 07:39:29.579 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.PatchCity (CityInfoAPI.Web)'
+2025-02-21 07:39:29.581 -05:00 [INF] Request finished HTTP/1.1 PATCH https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd - 500 null text/plain; charset=utf-8 239.0261ms
+2025-02-21 07:39:58.231 -05:00 [INF] Now listening on: https://localhost:7024
+2025-02-21 07:39:58.266 -05:00 [INF] Now listening on: http://localhost:5047
+2025-02-21 07:39:58.314 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-02-21 07:39:58.317 -05:00 [INF] Hosting environment: Development
+2025-02-21 07:39:58.318 -05:00 [INF] Content root path: C:\Data\Projects\GitHubRepos\City-Info-API-NET8\CityInfoAPI\CityInfoAPI.Web
+2025-02-21 07:39:58.694 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/index.html - null null
+2025-02-21 07:39:58.913 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/index.html - 200 null text/html;charset=utf-8 230.4115ms
+2025-02-21 07:39:58.966 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - null null
+2025-02-21 07:39:58.966 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_vs/browserLink - null null
+2025-02-21 07:39:58.977 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 11.7224ms
+2025-02-21 07:39:59.029 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_vs/browserLink - 200 null text/javascript; charset=UTF-8 64.055ms
+2025-02-21 07:39:59.096 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - null null
+2025-02-21 07:39:59.283 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 186.0668ms
+2025-02-21 07:40:03.111 -05:00 [INF] Request starting HTTP/1.1 PATCH https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd - application/json 222
+2025-02-21 07:40:03.133 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.PatchCity (CityInfoAPI.Web)'
+2025-02-21 07:40:03.158 -05:00 [INF] Route matched with {action = "PatchCity", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[CityInfoAPI.Dtos.Models.CityDto]] PatchCity(System.Guid, Microsoft.AspNetCore.JsonPatch.JsonPatchDocument`1[CityInfoAPI.Dtos.Models.CityUpdateDto]) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 07:40:04.651 -05:00 [INF] Executed DbCommand (61ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:40:04.729 -05:00 [INF] Executed DbCommand (19ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [c].[Id], [c].[CityGuid], [c].[CreatedOn], [c].[Description], [c].[Name]
+FROM [Cities] AS [c]
+WHERE [c].[CityGuid] = @__cityGuid_0
+2025-02-21 07:40:04.906 -05:00 [INF] Executed DbCommand (58ms) [Parameters=[@p2='?' (DbType = Int32), @p0='?' (Size = 200), @p1='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+UPDATE [Cities] SET [Description] = @p0, [Name] = @p1
+OUTPUT 1
+WHERE [Id] = @p2;
+2025-02-21 07:40:04.922 -05:00 [INF] Executing StatusCodeResult, setting HTTP status code 204
+2025-02-21 07:40:04.928 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.PatchCity (CityInfoAPI.Web) in 1763.3645ms
+2025-02-21 07:40:04.930 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.PatchCity (CityInfoAPI.Web)'
+2025-02-21 07:40:04.938 -05:00 [INF] Request finished HTTP/1.1 PATCH https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd - 204 null null 1826.2846ms
+2025-02-21 07:40:09.554 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - null null
+2025-02-21 07:40:09.561 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:40:09.567 -05:00 [INF] Route matched with {action = "GetCityByCityId", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCityByCityId(System.Guid, Boolean) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 07:40:09.609 -05:00 [INF] Executed DbCommand (14ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:40:09.715 -05:00 [INF] Executed DbCommand (30ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[CityGuid], [t].[CreatedOn], [t].[Description], [t].[Name], [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM (
+    SELECT TOP(1) [c].[Id], [c].[CityGuid], [c].[CreatedOn], [c].[Description], [c].[Name]
+    FROM [Cities] AS [c]
+    WHERE [c].[CityGuid] = @__cityGuid_0
+) AS [t]
+LEFT JOIN [PointsOfInterest] AS [p] ON [t].[Id] = [p].[CityId]
+ORDER BY [t].[Id]
+2025-02-21 07:40:09.746 -05:00 [INF] Executing OkObjectResult, writing value of type 'CityInfoAPI.Dtos.Models.CityDto'.
+2025-02-21 07:40:09.776 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web) in 204.9874ms
+2025-02-21 07:40:09.779 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:40:09.781 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - 200 417 application/json; charset=utf-8 226.6318ms
+2025-02-21 07:56:19.834 -05:00 [INF] Now listening on: https://localhost:7024
+2025-02-21 07:56:19.864 -05:00 [INF] Now listening on: http://localhost:5047
+2025-02-21 07:56:19.908 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-02-21 07:56:19.910 -05:00 [INF] Hosting environment: Development
+2025-02-21 07:56:19.912 -05:00 [INF] Content root path: C:\Data\Projects\GitHubRepos\City-Info-API-NET8\CityInfoAPI\CityInfoAPI.Web
+2025-02-21 07:56:20.372 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/index.html - null null
+2025-02-21 07:56:20.595 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/index.html - 200 null text/html;charset=utf-8 233.5986ms
+2025-02-21 07:56:20.654 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - null null
+2025-02-21 07:56:20.654 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_vs/browserLink - null null
+2025-02-21 07:56:20.673 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 19.4746ms
+2025-02-21 07:56:20.733 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_vs/browserLink - 200 null text/javascript; charset=UTF-8 79.626ms
+2025-02-21 07:56:20.773 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - null null
+2025-02-21 07:56:20.934 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 161.036ms
+2025-02-21 07:56:30.344 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - null null
+2025-02-21 07:56:30.366 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:56:30.391 -05:00 [INF] Route matched with {action = "GetCityByCityId", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCityByCityId(System.Guid, Boolean) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 07:56:31.849 -05:00 [INF] Executed DbCommand (73ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:56:32.014 -05:00 [INF] Executed DbCommand (21ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[CityGuid], [t].[CreatedOn], [t].[Description], [t].[Name], [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM (
+    SELECT TOP(1) [c].[Id], [c].[CityGuid], [c].[CreatedOn], [c].[Description], [c].[Name]
+    FROM [Cities] AS [c]
+    WHERE [c].[CityGuid] = @__cityGuid_0
+) AS [t]
+LEFT JOIN [PointsOfInterest] AS [p] ON [t].[Id] = [p].[CityId]
+ORDER BY [t].[Id]
+2025-02-21 07:56:32.256 -05:00 [INF] Executing OkObjectResult, writing value of type 'CityInfoAPI.Dtos.Models.CityDto'.
+2025-02-21 07:56:32.350 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web) in 1953.6231ms
+2025-02-21 07:56:32.353 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:56:32.366 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - 200 417 application/json; charset=utf-8 2022.0347ms
+2025-02-21 07:56:46.514 -05:00 [INF] Request starting HTTP/1.1 DELETE https://localhost:7024/api/cities/38276231-1918-452d-a3e9-6f50873a95d2/pointsofinterest/53a872b7-39cf-43fc-b80d-4db05347b81f - null null
+2025-02-21 07:56:46.521 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web)'
+2025-02-21 07:56:46.527 -05:00 [INF] Route matched with {action = "DeletePointOfInterest", controller = "PointsOfInterest"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] DeletePointOfInterest(System.Guid, System.Guid) on controller CityInfoAPI.Controllers.PointsOfInterestController (CityInfoAPI.Web).
+2025-02-21 07:56:46.590 -05:00 [INF] Executed DbCommand (28ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:56:46.615 -05:00 [INF] Executed DbCommand (16ms) [Parameters=[@__pointGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [PointsOfInterest] AS [p]
+        WHERE [p].[PointGuid] = @__pointGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:56:46.685 -05:00 [INF] Executed DbCommand (44ms) [Parameters=[@__pointGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM [PointsOfInterest] AS [p]
+WHERE [p].[PointGuid] = @__pointGuid_0
+2025-02-21 07:56:46.691 -05:00 [WRN] Point of interest with id 53a872b7-39cf-43fc-b80d-4db05347b81f doesn't belong to city with id 38276231-1918-452d-a3e9-6f50873a95d2.
+2025-02-21 07:56:46.714 -05:00 [INF] Executing ObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ProblemDetails'.
+2025-02-21 07:56:46.741 -05:00 [INF] Executed action CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web) in 211.5293ms
+2025-02-21 07:56:46.745 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web)'
+2025-02-21 07:56:46.748 -05:00 [INF] Request finished HTTP/1.1 DELETE https://localhost:7024/api/cities/38276231-1918-452d-a3e9-6f50873a95d2/pointsofinterest/53a872b7-39cf-43fc-b80d-4db05347b81f - 404 193 application/problem+json; charset=utf-8 233.2138ms
+2025-02-21 07:57:42.923 -05:00 [INF] Request starting HTTP/1.1 DELETE https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd/pointsofinterest/53a872b7-39cf-43fc-b80d-4db05347b81f - null null
+2025-02-21 07:57:42.926 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web)'
+2025-02-21 07:57:42.930 -05:00 [INF] Route matched with {action = "DeletePointOfInterest", controller = "PointsOfInterest"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] DeletePointOfInterest(System.Guid, System.Guid) on controller CityInfoAPI.Controllers.PointsOfInterestController (CityInfoAPI.Web).
+2025-02-21 07:57:43.007 -05:00 [INF] Executed DbCommand (28ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:57:43.028 -05:00 [INF] Executed DbCommand (16ms) [Parameters=[@__pointGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [PointsOfInterest] AS [p]
+        WHERE [p].[PointGuid] = @__pointGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:57:43.049 -05:00 [INF] Executed DbCommand (16ms) [Parameters=[@__pointGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM [PointsOfInterest] AS [p]
+WHERE [p].[PointGuid] = @__pointGuid_0
+2025-02-21 07:57:43.082 -05:00 [INF] Executed DbCommand (14ms) [Parameters=[@__pointGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM [PointsOfInterest] AS [p]
+WHERE [p].[PointGuid] = @__pointGuid_0
+2025-02-21 07:57:43.180 -05:00 [INF] Executed DbCommand (34ms) [Parameters=[@p0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+DELETE FROM [PointsOfInterest]
+OUTPUT 1
+WHERE [Id] = @p0;
+2025-02-21 07:57:43.198 -05:00 [INF] Executing StatusCodeResult, setting HTTP status code 204
+2025-02-21 07:57:43.200 -05:00 [INF] Executed action CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web) in 267.459ms
+2025-02-21 07:57:43.202 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest (CityInfoAPI.Web)'
+2025-02-21 07:57:43.204 -05:00 [INF] Request finished HTTP/1.1 DELETE https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd/pointsofinterest/53a872b7-39cf-43fc-b80d-4db05347b81f - 204 null null 280.9162ms
+2025-02-21 07:57:46.851 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - null null
+2025-02-21 07:57:46.855 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:57:46.856 -05:00 [INF] Route matched with {action = "GetCityByCityId", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCityByCityId(System.Guid, Boolean) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 07:57:46.885 -05:00 [INF] Executed DbCommand (25ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 07:57:46.922 -05:00 [INF] Executed DbCommand (32ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[CityGuid], [t].[CreatedOn], [t].[Description], [t].[Name], [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM (
+    SELECT TOP(1) [c].[Id], [c].[CityGuid], [c].[CreatedOn], [c].[Description], [c].[Name]
+    FROM [Cities] AS [c]
+    WHERE [c].[CityGuid] = @__cityGuid_0
+) AS [t]
+LEFT JOIN [PointsOfInterest] AS [p] ON [t].[Id] = [p].[CityId]
+ORDER BY [t].[Id]
+2025-02-21 07:57:46.927 -05:00 [INF] Executing OkObjectResult, writing value of type 'CityInfoAPI.Dtos.Models.CityDto'.
+2025-02-21 07:57:46.929 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web) in 70.4814ms
+2025-02-21 07:57:46.930 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 07:57:46.933 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - 200 203 application/json; charset=utf-8 81.6543ms
+2025-02-21 08:01:25.574 -05:00 [INF] Now listening on: https://localhost:7024
+2025-02-21 08:01:25.609 -05:00 [INF] Now listening on: http://localhost:5047
+2025-02-21 08:01:25.652 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-02-21 08:01:25.654 -05:00 [INF] Hosting environment: Development
+2025-02-21 08:01:25.655 -05:00 [INF] Content root path: C:\Data\Projects\GitHubRepos\City-Info-API-NET8\CityInfoAPI\CityInfoAPI.Web
+2025-02-21 08:01:26.127 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/index.html - null null
+2025-02-21 08:01:26.336 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/index.html - 200 null text/html;charset=utf-8 218.7692ms
+2025-02-21 08:01:26.379 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_vs/browserLink - null null
+2025-02-21 08:01:26.381 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - null null
+2025-02-21 08:01:26.409 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 28.1176ms
+2025-02-21 08:01:26.474 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_vs/browserLink - 200 null text/javascript; charset=UTF-8 95.2395ms
+2025-02-21 08:01:26.515 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - null null
+2025-02-21 08:01:26.671 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 158.1487ms
+2025-02-21 08:01:38.491 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - null null
+2025-02-21 08:01:38.513 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 08:01:38.536 -05:00 [INF] Route matched with {action = "GetCityByCityId", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCityByCityId(System.Guid, Boolean) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 08:01:39.940 -05:00 [INF] Executed DbCommand (78ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 08:01:40.088 -05:00 [INF] Executed DbCommand (18ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[CityGuid], [t].[CreatedOn], [t].[Description], [t].[Name], [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM (
+    SELECT TOP(1) [c].[Id], [c].[CityGuid], [c].[CreatedOn], [c].[Description], [c].[Name]
+    FROM [Cities] AS [c]
+    WHERE [c].[CityGuid] = @__cityGuid_0
+) AS [t]
+LEFT JOIN [PointsOfInterest] AS [p] ON [t].[Id] = [p].[CityId]
+ORDER BY [t].[Id]
+2025-02-21 08:01:40.180 -05:00 [INF] Executing OkObjectResult, writing value of type 'CityInfoAPI.Dtos.Models.CityDto'.
+2025-02-21 08:01:40.266 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web) in 1722.8232ms
+2025-02-21 08:01:40.269 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 08:01:40.280 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - 200 203 application/json; charset=utf-8 1789.6721ms
+2025-02-21 08:01:53.486 -05:00 [INF] Request starting HTTP/1.1 DELETE https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd - null null
+2025-02-21 08:01:53.493 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.DeleteCity (CityInfoAPI.Web)'
+2025-02-21 08:01:53.502 -05:00 [INF] Route matched with {action = "DeleteCity", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] DeleteCity(System.Guid) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 08:01:53.547 -05:00 [INF] Executed DbCommand (24ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 08:01:53.571 -05:00 [INF] Executed DbCommand (14ms) [Parameters=[@__pointGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM [PointsOfInterest] AS [p]
+WHERE [p].[PointGuid] = @__pointGuid_0
+2025-02-21 08:01:53.753 -05:00 [ERR] An error occurred while deleting city.
+System.ArgumentNullException: Value cannot be null. (Parameter 'entity')
+   at CityInfoAPI.Data.Repositories.CityInfoRepository.DeletePointOfInterestAsync(Guid pointGuid) in C:\Data\Projects\GitHubRepos\City-Info-API-NET8\CityInfoAPI\CityInfoAPI.Data\Repositories\CityInfoRepository.cs:line 161
+   at CityInfoAPI.Controllers.CitiesController.DeleteCity(Guid cityGuid) in C:\Data\Projects\GitHubRepos\City-Info-API-NET8\CityInfoAPI\CityInfoAPI.Web\Controllers\CitiesController.cs:line 239
+2025-02-21 08:01:53.791 -05:00 [INF] Executing ObjectResult, writing value of type 'System.String'.
+2025-02-21 08:01:53.793 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.DeleteCity (CityInfoAPI.Web) in 286.9088ms
+2025-02-21 08:01:53.795 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.DeleteCity (CityInfoAPI.Web)'
+2025-02-21 08:01:53.797 -05:00 [INF] Request finished HTTP/1.1 DELETE https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd - 500 null text/plain; charset=utf-8 311.1672ms
+2025-02-21 08:02:14.423 -05:00 [INF] Request starting HTTP/1.1 DELETE https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd - null null
+2025-02-21 08:02:14.427 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.DeleteCity (CityInfoAPI.Web)'
+2025-02-21 08:02:14.428 -05:00 [INF] Route matched with {action = "DeleteCity", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] DeleteCity(System.Guid) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 08:02:17.122 -05:00 [INF] Executed DbCommand (27ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 08:02:18.986 -05:00 [INF] Executed DbCommand (20ms) [Parameters=[@__pointGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [p].[Id], [p].[CityGuid], [p].[CityId], [p].[CreatedOn], [p].[Description], [p].[Name], [p].[PointGuid]
+FROM [PointsOfInterest] AS [p]
+WHERE [p].[PointGuid] = @__pointGuid_0
+2025-02-21 08:02:42.297 -05:00 [INF] Now listening on: https://localhost:7024
+2025-02-21 08:02:42.328 -05:00 [INF] Now listening on: http://localhost:5047
+2025-02-21 08:02:42.383 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-02-21 08:02:42.384 -05:00 [INF] Hosting environment: Development
+2025-02-21 08:02:42.386 -05:00 [INF] Content root path: C:\Data\Projects\GitHubRepos\City-Info-API-NET8\CityInfoAPI\CityInfoAPI.Web
+2025-02-21 08:02:43.219 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/index.html - null null
+2025-02-21 08:02:43.438 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/index.html - 200 null text/html;charset=utf-8 244.6473ms
+2025-02-21 08:02:43.501 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_vs/browserLink - null null
+2025-02-21 08:02:43.501 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - null null
+2025-02-21 08:02:43.531 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_framework/aspnetcore-browser-refresh.js - 200 13766 application/javascript; charset=utf-8 30.4891ms
+2025-02-21 08:02:43.570 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/_vs/browserLink - 200 null text/javascript; charset=UTF-8 68.9008ms
+2025-02-21 08:02:43.620 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - null null
+2025-02-21 08:02:43.839 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7024/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 219.3785ms
+2025-02-21 08:02:54.430 -05:00 [INF] Request starting HTTP/1.1 DELETE https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd - null null
+2025-02-21 08:02:54.453 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.DeleteCity (CityInfoAPI.Web)'
+2025-02-21 08:02:54.478 -05:00 [INF] Route matched with {action = "DeleteCity", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] DeleteCity(System.Guid) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 08:02:58.574 -05:00 [INF] Executed DbCommand (80ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 08:02:58.655 -05:00 [INF] Executed DbCommand (22ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [c].[Id], [c].[CityGuid], [c].[CreatedOn], [c].[Description], [c].[Name]
+FROM [Cities] AS [c]
+WHERE [c].[CityGuid] = @__cityGuid_0
+2025-02-21 08:02:58.801 -05:00 [INF] Executed DbCommand (32ms) [Parameters=[@p0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SET IMPLICIT_TRANSACTIONS OFF;
+SET NOCOUNT ON;
+DELETE FROM [Cities]
+OUTPUT 1
+WHERE [Id] = @p0;
+2025-02-21 08:02:58.819 -05:00 [INF] Executing StatusCodeResult, setting HTTP status code 204
+2025-02-21 08:02:58.826 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.DeleteCity (CityInfoAPI.Web) in 4341.6604ms
+2025-02-21 08:02:58.829 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.DeleteCity (CityInfoAPI.Web)'
+2025-02-21 08:02:58.839 -05:00 [INF] Request finished HTTP/1.1 DELETE https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd - 204 null null 4408.5042ms
+2025-02-21 08:03:06.137 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - null null
+2025-02-21 08:03:06.143 -05:00 [INF] Executing endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 08:03:06.149 -05:00 [INF] Route matched with {action = "GetCityByCityId", controller = "Cities"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCityByCityId(System.Guid, Boolean) on controller CityInfoAPI.Controllers.CitiesController (CityInfoAPI.Web).
+2025-02-21 08:03:06.187 -05:00 [INF] Executed DbCommand (16ms) [Parameters=[@__cityGuid_0='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Cities] AS [c]
+        WHERE [c].[CityGuid] = @__cityGuid_0) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2025-02-21 08:03:06.199 -05:00 [WRN] City with id cc343543-9f41-46e3-aa6c-998ad4b83ddd wasn't found.
+2025-02-21 08:03:06.206 -05:00 [INF] Executing ObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ProblemDetails'.
+2025-02-21 08:03:06.280 -05:00 [INF] Executed action CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web) in 127.8948ms
+2025-02-21 08:03:06.283 -05:00 [INF] Executed endpoint 'CityInfoAPI.Controllers.CitiesController.GetCityByCityId (CityInfoAPI.Web)'
+2025-02-21 08:03:06.285 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7024/api/cities/cc343543-9f41-46e3-aa6c-998ad4b83ddd?includePointsOfInterest=true - 404 193 application/problem+json; charset=utf-8 147.435ms

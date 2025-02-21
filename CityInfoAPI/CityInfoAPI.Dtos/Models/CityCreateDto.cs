@@ -14,6 +14,5 @@ namespace CityInfoAPI.Dtos.Models
         public string? Description { get; set; }
 
         public DateTime CreatedOn { get; set; } = DateTime.Now;
-
     }
 }
