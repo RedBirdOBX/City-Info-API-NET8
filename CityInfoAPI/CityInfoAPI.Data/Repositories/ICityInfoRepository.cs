@@ -7,6 +7,8 @@ namespace CityInfoAPI.Data.Repositories
         // cities
         Task<IEnumerable<City>> GetCitiesAsync();
 
+        Task<IEnumerable<City>> GetCitiesAsync(string? name);
+
         Task<City?> GetCityByCityIdAsync(Guid cityId, bool includePointsOfInterest);
 
         Task<City?> CreateCityAsync(City newCity);

@@ -34,11 +34,11 @@ namespace CityInfoAPI.Controllers
         /// <returns>collection of CityDto</returns>
         /// <example>{baseUrl}/api/cities</example>
         [HttpGet("", Name = "GetCities")]
-        public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities(bool includePointsOfInterest = true)
+        public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery] bool? includePointsOfInterest = true, [FromQuery(Name = "name")] string? name = null)
         {
             try
             {
-                var cities = await _repo.GetCitiesAsync();
+                var cities = await _repo.GetCitiesAsync(name);
                 var results = _mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cities);
 
                 _logger.LogInformation("Getting cities.");

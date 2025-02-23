@@ -28,6 +28,39 @@ namespace CityInfoAPI.Data.Repositories
             }
         }
 
+        public async Task<IEnumerable<City>> GetCitiesAsync(string? name)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    return await GetCitiesAsync();
+                }
+
+                name = name.Trim().ToLower();
+
+                //return await _dbContext.Cities.Where(c => c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                //                                .OrderBy(c => c.Name)
+                //                                .ToListAsync();
+
+                //string str1 = "Hello";
+                //string str2 = "hello";
+
+                //bool areEqual = str1.Equals(str2, StringComparison.OrdinalIgnoreCase);
+                //Console.WriteLine(areEqual); // Output: True
+                //bool isBillPostalCodeSame = leadAdd1PostalCode.Equals(custBillPostalCode, StringComparison.InvariantCultureIgnoreCase);
+
+                return await _dbContext.Cities.Where(c => c.Name.ToLower() == name)
+                                                .OrderBy(c => c.Name)
+                                                .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // logger here
+                throw ex;
+            }
+        }
+
         public async Task<City?> GetCityByCityIdAsync(Guid cityGuid, bool includePointsOfInterest)
         {
             try
