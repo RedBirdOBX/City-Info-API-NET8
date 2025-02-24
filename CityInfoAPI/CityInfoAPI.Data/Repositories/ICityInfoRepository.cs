@@ -15,6 +15,8 @@ namespace CityInfoAPI.Data.Repositories
 
         Task<bool> CityExistsAsync(Guid cityGuid);
 
+        Task<int> GetCitiesCountAsync();
+
         Task DeleteCityAsync(Guid cityGuid);
 
         // points of interest

@@ -117,6 +117,19 @@ namespace CityInfoAPI.Data.Repositories
             }
         }
 
+        public async Task<int> GetCitiesCountAsync()
+        {
+            try
+            {
+                return await _dbContext.Cities.CountAsync();
+            }
+            catch (Exception ex)
+            {
+                // logger here
+                throw ex;
+            }
+        }
+
         public async Task<bool> CityExistsAsync(Guid cityGuid)
         {
             try

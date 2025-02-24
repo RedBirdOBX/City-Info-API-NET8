@@ -3,6 +3,7 @@ using CityInfoAPI.Data;
 using CityInfoAPI.Data.Entities;
 using CityInfoAPI.Data.Repositories;
 using CityInfoAPI.Dtos.Models;
+using CityInfoAPI.Web.Controllers.ResponseHelpers;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -53,6 +54,13 @@ namespace CityInfoAPI.Controllers
                 var results = _mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cities);
 
                 _logger.LogInformation("Getting cities.");
+
+                var totalCities = await _repo.GetCitiesCountAsync();
+                var metaData = MetaDataHelper.BuildCitiesMetaData(totalCities, pageNumber, pageSize);
+
+                // add as custom header
+                Response.Headers.Append("X-CityParameters", Newtonsoft.Json.JsonConvert.SerializeObject(metaData));
+
                 return Ok(results);
             }
             catch (Exception ex)
