@@ -16,6 +16,7 @@ namespace CityInfoAPI.Controllers
         private readonly CityInfoMemoryDataStore _citiesDataStore;
         private readonly ICityInfoRepository _repo;
         private readonly IMapper _mapper;
+        private readonly int _maxPageSize = 100;
 
         /// <summary>
         /// Constructor
@@ -32,13 +33,23 @@ namespace CityInfoAPI.Controllers
 
         /// <summary>Gets all Cities</summary>
         /// <returns>collection of CityDto</returns>
+        /// <param name="includePointsOfInterest"></param>
+        /// <param name="name"></param>
+        /// <param name="search"></param>
         /// <example>{baseUrl}/api/cities</example>
         [HttpGet("", Name = "GetCities")]
-        public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery] bool? includePointsOfInterest = true, [FromQuery(Name = "name")] string? name = null)
+        public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery] bool? includePointsOfInterest = true,
+            [FromQuery(Name = "name")] string? name = null, [FromQuery(Name = "search")] string? search = null,
+            [FromQuery(Name = "pageNumber")] int pageNumber = 1, [FromQuery(Name = "pageSize")] int pageSize = 10)
         {
             try
             {
-                var cities = await _repo.GetCitiesAsync(name);
+                if (pageSize > _maxPageSize)
+                {
+                    pageSize = _maxPageSize;
+                }
+
+                var cities = await _repo.GetCitiesAsync(name, search, pageNumber, pageSize);
                 var results = _mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cities);
 
                 _logger.LogInformation("Getting cities.");

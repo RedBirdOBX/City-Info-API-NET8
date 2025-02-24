@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfoAPI.Controllers
 {
-    [Route("api/cities/{cityGuid}/pointsofinterest")]
+    [Route("api")]
     [ApiController]
     public class PointsOfInterestController : ControllerBase
     {
@@ -31,11 +31,32 @@ namespace CityInfoAPI.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
+        /// <summary>Gets all Points of Interest</summary>
+        /// <returns>collection of points of interest</returns>
+        /// <example>{baseUrl}/api/pointsofinterest</example>
+        [HttpGet("pointsofinterest", Name = "GetPointsOfInterest")]
+        public async Task<ActionResult<IEnumerable<PointOfInterestDto>>> GetPointsOfInterest([FromQuery(Name = "name")] string? name = null, 
+            [FromQuery(Name = "search")] string? search = null)
+        {
+            try
+            {
+                var pointsOfInterest = await _repo.GetPointsOfInterestAsync(name, search);
+                var results = _mapper.Map<IEnumerable<PointOfInterestDto>>(pointsOfInterest);
+
+                return Ok(results);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting points of interest.");
+                return StatusCode(500, "An error occurred while getting points of interest.");
+            }
+        }
+
         /// <summary>Gets all Points of Interest for City</summary>
         /// <returns>collection of points of interest</returns>
         /// <param name="cityGuid"></param>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest</example>
-        [HttpGet("", Name = "GetPointsOfInterestForCity")]
+        [HttpGet("cities/{cityGuid}/pointsofinterest", Name = "GetPointsOfInterestForCity")]
         public async Task<ActionResult<IEnumerable<PointOfInterestDto>>> GetPointsOfInterestForCity([FromRoute] Guid cityGuid)
         {
             try
@@ -64,7 +85,7 @@ namespace CityInfoAPI.Controllers
         /// <param name="pointGuid"></param>
         /// <returns>point of interest</returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
-        [HttpGet("{pointGuid}", Name = "GetPointOfInterestById")]
+        [HttpGet("cities/{cityGuid}/pointsofinterest/{pointGuid}", Name = "GetPointOfInterestById")]
         public async Task<ActionResult<PointOfInterestDto>> GetPointOfInterestById([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid)
         {
             try
@@ -106,7 +127,7 @@ namespace CityInfoAPI.Controllers
         /// <param name="createPointOfInterest"></param>
         /// <returns>new point of interest at route</returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest</example>
-        [HttpPost("", Name = "CreatePointOfInterest")]
+        [HttpPost("cities/{cityGuid}/pointsofinterest/", Name = "CreatePointOfInterest")]
         public async Task<ActionResult<PointOfInterestDto>> CreatePointOfInterest([FromRoute] Guid cityGuid, [FromBody] PointOfInterestCreateDto request)
         {
             try
@@ -152,7 +173,7 @@ namespace CityInfoAPI.Controllers
         /// <param name="updatePointOfInterest"></param>
         /// <returns></returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
-        [HttpPut("{pointGuid}", Name = "UpdatePointOfInterest")]
+        [HttpPut("cities/{cityGuid}/pointsofinterest/{pointGuid}", Name = "UpdatePointOfInterest")]
         public async Task<ActionResult> UpdatePointOfInterest([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid, [FromBody] PointOfInterestUpdateDto updatePointOfInterest)
         {
             try
@@ -204,7 +225,7 @@ namespace CityInfoAPI.Controllers
         /// <param name="patchDocument"></param>
         /// <returns></returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
-        [HttpPatch("{pointGuid}", Name = "PatchPointOfInterest")]
+        [HttpPatch("cities/{cityGuid}/pointsofinterest/{pointGuid}", Name = "PatchPointOfInterest")]
         public async Task<ActionResult<PointOfInterestDto>> PatchPointOfInterest([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid, [FromBody] JsonPatchDocument<PointOfInterestUpdateDto> patchDocument)
         {
             try
@@ -269,7 +290,7 @@ namespace CityInfoAPI.Controllers
         /// <param name="pointGuid"></param>
         /// <returns></returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
-        [HttpDelete("{pointGuid}", Name = "DeletePointOfInterest")]
+        [HttpDelete("cities/{cityGuid}/pointsofinterest/{pointGuid}", Name = "DeletePointOfInterest")]
         public async Task<ActionResult> DeletePointOfInterest([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid)
         {
             try

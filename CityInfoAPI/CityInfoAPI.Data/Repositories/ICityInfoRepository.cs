@@ -7,7 +7,7 @@ namespace CityInfoAPI.Data.Repositories
         // cities
         Task<IEnumerable<City>> GetCitiesAsync();
 
-        Task<IEnumerable<City>> GetCitiesAsync(string? name);
+        Task<IEnumerable<City>> GetCitiesAsync(string? name, string? search, int pageNumber, int pageSize);
 
         Task<City?> GetCityByCityIdAsync(Guid cityId, bool includePointsOfInterest);
 
@@ -18,6 +18,10 @@ namespace CityInfoAPI.Data.Repositories
         Task DeleteCityAsync(Guid cityGuid);
 
         // points of interest
+        Task<IEnumerable<PointOfInterest>> GetPointsOfInterestAsync();
+
+        Task<IEnumerable<PointOfInterest>> GetPointsOfInterestAsync(string? name, string? search);
+
         Task<IEnumerable<PointOfInterest>> GetPointsOfInterestForCityAsync(Guid cityGuid);
 
         Task<PointOfInterest?> GetPointOfInterestById(Guid pointGuid);

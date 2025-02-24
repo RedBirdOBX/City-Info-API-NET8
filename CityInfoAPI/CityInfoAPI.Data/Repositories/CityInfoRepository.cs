@@ -1,6 +1,7 @@
 ﻿using CityInfoAPI.Data.DbContents;
 using CityInfoAPI.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CityInfoAPI.Data.Repositories
 {
@@ -28,31 +29,36 @@ namespace CityInfoAPI.Data.Repositories
             }
         }
 
-        public async Task<IEnumerable<City>> GetCitiesAsync(string? name)
+        public async Task<IEnumerable<City>> GetCitiesAsync(string? name, string? search, int pageNumber, int pageSize)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(name))
+                // IQueryable uses deferred execution
+                // the query variable itself never holds the query results and only
+                // stores the query commands. Execution of the query is deferred until
+                // the query variable is iterated over.
+                var cities = _dbContext.Cities as IQueryable<City>;
+
+                // constructing the query,,,
+                if (!name.IsNullOrEmpty())
                 {
-                    return await GetCitiesAsync();
+                    name = name.Trim().ToLower();
+                    cities = cities.Where(c => c.Name.ToLower() == name);
                 }
 
-                name = name.Trim().ToLower();
+                if (!search.IsNullOrEmpty())
+                {
+                    search = search.Trim().ToLower();
+                    cities = cities.Where(c => c.Name.ToLower()
+                                    .Contains(search) || (c.Description != null && c.Description.ToLower().Contains(search)));
+                }
 
-                //return await _dbContext.Cities.Where(c => c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-                //                                .OrderBy(c => c.Name)
-                //                                .ToListAsync();
-
-                //string str1 = "Hello";
-                //string str2 = "hello";
-
-                //bool areEqual = str1.Equals(str2, StringComparison.OrdinalIgnoreCase);
-                //Console.WriteLine(areEqual); // Output: True
-                //bool isBillPostalCodeSame = leadAdd1PostalCode.Equals(custBillPostalCode, StringComparison.InvariantCultureIgnoreCase);
-
-                return await _dbContext.Cities.Where(c => c.Name.ToLower() == name)
-                                                .OrderBy(c => c.Name)
-                                                .ToListAsync();
+                // query is sent
+                var results = await cities.OrderBy(c => c.Name)
+                                            .Skip(pageSize * (pageNumber - 1))
+                                            .Take(pageSize)
+                                            .ToListAsync();
+                return results;
             }
             catch (Exception ex)
             {
@@ -127,6 +133,60 @@ namespace CityInfoAPI.Data.Repositories
 
 
         // points of interest
+        public async Task<IEnumerable<PointOfInterest>> GetPointsOfInterestAsync()
+        {
+            try
+            {
+                var pointsOfInterest = await _dbContext.PointsOfInterest.OrderBy(p => p.Name).ToListAsync();
+                return pointsOfInterest;
+            }
+            catch (Exception ex)
+            {
+                // logger here
+                throw ex;
+            }
+        }
+
+        public async Task<IEnumerable<PointOfInterest>> GetPointsOfInterestAsync(string? name, string? search)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(name) && string.IsNullOrEmpty(search))
+                {
+                    return await GetPointsOfInterestAsync();
+                }
+
+                // IQueryable uses deferred execution
+                // the query variable itself never holds the query results and only
+                // stores the query commands. Execution of the query is deferred until
+                // the query variable is iterated over.
+                var pointsOfInterest = _dbContext.PointsOfInterest as IQueryable<PointOfInterest>;
+
+                // constructing the query,,,
+                if (!name.IsNullOrEmpty())
+                {
+                    name = name.Trim().ToLower();
+                    pointsOfInterest = pointsOfInterest.Where(p => p.Name.ToLower() == name);
+                }
+
+                if (!search.IsNullOrEmpty())
+                {
+                    search = search.Trim().ToLower();
+                    pointsOfInterest = pointsOfInterest.Where(p => p.Name.ToLower()
+                                                        .Contains(search) || (p.Description != null && p.Description.ToLower().Contains(search)));
+                }
+
+                // query is sent
+                var results = await pointsOfInterest.OrderBy(p => p.Name).ToListAsync();
+                return results;
+            }
+            catch (Exception ex)
+            {
+                // logger here
+                throw ex;
+            }
+        }
+
         public async Task<IEnumerable<PointOfInterest>> GetPointsOfInterestForCityAsync(Guid cityGuid)
         {
             try
