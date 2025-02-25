@@ -41,7 +41,7 @@ namespace CityInfoAPI.Controllers
         [HttpGet("", Name = "GetCities")]
         public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery] bool? includePointsOfInterest = true,
             [FromQuery(Name = "name")] string? name = null, [FromQuery(Name = "search")] string? search = null,
-            [FromQuery(Name = "pageNumber")] int pageNumber = 1, [FromQuery(Name = "pageSize")] int pageSize = 10)
+            [FromQuery(Name = "pageNumber")] int pageNumber = 1, [FromQuery(Name = "pageSize")] int pageSize = 100)
         {
             try
             {
