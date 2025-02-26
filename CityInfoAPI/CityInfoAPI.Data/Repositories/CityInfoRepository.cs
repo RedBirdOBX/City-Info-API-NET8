@@ -143,6 +143,18 @@ namespace CityInfoAPI.Data.Repositories
             }
         }
 
+        public async Task<bool> CityNameMatchesCityIdAsync(string? name, Guid cityGuid)
+        {
+            try
+            {
+                return await _dbContext.Cities.AnyAsync(c => c.CityGuid == cityGuid && c.Name.ToLower() == name.ToLower());
+            }
+            catch (Exception ex)
+            {
+                // logger here
+                throw ex;
+            }
+        }
 
 
         // points of interest

@@ -79,7 +79,7 @@ namespace CityInfoAPI.Web.Controllers
             // typically, this is where we look up the credentials passed in.
             // for now, we'll just return a hard-coded user and assume creds are valid.
 
-            return new CityInfoUser(1, username, "John", "Doe", "New York");
+            return new CityInfoUser(1, username, "John", "Doe", "Los Angeles");
         }
     }
 }

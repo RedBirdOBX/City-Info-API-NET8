@@ -6,6 +6,7 @@ using CityInfoAPI.Data;
 using CityInfoAPI.Data.DbContents;
 using Microsoft.EntityFrameworkCore;
 using CityInfoAPI.Data.Repositories;
+using Microsoft.IdentityModel.Tokens;
 
 
 //--LOGGING--//
@@ -69,8 +70,25 @@ builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>();
 // AutoMapper.  Scan for profiles.
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+// swagger, swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// token
+builder.Services.AddAuthentication("Bearer")
+        .AddJwtBearer("Bearer", options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = builder.Configuration["Authentication:Issuer"],
+                ValidAudience = builder.Configuration["Authentication:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(builder.Configuration["Authentication:SecretForKey"]))
+            };
+        });
+
 
 // https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-8.0
 builder.Services.AddHealthChecks();
@@ -95,6 +113,8 @@ app.UseHttpsRedirection();
 
 // add routing middleware to request pipeline
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

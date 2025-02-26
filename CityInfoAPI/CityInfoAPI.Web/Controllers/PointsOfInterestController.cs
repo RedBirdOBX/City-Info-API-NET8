@@ -4,6 +4,7 @@ using CityInfoAPI.Data.Entities;
 using CityInfoAPI.Data.Repositories;
 using CityInfoAPI.Dtos.Models;
 using CityInfoAPI.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ namespace CityInfoAPI.Controllers
 {
     [Route("api")]
     [ApiController]
+    [Authorize]
     public class PointsOfInterestController : ControllerBase
     {
         private readonly CityInfoMemoryDataStore _citiesDataStore;
@@ -35,7 +37,7 @@ namespace CityInfoAPI.Controllers
         /// <returns>collection of points of interest</returns>
         /// <example>{baseUrl}/api/pointsofinterest</example>
         [HttpGet("pointsofinterest", Name = "GetPointsOfInterest")]
-        public async Task<ActionResult<IEnumerable<PointOfInterestDto>>> GetPointsOfInterest([FromQuery(Name = "name")] string? name = null, 
+        public async Task<ActionResult<IEnumerable<PointOfInterestDto>>> GetPointsOfInterest([FromQuery(Name = "name")] string? name = null,
             [FromQuery(Name = "search")] string? search = null)
         {
             try
@@ -90,6 +92,14 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
+                // demo purposes ONLY. checking and validating a user's claims (in token).
+                //var claimsCity = User.Claims.FirstOrDefault(c => c.Type == "city")?.Value;
+                //if (!await _repo.CityNameMatchesCityIdAsync(claimsCity, cityGuid))
+                //{
+                //    return Forbid();
+                //}
+                // end of demo
+
                 var cityExists = await _repo.CityExistsAsync(cityGuid);
                 if (!cityExists)
                 {

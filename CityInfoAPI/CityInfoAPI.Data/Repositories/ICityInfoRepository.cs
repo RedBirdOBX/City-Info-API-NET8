@@ -17,7 +17,10 @@ namespace CityInfoAPI.Data.Repositories
 
         Task<int> GetCitiesCountAsync();
 
+        Task<bool> CityNameMatchesCityIdAsync(string? name, Guid cityGuid);
+
         Task DeleteCityAsync(Guid cityGuid);
+
 
         // points of interest
         Task<IEnumerable<PointOfInterest>> GetPointsOfInterestAsync();
@@ -33,6 +36,7 @@ namespace CityInfoAPI.Data.Repositories
         Task<bool> PointOfInterestExistsAsync(Guid pointGuid);
 
         Task DeletePointOfInterestAsync(Guid pointGuid);
+
 
         // global
         Task<bool> SaveChangesAsync();
