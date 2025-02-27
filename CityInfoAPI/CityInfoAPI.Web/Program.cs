@@ -7,6 +7,7 @@ using CityInfoAPI.Data.DbContents;
 using Microsoft.EntityFrameworkCore;
 using CityInfoAPI.Data.Repositories;
 using Microsoft.IdentityModel.Tokens;
+using Asp.Versioning;
 
 
 //--LOGGING--//
@@ -88,6 +89,25 @@ builder.Services.AddAuthentication("Bearer")
                 IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(builder.Configuration["Authentication:SecretForKey"]))
             };
         });
+
+//// DEMO ONLY: adding a authorization policy
+//builder.Services.AddAuthorization(options =>
+//{
+//    options.AddPolicy("MustBeFromRichmond", policy =>
+//    {
+//        policy.RequireAuthenticatedUser();
+//        policy.RequireClaim("city", "Richmond");
+//    });
+//});
+//// end DEMO
+
+// versioning
+builder.Services.AddApiVersioning(setUpAction =>
+{
+    setUpAction.ReportApiVersions = true;
+    setUpAction.AssumeDefaultVersionWhenUnspecified = true;
+    setUpAction.DefaultApiVersion = new ApiVersion(1, 0);
+}).AddMvc();
 
 
 // https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-8.0

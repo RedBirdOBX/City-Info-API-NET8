@@ -1,4 +1,5 @@
-﻿using Azure.Core;
+﻿using Asp.Versioning;
+using Azure.Core;
 using CityInfoAPI.Web.Controllers.RequestHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,9 @@ using System.Text;
 
 namespace CityInfoAPI.Web.Controllers
 {
-    [Route("api/authentication")]
+    [Route("api/v{version:apiVersion}/authentication")]
+    [ApiVersion(1.0)]
+    [ApiVersion(2.0)]
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
@@ -79,7 +82,7 @@ namespace CityInfoAPI.Web.Controllers
             // typically, this is where we look up the credentials passed in.
             // for now, we'll just return a hard-coded user and assume creds are valid.
 
-            return new CityInfoUser(1, username, "John", "Doe", "Los Angeles");
+            return new CityInfoUser(1, username, "John", "Doe", "Richmond");
         }
     }
 }

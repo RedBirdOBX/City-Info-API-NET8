@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
 using CityInfoAPI.Data;
 using CityInfoAPI.Data.Entities;
 using CityInfoAPI.Data.Repositories;
@@ -10,9 +11,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfoAPI.Controllers
 {
-    [Route("api")]
+    [Route("api/v{version:apiVersion}")]
     [ApiController]
     [Authorize]
+    [ApiVersion(1.0)]
+    [ApiVersion(2.0)]
     public class PointsOfInterestController : ControllerBase
     {
         private readonly CityInfoMemoryDataStore _citiesDataStore;
@@ -87,12 +90,14 @@ namespace CityInfoAPI.Controllers
         /// <param name="pointGuid"></param>
         /// <returns>point of interest</returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
+        //[Authorize(Policy = "MustBeFromRichmond")] - Demo policy enforcement
         [HttpGet("cities/{cityGuid}/pointsofinterest/{pointGuid}", Name = "GetPointOfInterestById")]
         public async Task<ActionResult<PointOfInterestDto>> GetPointOfInterestById([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid)
         {
             try
             {
                 // demo purposes ONLY. checking and validating a user's claims (in token).
+                // Claim Based Authorization
                 //var claimsCity = User.Claims.FirstOrDefault(c => c.Type == "city")?.Value;
                 //if (!await _repo.CityNameMatchesCityIdAsync(claimsCity, cityGuid))
                 //{

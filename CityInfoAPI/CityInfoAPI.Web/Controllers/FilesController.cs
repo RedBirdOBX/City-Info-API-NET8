@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 
 namespace CityInfoAPI.Web.Controllers
 {
-    [Route("api/files")]
+    [ApiController]
+    [Route("api/v{version:apiVersion}/files")]
     [Authorize]
+    [ApiVersion("2.0")]
     public class FilesController : Controller
     {
         private readonly FileExtensionContentTypeProvider _fileExtensionContentTypeProvider;
@@ -73,6 +76,19 @@ namespace CityInfoAPI.Web.Controllers
                 return StatusCode(500, "An error occurred while getting file.");
             }
         }
+
+        /// <summary>Deprecated Example</summary>
+        /// <param name="fileId"></param>
+        /// <returns>file found by id</returns>
+        /// <example>{baseUrl}/api/files/{fileId}</example>
+        //[HttpGet("legacy/{fileId}", Name = "GetFileLegacy")]
+        //[ApiVersion(0.1, Deprecated = true)]
+        //public ActionResult GetFileLegacy([FromRoute] string fileId)
+        //{
+        //    string file = "Downloads\\Test.txt";
+        //    var bytes = System.IO.File.ReadAllBytes(file);
+        //    return File(bytes, "application/text", Path.GetFileName(file));
+        //}
 
         /// <summary>create a pdf file</summary>
         /// <param name="file"></param>
