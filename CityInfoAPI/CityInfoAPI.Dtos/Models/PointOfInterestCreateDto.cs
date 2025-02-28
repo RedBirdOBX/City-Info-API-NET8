@@ -2,22 +2,32 @@
 
 namespace CityInfoAPI.Dtos.Models
 {
+    /// <summary>
+    /// object for creating a point of interest
+    /// </summary>
     public class PointOfInterestCreateDto
     {
-        //public int PointId { get; set; }
-
+        /// <summary>
+        /// unique identifier for the point of interest
+        /// </summary>
         public Guid PointGuid { get; set; } = Guid.NewGuid();
 
-        //[Required(ErrorMessage = $"{nameof(CityId)} is required.")]
-        //public int CityId { get; set; }
-
+        /// <summary>
+        /// unique identifier for the city
+        /// </summary>
         [Required(ErrorMessage = $"{nameof(CityGuid)} is required.")]
         public Guid CityGuid { get; set; } = Guid.NewGuid();
 
+        /// <summary>
+        /// name of the point of interest
+        /// </summary>
         [Required(ErrorMessage = $"{nameof(Name)} is required.")]
         [MaxLength(ErrorMessage = $"Max length for {nameof(Name)} is 50 chars.")]
         public string Name { get; set; } = string.Empty;
 
+        /// <summary>
+        /// description of the point of interest
+        /// </summary>
         [MaxLength(ErrorMessage = $"Max length for {nameof(Description)} is 500 chars.")]
         public string? Description { get; set; }
     }

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CityInfoAPI.Data.Repositories;
 using Microsoft.IdentityModel.Tokens;
 using Asp.Versioning;
+using System.Reflection;
 
 
 //--LOGGING--//
@@ -73,7 +74,21 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // swagger, swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(setUpAction =>
+{
+    //var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    //var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
+    //setUpAction.IncludeXmlComments(xmlCommentsFullPath);
+
+    // since multiple projects will have xml documentation, we will need to loop thru all the files and include
+    // all of the xml docs....not just the CityInfoAPI.Web.Xml.
+    // **for some reason, these files are not picked up on Azure.**
+    DirectoryInfo baseDirectoryInfo = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+    foreach (var fileInfo in baseDirectoryInfo.EnumerateFiles("CityInfoAPI*.xml"))
+    {
+        setUpAction.IncludeXmlComments(fileInfo.FullName);
+    };
+});
 
 // token
 builder.Services.AddAuthentication("Bearer")

@@ -9,5 +9,5 @@ To do:
 - search and filter to Points of Interest
 - add links in results
 - Postman city and POI id variables
-- 
+- Logs in db
 
