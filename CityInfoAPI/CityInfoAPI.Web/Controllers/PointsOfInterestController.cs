@@ -1,6 +1,5 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
-using CityInfoAPI.Data;
 using CityInfoAPI.Data.Entities;
 using CityInfoAPI.Data.Repositories;
 using CityInfoAPI.Dtos.Models;
@@ -11,25 +10,33 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfoAPI.Controllers
 {
+    /// <summary>
+    /// points of interest controller
+    /// </summary>
+    /// <response code="401">unauthorized request</response>
+    /// <response code="500">internal error</response>
     [Route("api/v{version:apiVersion}")]
     [ApiController]
     [Authorize]
     [ApiVersion(1.0)]
     [ApiVersion(2.0)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class PointsOfInterestController : ControllerBase
     {
-        private readonly CityInfoMemoryDataStore _citiesDataStore;
         private readonly ICityInfoRepository _repo;
         private readonly ILogger<PointsOfInterestController> _logger;
         private readonly IMailService _mailService;
         private readonly IMapper _mapper;
 
         /// <summary>constructor</summary>
+        /// <param name="repo"></param>
         /// <param name="logger"></param>
+        /// <param name="mailService"></param>
+        /// <param name="mapper"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public PointsOfInterestController(CityInfoMemoryDataStore citiesDataStore, ICityInfoRepository repo, ILogger<PointsOfInterestController> logger, IMailService mailService, IMapper mapper)
+        public PointsOfInterestController(ICityInfoRepository repo, ILogger<PointsOfInterestController> logger, IMailService mailService, IMapper mapper)
         {
-            _citiesDataStore = citiesDataStore ?? throw new ArgumentNullException(nameof(citiesDataStore));
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mailService = mailService ?? throw new ArgumentNullException(nameof(mailService));
@@ -39,6 +46,8 @@ namespace CityInfoAPI.Controllers
         /// <summary>Gets all Points of Interest</summary>
         /// <returns>collection of points of interest</returns>
         /// <example>{baseUrl}/api/pointsofinterest</example>
+        /// <response code="200">returns points of interest for city</response>
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("pointsofinterest", Name = "GetPointsOfInterest")]
         public async Task<ActionResult<IEnumerable<PointOfInterestDto>>> GetPointsOfInterest([FromQuery(Name = "name")] string? name = null,
             [FromQuery(Name = "search")] string? search = null)
@@ -61,6 +70,10 @@ namespace CityInfoAPI.Controllers
         /// <returns>collection of points of interest</returns>
         /// <param name="cityGuid"></param>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest</example>
+        /// <response code="200">returns points of interest for city</response>
+        /// <response code="404">city not found</response>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("cities/{cityGuid}/pointsofinterest", Name = "GetPointsOfInterestForCity")]
         public async Task<ActionResult<IEnumerable<PointOfInterestDto>>> GetPointsOfInterestForCity([FromRoute] Guid cityGuid)
         {
@@ -90,7 +103,11 @@ namespace CityInfoAPI.Controllers
         /// <param name="pointGuid"></param>
         /// <returns>point of interest</returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
-        //[Authorize(Policy = "MustBeFromRichmond")] - Demo policy enforcement
+        /// <response code="200">returns point of interest by id for city</response>
+        /// <response code="404">city or point of interest not found</response>
+        //[Authorize(Policy = "MustBeFromRichmond")] - DEMO policy enforcement
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("cities/{cityGuid}/pointsofinterest/{pointGuid}", Name = "GetPointOfInterestById")]
         public async Task<ActionResult<PointOfInterestDto>> GetPointOfInterestById([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid)
         {
@@ -139,9 +156,13 @@ namespace CityInfoAPI.Controllers
 
         /// <summary>creates a point of interest</summary>
         /// <param name="cityGuid"></param>
-        /// <param name="createPointOfInterest"></param>
+        /// <param name="request"></param>
         /// <returns>new point of interest at route</returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest</example>
+        /// <response code="201">returns created at route for new point of interest</response>
+        /// <response code="404">city not found</response>
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("cities/{cityGuid}/pointsofinterest/", Name = "CreatePointOfInterest")]
         public async Task<ActionResult<PointOfInterestDto>> CreatePointOfInterest([FromRoute] Guid cityGuid, [FromBody] PointOfInterestCreateDto request)
         {
@@ -188,6 +209,10 @@ namespace CityInfoAPI.Controllers
         /// <param name="updatePointOfInterest"></param>
         /// <returns></returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
+        /// <response code="204">updated point of interest</response>
+        /// <response code="404">city or point of interest not found</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("cities/{cityGuid}/pointsofinterest/{pointGuid}", Name = "UpdatePointOfInterest")]
         public async Task<ActionResult> UpdatePointOfInterest([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid, [FromBody] PointOfInterestUpdateDto updatePointOfInterest)
         {
@@ -240,6 +265,10 @@ namespace CityInfoAPI.Controllers
         /// <param name="patchDocument"></param>
         /// <returns></returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
+        /// <response code="204">updated point of interest</response>
+        /// <response code="404">city or point of interest not found</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPatch("cities/{cityGuid}/pointsofinterest/{pointGuid}", Name = "PatchPointOfInterest")]
         public async Task<ActionResult<PointOfInterestDto>> PatchPointOfInterest([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid, [FromBody] JsonPatchDocument<PointOfInterestUpdateDto> patchDocument)
         {
@@ -305,6 +334,10 @@ namespace CityInfoAPI.Controllers
         /// <param name="pointGuid"></param>
         /// <returns></returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
+        /// <response code="204">deleted point of interest</response>
+        /// <response code="404">city or point of interest not found</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("cities/{cityGuid}/pointsofinterest/{pointGuid}", Name = "DeletePointOfInterest")]
         public async Task<ActionResult> DeletePointOfInterest([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid)
         {

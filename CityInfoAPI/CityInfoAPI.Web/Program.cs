@@ -9,7 +9,9 @@ using CityInfoAPI.Data.Repositories;
 using Microsoft.IdentityModel.Tokens;
 using Asp.Versioning;
 using System.Reflection;
+using Asp.Versioning.ApiExplorer;
 
+#pragma warning disable CS1591
 
 //--LOGGING--//
 Log.Logger = new LoggerConfiguration()
@@ -74,21 +76,6 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // swagger, swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(setUpAction =>
-{
-    //var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    //var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
-    //setUpAction.IncludeXmlComments(xmlCommentsFullPath);
-
-    // since multiple projects will have xml documentation, we will need to loop thru all the files and include
-    // all of the xml docs....not just the CityInfoAPI.Web.Xml.
-    // **for some reason, these files are not picked up on Azure.**
-    DirectoryInfo baseDirectoryInfo = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
-    foreach (var fileInfo in baseDirectoryInfo.EnumerateFiles("CityInfoAPI*.xml"))
-    {
-        setUpAction.IncludeXmlComments(fileInfo.FullName);
-    };
-});
 
 // token
 builder.Services.AddAuthentication("Bearer")
@@ -122,8 +109,39 @@ builder.Services.AddApiVersioning(setUpAction =>
     setUpAction.ReportApiVersions = true;
     setUpAction.AssumeDefaultVersionWhenUnspecified = true;
     setUpAction.DefaultApiVersion = new ApiVersion(1, 0);
-}).AddMvc();
+})
+.AddMvc()
+.AddApiExplorer(setUpAction =>
+{
+    setUpAction.GroupNameFormat = "'v'VVV";
+    setUpAction.SubstituteApiVersionInUrl = true;
+});
 
+
+var apiVersionDescriptionProvider = builder.Services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
+builder.Services.AddSwaggerGen(setUpAction =>
+{
+    foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+    {
+        setUpAction.SwaggerDoc($"{description.GroupName}",
+                                new() 
+                                { 
+                                    Title = "CityInfo API",
+                                    Version = description.ApiVersion.ToString(),
+                                    Description = "Through this API you can access cities and points of interest."
+                                });
+    }
+
+
+    // since multiple projects will have xml documentation, we will need to loop thru all the files and include
+    // all of the xml docs....not just the CityInfoAPI.Web.Xml.
+    // **for some reason, these files are not picked up on Azure.**
+    DirectoryInfo baseDirectoryInfo = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+    foreach (var fileInfo in baseDirectoryInfo.EnumerateFiles("CityInfoAPI*.xml"))
+    {
+        setUpAction.IncludeXmlComments(fileInfo.FullName);
+    };
+});
 
 // https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-8.0
 builder.Services.AddHealthChecks();
@@ -141,7 +159,14 @@ else
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(setUpAction => 
+    { 
+        var descriptions = app.DescribeApiVersions();
+        foreach (var description in descriptions)
+        {
+            setUpAction.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+        }
+    });
 }
 
 app.UseHttpsRedirection();
@@ -159,3 +184,5 @@ app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 app.MapHealthChecks("/api/health");
 
 app.Run();
+
+#pragma warning restore CS1591

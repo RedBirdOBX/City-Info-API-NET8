@@ -2,6 +2,8 @@
 
 namespace CityInfoAPI.Data
 {
+    #pragma warning disable CS8618
+
     public class CityInfoMemoryDataStore //: ICityInfoRepository
     {
         // fields
@@ -691,4 +693,7 @@ namespace CityInfoAPI.Data
         //    return true;
         //}
     }
+
+    #pragma warning restore CS8618
+
 }

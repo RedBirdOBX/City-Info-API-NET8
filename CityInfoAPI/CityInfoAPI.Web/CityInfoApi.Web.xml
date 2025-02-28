@@ -4,12 +4,27 @@
         <name>CityInfoAPI.Web</name>
     </assembly>
     <members>
+        <member name="T:CityInfoAPI.Web.Controllers.AuthenticationController">
+            <summary>
+            authentication controller
+            </summary>
+            <response code="500">internal error</response>
+        </member>
+        <member name="M:CityInfoAPI.Web.Controllers.AuthenticationController.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            constructor
+            </summary>
+            <param name="configuration"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
         <member name="M:CityInfoAPI.Web.Controllers.AuthenticationController.Authenticate(CityInfoAPI.Web.Controllers.RequestHelpers.AuthenticationUserRequest)">
-             <summary>
-            
-             </summary>
-             <param name="user"></param>
-             <returns></returns>
+            <summary>
+            provides user token
+            </summary>
+            <param name="userRequest"></param>
+            <returns>token</returns>
+            <response code="200">returns token</response>
+            <response code="401">unauthorized</response>
         </member>
         <member name="M:CityInfoAPI.Web.Controllers.AuthenticationController.ValidateUserCredentials(System.String,System.String)">
             <summary>
@@ -21,6 +36,13 @@
             <returns></returns>
             <exception cref="T:System.NotImplementedException"></exception>
         </member>
+        <member name="T:CityInfoAPI.Web.Controllers.FilesController">
+            <summary>
+            files controller
+            </summary>
+            <response code="401">unauthorized request</response>
+            <response code="500">internal error</response>
+        </member>
         <member name="M:CityInfoAPI.Web.Controllers.FilesController.#ctor(Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider,Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Web.Controllers.FilesController})">
             <summary>constructor</summary>
             <param name="fileExtensionContentTypeProvider"></param>
@@ -31,18 +53,31 @@
             <param name="fileId"></param>
             <returns>file found by id</returns>
             <example>{baseUrl}/api/files/{fileId}</example>
+            <response code="200">returns file</response>
+            <response code="404">file not found</response>
         </member>
         <member name="M:CityInfoAPI.Web.Controllers.FilesController.CreateFile(Microsoft.AspNetCore.Http.IFormFile)">
             <summary>create a pdf file</summary>
             <param name="file"></param>
             <returns>OK - 200</returns>
             <example>{baseUrl}/api/files</example>
+            <response code="200">file created</response>
+            <response code="400">bad request for file upload</response>
         </member>
-        <member name="M:CityInfoAPI.Controllers.CitiesController.#ctor(Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.CitiesController},CityInfoAPI.Data.CityInfoMemoryDataStore,CityInfoAPI.Data.Repositories.ICityInfoRepository,AutoMapper.IMapper)">
+        <member name="T:CityInfoAPI.Controllers.CitiesController">
+            <summary>
+            Cities controller
+            </summary>
+            <response code="401">unauthorized request</response>
+            <response code="500">internal error</response>
+        </member>
+        <member name="M:CityInfoAPI.Controllers.CitiesController.#ctor(Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.CitiesController},CityInfoAPI.Data.Repositories.ICityInfoRepository,AutoMapper.IMapper)">
             <summary>
             Constructor
             </summary>
             <param name="logger"></param>
+            <param name="repo"></param>
+            <param name="mapper"></param>
             <exception cref="T:System.ArgumentNullException"></exception>
         </member>
         <member name="M:CityInfoAPI.Controllers.CitiesController.GetCities(System.Nullable{System.Boolean},System.String,System.String,System.Int32,System.Int32)">
@@ -51,26 +86,35 @@
             <param name="includePointsOfInterest"></param>
             <param name="name"></param>
             <param name="search"></param>
+            <param name="pageNumber"></param>
+            <param name="pageSize"></param>
             <example>{baseUrl}/api/cities</example>
         </member>
         <member name="M:CityInfoAPI.Controllers.CitiesController.GetCityByCityId(System.Guid,System.Boolean)">
-            <summary>Gets a City by Id</summary>
+            <summary>returns city by id</summary>
             <param name="cityGuid"></param>
             <param name="includePointsOfInterest"></param>
             <returns>CityDto</returns>
             <example>{baseUrl}/api/cities/{cityGuid}?includePointsOfInterest={bool}</example>
+            <response code="200">returns city by id</response>
+            <response code="400">bad request for getting city by id</response>
         </member>
         <member name="M:CityInfoAPI.Controllers.CitiesController.CreateCity(CityInfoAPI.Dtos.Models.CityCreateDto)">
             <summary>creates a City</summary>
             <param name="request"></param>
             <returns>CityDto at details route</returns>
             <example>{baseUrl}/api/cities</example>
+            <response code="201">city created</response>
+            <response code="409">conflict of data - city already exists</response>
         </member>
         <member name="M:CityInfoAPI.Controllers.CitiesController.UpdateCity(System.Guid,CityInfoAPI.Dtos.Models.CityUpdateDto)">
             <summary>updates city through PUT</summary>
+            <param name="cityGuid"></param>       
             <param name="request"></param>
             <returns>No Content</returns>
             <example>{baseUrl}/api/cities/{cityGuid}</example>
+            <response code="204">city updated</response>
+            <response code="404">city not found</response>
         </member>
         <member name="M:CityInfoAPI.Controllers.CitiesController.PatchCity(System.Guid,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{CityInfoAPI.Dtos.Models.CityUpdateDto})">
             <summary>patches city object</summary>
@@ -78,28 +122,46 @@
             <param name="patchDocument"></param>
             <returns>No Content</returns>
             <example>{baseUrl}/api/cities/{cityGuid}</example>
+            <response code="204">city updated</response>
+            <response code="400">city has bad data</response>
+            <response code="404">city not found</response>
         </member>
         <member name="M:CityInfoAPI.Controllers.CitiesController.DeleteCity(System.Guid)">
             <summary>deletes city object</summary>
             <param name="cityGuid"></param>
             <returns>no content</returns>
             <example>{baseUrl}/api/cities/{cityGuid}</example>
+            <response code="204">city deleted</response>
+            <response code="404">city not found</response>
         </member>
-        <member name="M:CityInfoAPI.Controllers.PointsOfInterestController.#ctor(CityInfoAPI.Data.CityInfoMemoryDataStore,CityInfoAPI.Data.Repositories.ICityInfoRepository,Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.PointsOfInterestController},CityInfoAPI.Web.Services.IMailService,AutoMapper.IMapper)">
+        <member name="T:CityInfoAPI.Controllers.PointsOfInterestController">
+            <summary>
+            points of interest controller
+            </summary>
+            <response code="401">unauthorized request</response>
+            <response code="500">internal error</response>
+        </member>
+        <member name="M:CityInfoAPI.Controllers.PointsOfInterestController.#ctor(CityInfoAPI.Data.Repositories.ICityInfoRepository,Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.PointsOfInterestController},CityInfoAPI.Web.Services.IMailService,AutoMapper.IMapper)">
             <summary>constructor</summary>
+            <param name="repo"></param>
             <param name="logger"></param>
+            <param name="mailService"></param>
+            <param name="mapper"></param>
             <exception cref="T:System.ArgumentNullException"></exception>
         </member>
         <member name="M:CityInfoAPI.Controllers.PointsOfInterestController.GetPointsOfInterest(System.String,System.String)">
             <summary>Gets all Points of Interest</summary>
             <returns>collection of points of interest</returns>
             <example>{baseUrl}/api/pointsofinterest</example>
+            <response code="200">returns points of interest for city</response>
         </member>
         <member name="M:CityInfoAPI.Controllers.PointsOfInterestController.GetPointsOfInterestForCity(System.Guid)">
             <summary>Gets all Points of Interest for City</summary>
             <returns>collection of points of interest</returns>
             <param name="cityGuid"></param>
             <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest</example>
+            <response code="200">returns points of interest for city</response>
+            <response code="404">city not found</response>
         </member>
         <member name="M:CityInfoAPI.Controllers.PointsOfInterestController.GetPointOfInterestById(System.Guid,System.Guid)">
             <summary>gets point of interest by id</summary>
@@ -107,13 +169,17 @@
             <param name="pointGuid"></param>
             <returns>point of interest</returns>
             <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
+            <response code="200">returns point of interest by id for city</response>
+            <response code="404">city or point of interest not found</response>
         </member>
         <member name="M:CityInfoAPI.Controllers.PointsOfInterestController.CreatePointOfInterest(System.Guid,CityInfoAPI.Dtos.Models.PointOfInterestCreateDto)">
             <summary>creates a point of interest</summary>
             <param name="cityGuid"></param>
-            <param name="createPointOfInterest"></param>
+            <param name="request"></param>
             <returns>new point of interest at route</returns>
             <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest</example>
+            <response code="201">returns created at route for new point of interest</response>
+            <response code="404">city not found</response>
         </member>
         <member name="M:CityInfoAPI.Controllers.PointsOfInterestController.UpdatePointOfInterest(System.Guid,System.Guid,CityInfoAPI.Dtos.Models.PointOfInterestUpdateDto)">
             <summary>updates point of interest through PUT</summary>
@@ -122,6 +188,8 @@
             <param name="updatePointOfInterest"></param>
             <returns></returns>
             <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
+            <response code="204">updated point of interest</response>
+            <response code="404">city or point of interest not found</response>
         </member>
         <member name="M:CityInfoAPI.Controllers.PointsOfInterestController.PatchPointOfInterest(System.Guid,System.Guid,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{CityInfoAPI.Dtos.Models.PointOfInterestUpdateDto})">
             <summary>patches point of interest</summary>
@@ -130,6 +198,8 @@
             <param name="patchDocument"></param>
             <returns></returns>
             <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
+            <response code="204">updated point of interest</response>
+            <response code="404">city or point of interest not found</response>
         </member>
         <member name="M:CityInfoAPI.Controllers.PointsOfInterestController.DeletePointOfInterest(System.Guid,System.Guid)">
             <summary>deletes point of interest</summary>
@@ -137,6 +207,8 @@
             <param name="pointGuid"></param>
             <returns></returns>
             <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
+            <response code="204">deleted point of interest</response>
+            <response code="404">city or point of interest not found</response>
         </member>
     </members>
 </doc>

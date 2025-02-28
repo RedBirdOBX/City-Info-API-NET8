@@ -5,10 +5,17 @@ using Microsoft.AspNetCore.StaticFiles;
 
 namespace CityInfoAPI.Web.Controllers
 {
+    /// <summary>
+    /// files controller
+    /// </summary>
+    /// <response code="401">unauthorized request</response>
+    /// <response code="500">internal error</response>
     [ApiController]
     [Route("api/v{version:apiVersion}/files")]
     [Authorize]
     [ApiVersion("2.0")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class FilesController : Controller
     {
         private readonly FileExtensionContentTypeProvider _fileExtensionContentTypeProvider;
@@ -27,6 +34,10 @@ namespace CityInfoAPI.Web.Controllers
         /// <param name="fileId"></param>
         /// <returns>file found by id</returns>
         /// <example>{baseUrl}/api/files/{fileId}</example>
+        /// <response code="200">returns file</response>
+        /// <response code="404">file not found</response>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{fileId}", Name = "GetFile")]
         public ActionResult GetFile([FromRoute] string fileId)
         {
@@ -94,6 +105,10 @@ namespace CityInfoAPI.Web.Controllers
         /// <param name="file"></param>
         /// <returns>OK - 200</returns>
         /// <example>{baseUrl}/api/files</example>
+        /// <response code="200">file created</response>
+        /// <response code="400">bad request for file upload</response>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost]
         public async Task<ActionResult> CreateFile(IFormFile file)
         {

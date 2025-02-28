@@ -1,34 +1,44 @@
 ﻿using Asp.Versioning;
-using Azure.Core;
 using CityInfoAPI.Web.Controllers.RequestHelpers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace CityInfoAPI.Web.Controllers
 {
+    /// <summary>
+    /// authentication controller
+    /// </summary>
+    /// <response code="500">internal error</response>
     [Route("api/v{version:apiVersion}/authentication")]
     [ApiVersion(1.0)]
     [ApiVersion(2.0)]
     [ApiController]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class AuthenticationController : ControllerBase
     {
         private readonly IConfiguration _configuration;
 
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public AuthenticationController(IConfiguration configuration)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-
         /// <summary>
-        ///
+        /// provides user token
         /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
+        /// <param name="userRequest"></param>
+        /// <returns>token</returns>
+        /// <response code="200">returns token</response>
+        /// <response code="401">unauthorized</response>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost("Authenticate", Name = "Authenticate")]
         public ActionResult<string> Authenticate([FromBody] AuthenticationUserRequest userRequest)
         {

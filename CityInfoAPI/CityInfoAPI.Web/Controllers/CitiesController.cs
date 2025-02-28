@@ -1,6 +1,5 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
-using CityInfoAPI.Data;
 using CityInfoAPI.Data.Entities;
 using CityInfoAPI.Data.Repositories;
 using CityInfoAPI.Dtos.Models;
@@ -11,15 +10,21 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfoAPI.Controllers
 {
+    /// <summary>
+    /// Cities controller
+    /// </summary>
+    /// <response code="401">unauthorized request</response>
+    /// <response code="500">internal error</response>
     [Route("api/v{version:apiVersion}/cities")]
     [ApiController]
     [Authorize]
     [ApiVersion(1.0)]
     [ApiVersion(2.0)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class CitiesController : ControllerBase
     {
         private readonly ILogger<CitiesController> _logger;
-        private readonly CityInfoMemoryDataStore _citiesDataStore;
         private readonly ICityInfoRepository _repo;
         private readonly IMapper _mapper;
         private readonly int _maxPageSize = 100;
@@ -28,11 +33,13 @@ namespace CityInfoAPI.Controllers
         /// Constructor
         /// </summary>
         /// <param name="logger"></param>
+        /// <param name="repo"></param>
+        /// <param name="mapper"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public CitiesController(ILogger<CitiesController> logger, CityInfoMemoryDataStore citiesDataStore, ICityInfoRepository repo, IMapper mapper)
+
+        public CitiesController(ILogger<CitiesController> logger, ICityInfoRepository repo, IMapper mapper)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _citiesDataStore = citiesDataStore ?? throw new ArgumentNullException(nameof(_citiesDataStore));
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
@@ -42,6 +49,8 @@ namespace CityInfoAPI.Controllers
         /// <param name="includePointsOfInterest"></param>
         /// <param name="name"></param>
         /// <param name="search"></param>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
         /// <example>{baseUrl}/api/cities</example>
         [HttpGet("", Name = "GetCities")]
         public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery] bool? includePointsOfInterest = true,
@@ -75,14 +84,17 @@ namespace CityInfoAPI.Controllers
             }
         }
 
-        // iAction??
-        /// <summary>Gets a City by Id</summary>
+        /// <summary>returns city by id</summary>
         /// <param name="cityGuid"></param>
         /// <param name="includePointsOfInterest"></param>
         /// <returns>CityDto</returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}?includePointsOfInterest={bool}</example>
+        /// <response code="200">returns city by id</response>
+        /// <response code="400">bad request for getting city by id</response>
         [HttpGet("{cityGuid}", Name = "GetCityByCityId")]
-        public async Task<IActionResult> GetCityByCityId([FromRoute] Guid cityGuid, [FromQuery] bool includePointsOfInterest = true)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<CityWithoutPointsOfInterestDto>> GetCityByCityId([FromRoute] Guid cityGuid, [FromQuery] bool includePointsOfInterest = true)
         {
             try
             {
@@ -116,6 +128,10 @@ namespace CityInfoAPI.Controllers
         /// <param name="request"></param>
         /// <returns>CityDto at details route</returns>
         /// <example>{baseUrl}/api/cities</example>
+        /// <response code="201">city created</response>
+        /// <response code="409">conflict of data - city already exists</response>
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost("", Name = "CreateCity")]
         public async Task<ActionResult<CityWithoutPointsOfInterestDto>> CreateCity([FromBody] CityCreateDto request)
         {
@@ -156,9 +172,14 @@ namespace CityInfoAPI.Controllers
         }
 
         /// <summary>updates city through PUT</summary>
+        /// <param name="cityGuid"></param>       
         /// <param name="request"></param>
         /// <returns>No Content</returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}</example>
+        /// <response code="204">city updated</response>
+        /// <response code="404">city not found</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{cityGuid}", Name = "UpdateCity")]
         public async Task<ActionResult> UpdateCity([FromRoute] Guid cityGuid, [FromBody] CityUpdateDto request)
         {
@@ -197,6 +218,12 @@ namespace CityInfoAPI.Controllers
         /// <param name="patchDocument"></param>
         /// <returns>No Content</returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}</example>
+        /// <response code="204">city updated</response>
+        /// <response code="400">city has bad data</response>
+        /// <response code="404">city not found</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPatch("{cityGuid}", Name = "PatchCity")]
         public async Task<ActionResult<CityDto>> PatchCity([FromRoute] Guid cityGuid, [FromBody] JsonPatchDocument<CityUpdateDto> patchDocument)
         {
@@ -247,6 +274,10 @@ namespace CityInfoAPI.Controllers
         /// <param name="cityGuid"></param>
         /// <returns>no content</returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}</example>
+        /// <response code="204">city deleted</response>
+        /// <response code="404">city not found</response>
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{cityGuid}", Name = "DeleteCity")]
         public async Task<ActionResult> DeleteCity([FromRoute] Guid cityGuid)
         {
