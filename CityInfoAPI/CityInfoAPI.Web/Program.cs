@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Asp.Versioning;
 using System.Reflection;
 using Asp.Versioning.ApiExplorer;
+using Microsoft.OpenApi.Models;
 
 #pragma warning disable CS1591
 
@@ -124,14 +125,13 @@ builder.Services.AddSwaggerGen(setUpAction =>
     foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
     {
         setUpAction.SwaggerDoc($"{description.GroupName}",
-                                new() 
-                                { 
+                                new()
+                                {
                                     Title = "CityInfo API",
                                     Version = description.ApiVersion.ToString(),
                                     Description = "Through this API you can access cities and points of interest."
                                 });
     }
-
 
     // since multiple projects will have xml documentation, we will need to loop thru all the files and include
     // all of the xml docs....not just the CityInfoAPI.Web.Xml.
@@ -141,6 +141,30 @@ builder.Services.AddSwaggerGen(setUpAction =>
     {
         setUpAction.IncludeXmlComments(fileInfo.FullName);
     };
+
+    // adding the security definition for the swagger UI to use
+    setUpAction.AddSecurityDefinition("CityInfoAPIBearerAuth", new()
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        Description = "Input a valid token to access this API."
+    });
+
+    // automatically send the bearer token in the authorization header in the swagger UI.
+    setUpAction.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "CityInfoAPIBearerAuth"
+                }
+            },
+            new List<string>()
+        }
+    });
 });
 
 // https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-8.0
@@ -159,8 +183,8 @@ else
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI(setUpAction => 
-    { 
+    app.UseSwaggerUI(setUpAction =>
+    {
         var descriptions = app.DescribeApiVersions();
         foreach (var description in descriptions)
         {

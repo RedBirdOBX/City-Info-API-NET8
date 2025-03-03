@@ -52,6 +52,8 @@ namespace CityInfoAPI.Controllers
         /// <param name="pageNumber"></param>
         /// <param name="pageSize"></param>
         /// <example>{baseUrl}/api/cities</example>
+        /// <response code="200">returns city by id</response>
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("", Name = "GetCities")]
         public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery] bool? includePointsOfInterest = true,
             [FromQuery(Name = "name")] string? name = null, [FromQuery(Name = "search")] string? search = null,
@@ -172,7 +174,7 @@ namespace CityInfoAPI.Controllers
         }
 
         /// <summary>updates city through PUT</summary>
-        /// <param name="cityGuid"></param>       
+        /// <param name="cityGuid"></param>
         /// <param name="request"></param>
         /// <returns>No Content</returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}</example>

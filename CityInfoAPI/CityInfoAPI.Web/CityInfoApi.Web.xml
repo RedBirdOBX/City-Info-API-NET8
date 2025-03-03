@@ -89,6 +89,7 @@
             <param name="pageNumber"></param>
             <param name="pageSize"></param>
             <example>{baseUrl}/api/cities</example>
+            <response code="200">returns city by id</response>
         </member>
         <member name="M:CityInfoAPI.Controllers.CitiesController.GetCityByCityId(System.Guid,System.Boolean)">
             <summary>returns city by id</summary>
@@ -109,7 +110,7 @@
         </member>
         <member name="M:CityInfoAPI.Controllers.CitiesController.UpdateCity(System.Guid,CityInfoAPI.Dtos.Models.CityUpdateDto)">
             <summary>updates city through PUT</summary>
-            <param name="cityGuid"></param>       
+            <param name="cityGuid"></param>
             <param name="request"></param>
             <returns>No Content</returns>
             <example>{baseUrl}/api/cities/{cityGuid}</example>
