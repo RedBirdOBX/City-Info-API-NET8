@@ -1,0 +1,333 @@
+﻿// variables
+@schema=https
+@hostname=localhost
+@port=7024
+@version=2.0
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZ2l2ZW5fbmFtZSI6IkpvaG4iLCJmYW1pbHlfbmFtZSI6IkRvZSIsImNpdHkiOiJSaWNobW9uZCIsIm5iZiI6MTc0MTAzNzQ5NSwiZXhwIjoxNzQxMDM5Mjk1LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo3MDI0IiwiYXVkIjoiQ2l0eUluZm9BUEkifQ.rBgc3PcJznG2bCY_XzGMsCP9vUkaFSQpULQfIbcJEg0
+@cityGuid=ce09626b-e19e-47f5-82f3-2bbf60866a47
+
+###
+// get token
+POST {{schema}}://{{hostname}}:{{port}}/api/v1.0/authentication/authenticate
+Content-Type: application/json
+
+{
+  "UserName": "a",
+  "Password": "b"
+}
+
+
+###
+// CITIES
+GET {{schema}}://{{hostname}}:{{port}}/api/v{{version}}/cities?pageNumber=1&pageSize=10
+Accept: application/json
+Authorization: Bearer {{token}}
+
+###
+GET {{schema}}://{{hostname}}:{{port}}/api/v{{version}}/cities
+Accept: application/xml
+Authorization: Bearer {{token}}
+
+###
+GET {{schema}}://{{hostname}}:{{port}}/api/v{{version}}/cities/{{cityGuid}}
+Accept: application/json
+Authorization: Bearer {{token}}
+
+###
+GET {{schema}}://{{hostname}}:{{port}}/api/v{{version}}/cities/{{cityGuid}}
+Accept: application/xml
+Authorization: Bearer {{token}}
+
+###
+GET {{schema}}://{{hostname}}:{{port}}/api/v{{version}}/cities/{{cityGuid}}?includePointsOfInterest=false
+Accept: application/json
+Authorization: Bearer {{token}}
+
+###
+GET {{schema}}://{{hostname}}:{{port}}/api/v{{version}}/cities/{{cityGuid}}?includePointsOfInterest=false
+Accept: application/xml
+Authorization: Bearer {{token}}
+###
+
+
+## DELETE {{CityInfoAPI.Web_HostAddress}}/api/v{version:apiVersion}/cities/{cityGuid}
+
+## ###
+
+
+# ###
+
+# GET {{CityInfoAPI.Web_HostAddress}}/api/v{version:apiVersion}/cities/{cityGuid}
+
+# ###
+
+# PUT {{CityInfoAPI.Web_HostAddress}}/api/v{version:apiVersion}/cities/{cityGuid}
+# Content-Type: application/json
+
+# {
+#   //CityUpdateDto
+# }
+
+# ###
+
+# PATCH {{CityInfoAPI.Web_HostAddress}}/api/v{version:apiVersion}/cities/{cityGuid}
+# Content-Type: application/json
+
+# {
+#   //JsonPatchDocument
+# }
+
+# ###
+
+# GET {{CityInfoAPI.Web_HostAddress}}/api/v{version:apiVersion}/cities/{cityGuid}/pointsofinterest
+
+# ###
+
+# POST {{CityInfoAPI.Web_HostAddress}}/api/v{version:apiVersion}/cities/{cityGuid}/pointsofinterest
+# Content-Type: application/json
+
+# {
+#   //PointOfInterestCreateDto
+# }
+
+# ###
+
+# GET {{CityInfoAPI.Web_HostAddress}}/api/v{version:apiVersion}/cities/{cityGuid}/pointsofinterest/{pointGuid}
+
+# ###
+
+# DELETE {{CityInfoAPI.Web_HostAddress}}/api/v{version:apiVersion}/cities/{cityGuid}/pointsofinterest/{pointGuid}
+
+# ###
+
+# PUT {{CityInfoAPI.Web_HostAddress}}/api/v{version:apiVersion}/cities/{cityGuid}/pointsofinterest/{pointGuid}
+# Content-Type: application/json
+
+# {
+#   //PointOfInterestUpdateDto
+# }
+
+# ###
+
+# PATCH {{CityInfoAPI.Web_HostAddress}}/api/v{version:apiVersion}/cities/{cityGuid}/pointsofinterest/{pointGuid}
+# Content-Type: application/json
+
+# {
+#   //JsonPatchDocument
+# }
+
+# ###
+
+# POST {{CityInfoAPI.Web_HostAddress}}/api/v{version:apiVersion}/files
+# Content-Type: application/json
+
+# {
+#   //IFormFile
+# }
+
+# ###
+
+# GET {{CityInfoAPI.Web_HostAddress}}/api/v{version:apiVersion}/files/{fileId}
+
+# ###
+
+# GET {{CityInfoAPI.Web_HostAddress}}/api/v{version:apiVersion}/pointsofinterest
+
+# ###
+
+# POST {{CityInfoAPI.Web_HostAddress}}/api/v1/authentication/Authenticate
+# Content-Type: application/json
+
+# {
+#   //AuthenticationUserRequest
+# }
+
+# ###
+
+# GET {{CityInfoAPI.Web_HostAddress}}/api/v1/cities
+
+# ###
+
+# POST {{CityInfoAPI.Web_HostAddress}}/api/v1/cities
+# Content-Type: application/json
+
+# {
+#   //CityCreateDto
+# }
+
+# ###
+
+# DELETE {{CityInfoAPI.Web_HostAddress}}/api/v1/cities/{cityGuid}
+
+# ###
+
+# GET {{CityInfoAPI.Web_HostAddress}}/api/v1/cities/{cityGuid}
+
+# ###
+
+# PUT {{CityInfoAPI.Web_HostAddress}}/api/v1/cities/{cityGuid}
+# Content-Type: application/json
+
+# {
+#   //CityUpdateDto
+# }
+
+# ###
+
+# PATCH {{CityInfoAPI.Web_HostAddress}}/api/v1/cities/{cityGuid}
+# Content-Type: application/json
+
+# {
+#   //JsonPatchDocument
+# }
+
+# ###
+
+# GET {{CityInfoAPI.Web_HostAddress}}/api/v1/cities/{cityGuid}/pointsofinterest
+
+# ###
+
+# POST {{CityInfoAPI.Web_HostAddress}}/api/v1/cities/{cityGuid}/pointsofinterest
+# Content-Type: application/json
+
+# {
+#   //PointOfInterestCreateDto
+# }
+
+# ###
+
+# GET {{CityInfoAPI.Web_HostAddress}}/api/v1/cities/{cityGuid}/pointsofinterest/{pointGuid}
+
+# ###
+
+# DELETE {{CityInfoAPI.Web_HostAddress}}/api/v1/cities/{cityGuid}/pointsofinterest/{pointGuid}
+
+# ###
+
+# PUT {{CityInfoAPI.Web_HostAddress}}/api/v1/cities/{cityGuid}/pointsofinterest/{pointGuid}
+# Content-Type: application/json
+
+# {
+#   //PointOfInterestUpdateDto
+# }
+
+# ###
+
+# PATCH {{CityInfoAPI.Web_HostAddress}}/api/v1/cities/{cityGuid}/pointsofinterest/{pointGuid}
+# Content-Type: application/json
+
+# {
+#   //JsonPatchDocument
+# }
+
+# ###
+
+# GET {{CityInfoAPI.Web_HostAddress}}/api/v1/pointsofinterest
+
+# ###
+
+# POST {{CityInfoAPI.Web_HostAddress}}/api/v2/authentication/Authenticate
+# Content-Type: application/json
+
+# {
+#   //AuthenticationUserRequest
+# }
+
+# ###
+
+# GET {{CityInfoAPI.Web_HostAddress}}/api/v2/cities
+
+# ###
+
+# POST {{CityInfoAPI.Web_HostAddress}}/api/v2/cities
+# Content-Type: application/json
+
+# {
+#   //CityCreateDto
+# }
+
+# ###
+
+# DELETE {{CityInfoAPI.Web_HostAddress}}/api/v2/cities/{cityGuid}
+
+# ###
+
+
+
+# GET {{CityInfoAPI.Web_HostAddress}}/api/v2/cities/{cityGuid}
+
+# ###
+
+# PUT {{CityInfoAPI.Web_HostAddress}}/api/v2/cities/{cityGuid}
+# Content-Type: application/json
+
+# {
+#   //CityUpdateDto
+# }
+
+# ###
+
+# PATCH {{CityInfoAPI.Web_HostAddress}}/api/v2/cities/{cityGuid}
+# Content-Type: application/json
+
+# {
+#   //JsonPatchDocument
+# }
+
+# ###
+
+# GET {{CityInfoAPI.Web_HostAddress}}/api/v2/cities/{cityGuid}/pointsofinterest
+
+# ###
+
+# POST {{CityInfoAPI.Web_HostAddress}}/api/v2/cities/{cityGuid}/pointsofinterest
+# Content-Type: application/json
+
+# {
+#   //PointOfInterestCreateDto
+# }
+
+# ###
+
+# GET {{CityInfoAPI.Web_HostAddress}}/api/v2/cities/{cityGuid}/pointsofinterest/{pointGuid}
+
+# ###
+
+# DELETE {{CityInfoAPI.Web_HostAddress}}/api/v2/cities/{cityGuid}/pointsofinterest/{pointGuid}
+
+# ###
+
+# PUT {{CityInfoAPI.Web_HostAddress}}/api/v2/cities/{cityGuid}/pointsofinterest/{pointGuid}
+# Content-Type: application/json
+
+# {
+#   //PointOfInterestUpdateDto
+# }
+
+# ###
+
+# PATCH {{CityInfoAPI.Web_HostAddress}}/api/v2/cities/{cityGuid}/pointsofinterest/{pointGuid}
+# Content-Type: application/json
+
+# {
+#   //JsonPatchDocument
+# }
+
+# ###
+
+# POST {{CityInfoAPI.Web_HostAddress}}/api/v2/files
+# Content-Type: application/json
+
+# {
+#   //IFormFile
+# }
+
+# ###
+
+# GET {{CityInfoAPI.Web_HostAddress}}/api/v2/files/{fileId}
+
+# ###
+
+# GET {{CityInfoAPI.Web_HostAddress}}/api/v2/pointsofinterest
+
+# ###
