@@ -49,6 +49,9 @@ namespace CityInfoAPI.Web.Controllers
                 //  PhysicalFileResult
                 //  VirtualFileResult
 
+                var url = Url.Link("GetFile", new { fileId = fileId });
+                _logger.LogInformation($"GetFile URL: {url}");
+
                 string file = string.Empty;
                 switch (fileId)
                 {
@@ -83,7 +86,7 @@ namespace CityInfoAPI.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting file.");
+                _logger.LogError($"An error occurred while getting file. {ex}");
                 return StatusCode(500, "An error occurred while getting file.");
             }
         }
@@ -109,7 +112,7 @@ namespace CityInfoAPI.Web.Controllers
         /// <response code="400">bad request for file upload</response>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [HttpPost]
+        [HttpPost(Name = "CreateFile")]
         public async Task<ActionResult> CreateFile(IFormFile file)
         {
             try
@@ -129,6 +132,9 @@ namespace CityInfoAPI.Web.Controllers
                 // or, perhaps upload to a cloud storage location. finally, it is better NOT to use the name of the file uploaded by the user.
                 var path = Path.Combine(Directory.GetCurrentDirectory(), $"uploads/uploaded_file_{Guid.NewGuid()}.pdf");
 
+                var url = Url.Link("CreateFile", new { OrigFileName = file.FileName, Path = path, FileSize = file.Length });
+                _logger.LogInformation($"CreateFile URL: {url}");
+
                 using (var steam = new FileStream(path, FileMode.Create))
                 {
                     await file.CopyToAsync(steam);
@@ -138,7 +144,7 @@ namespace CityInfoAPI.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while creating file.");
+                _logger.LogError($"An error occurred while creating file. {ex}");
                 return StatusCode(500, "An error occurred while creating file.");
             }
         }

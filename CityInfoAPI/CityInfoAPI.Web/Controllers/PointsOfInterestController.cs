@@ -7,6 +7,7 @@ using CityInfoAPI.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace CityInfoAPI.Controllers
 {
@@ -54,6 +55,9 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
+                var url = Url.Link("GetPointsOfInterest", new { name = name, search = search });
+                _logger.LogInformation($"GetPointsOfInterest called. Url: {url}");
+
                 var pointsOfInterest = await _repo.GetPointsOfInterestAsync(name, search);
                 var results = _mapper.Map<IEnumerable<PointOfInterestDto>>(pointsOfInterest);
 
@@ -61,7 +65,7 @@ namespace CityInfoAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting points of interest.");
+                _logger.LogError($"An error occurred while getting points of interest. {ex}");
                 return StatusCode(500, "An error occurred while getting points of interest.");
             }
         }
@@ -79,6 +83,9 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
+                var url = Url.Link("GetPointsOfInterestForCity", null);
+                _logger.LogInformation($"GetPointsOfInterestForCity called. Url: {url}");
+
                 var cityExists = await _repo.CityExistsAsync(cityGuid);
                 if (!cityExists)
                 {
@@ -93,7 +100,7 @@ namespace CityInfoAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting points of interest.");
+                _logger.LogError($"An error occurred while getting points of interest. {ex}");
                 return StatusCode(500, "An error occurred while getting points of interest.");
             }
         }
@@ -122,6 +129,9 @@ namespace CityInfoAPI.Controllers
                 //}
                 // end of demo
 
+                var url = Url.Link("GetPointOfInterestById", null);
+                _logger.LogInformation($"GetPointOfInterestById called. Url: {url}");
+
                 var cityExists = await _repo.CityExistsAsync(cityGuid);
                 if (!cityExists)
                 {
@@ -149,7 +159,7 @@ namespace CityInfoAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting point of interest.");
+                _logger.LogError($"An error occurred while getting point of interest. {ex}");
                 return StatusCode(500, "An error occurred while getting point of interest.");
             }
         }
@@ -168,6 +178,9 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
+                var url = Url.Link("CreatePointOfInterest", null);
+                _logger.LogInformation($"CreatePointOfInterest called. Url: {url}. Request: {JsonConvert.SerializeObject(request)}");
+
                 var cityExists = await _repo.CityExistsAsync(cityGuid);
                 if (!cityExists)
                 {
@@ -198,7 +211,7 @@ namespace CityInfoAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while creating point of interest.");
+                _logger.LogError($"An error occurred while creating point of interest. {ex}");
                 return StatusCode(500, "An error occurred while creating point of interest.");
             }
         }
@@ -218,6 +231,9 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
+                var url = Url.Link("UpdatePointOfInterest", null);
+                _logger.LogInformation($"UpdatePointOfInterest called. Url: {url}. Request: {JsonConvert.SerializeObject(updatePointOfInterest)}");
+
                 var cityExists = await _repo.CityExistsAsync(cityGuid);
                 if (!cityExists)
                 {
@@ -254,7 +270,7 @@ namespace CityInfoAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while updating point of interest.");
+                _logger.LogError($"An error occurred while updating point of interest. {ex}");
                 return StatusCode(500, "An error occurred while updating point of interest.");
             }
         }
@@ -274,6 +290,9 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
+                var url = Url.Link("PatchPointOfInterest", null);
+                _logger.LogInformation($"PatchPointOfInterest called. Url: {url}. Request: {JsonConvert.SerializeObject(patchDocument)}");
+
                 var cityExists = await _repo.CityExistsAsync(cityGuid);
                 if (!cityExists)
                 {
@@ -324,7 +343,7 @@ namespace CityInfoAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while patching point of interest.");
+                _logger.LogError($"An error occurred while patching point of interest. {ex}");
                 return StatusCode(500, "An error occurred while patching point of interest.");
             }
         }
@@ -343,6 +362,9 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
+                var url = Url.Link("DeletePointOfInterest", null);
+                _logger.LogInformation($"DeletePointOfInterest called. Url: {url}.");
+
                 // does the city exist?
                 var cityExists = await _repo.CityExistsAsync(cityGuid);
                 if (!cityExists)
@@ -384,7 +406,7 @@ namespace CityInfoAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while deleting point of interest.");
+                _logger.LogError($"An error occurred while deleting point of interest. {ex}");
                 return StatusCode(500, "An error occurred while deleting point of interest.");
             }
         }

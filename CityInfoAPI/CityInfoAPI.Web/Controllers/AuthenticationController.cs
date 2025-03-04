@@ -71,7 +71,7 @@ namespace CityInfoAPI.Web.Controllers
                                                     _configuration["Authentication:Audience"],
                                                     claimsForToken,
                                                     DateTime.UtcNow,
-                                                    DateTime.UtcNow.AddMinutes(30),
+                                                    DateTime.UtcNow.AddMinutes(60),
                                                     signingCredentials);
 
             var tokenToReturn = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);

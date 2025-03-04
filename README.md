@@ -12,4 +12,4 @@ To do:
 - Add States
 - logging!
 - add child properties
-
+- link helpers

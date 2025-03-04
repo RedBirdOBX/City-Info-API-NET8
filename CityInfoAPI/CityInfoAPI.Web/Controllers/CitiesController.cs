@@ -7,6 +7,7 @@ using CityInfoAPI.Web.Controllers.ResponseHelpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace CityInfoAPI.Controllers
 {
@@ -61,6 +62,9 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
+                var url = Url.Link("GetCities", new { includePointsOfInterest, name, search, pageNumber, pageSize });
+                _logger.LogInformation($"Getting cities URL: {url}");
+
                 if (pageSize > _maxPageSize)
                 {
                     pageSize = _maxPageSize;
@@ -68,8 +72,6 @@ namespace CityInfoAPI.Controllers
 
                 var cities = await _repo.GetCitiesAsync(name, search, pageNumber, pageSize);
                 var results = _mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cities);
-
-                _logger.LogInformation("Getting cities.");
 
                 var totalCities = await _repo.GetCitiesCountAsync();
                 var metaData = MetaDataHelper.BuildCitiesMetaData(totalCities, pageNumber, pageSize);
@@ -81,7 +83,7 @@ namespace CityInfoAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting cities.");
+                _logger.LogError($"An error occurred while getting cities. {ex}");
                 return StatusCode(500, "An error occurred while getting cities.");
             }
         }
@@ -100,6 +102,9 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
+                var url = Url.Link("GetCityByCityId", new { cityGuid, includePointsOfInterest });
+                _logger.LogInformation($"Getting City By Id URL: {url}");
+
                 var cityExists = await _repo.CityExistsAsync(cityGuid);
                 if (!cityExists)
                 {
@@ -121,8 +126,8 @@ namespace CityInfoAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting city.");
-                return StatusCode(500, $"An error occurred while getting city. {ex}");
+                _logger.LogError($"An error occurred while getting city. {ex}");
+                return StatusCode(500, "An error occurred while getting city.");
             }
         }
 
@@ -139,7 +144,10 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
-                // guids are auto-generated and not provided by client. unlikely but just in case.
+                var url = Url.Link("CreateCity", null);
+                _logger.LogInformation($"CreateCity URL: {url}. Request: {JsonConvert.SerializeObject(request)}");
+
+                // guids are auto-generated and not provided by client. unlikely but just incase.
                 var cityExists = await _repo.CityExistsAsync(request.CityGuid);
                 if (cityExists)
                 {
@@ -168,7 +176,7 @@ namespace CityInfoAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while creating city.");
+                _logger.LogError($"An error occurred while creating city. {ex}");
                 return StatusCode(500, "An error occurred while creating city.");
             }
         }
@@ -187,6 +195,9 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
+                var url = Url.Link("UpdateCity", null);
+                _logger.LogInformation($"UpdateCity URL: {url}. Request: {JsonConvert.SerializeObject(request)}");
+
                 var cityExists = await _repo.CityExistsAsync(cityGuid);
                 if (!cityExists)
                 {
@@ -210,7 +221,7 @@ namespace CityInfoAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while updating city.");
+                _logger.LogError($"An error occurred while updating city. {ex}");
                 return StatusCode(500, "An error occurred while updating city.");
             }
         }
@@ -231,6 +242,9 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
+                var url = Url.Link("PatchCity", null);
+                _logger.LogInformation($"PatchCity URL: {url}. Request: {JsonConvert.SerializeObject(patchDocument)}");
+
                 var cityExists = await _repo.CityExistsAsync(cityGuid);
                 if (!cityExists)
                 {
@@ -267,7 +281,7 @@ namespace CityInfoAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while patching city.");
+                _logger.LogError($"An error occurred while patching city. {ex}");
                 return StatusCode(500, "An error occurred while patching city.");
             }
         }
@@ -285,6 +299,9 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
+                var url = Url.Link("DeleteCity", null);
+                _logger.LogInformation($"DeleteCity URL: {url}.");
+
                 // does the city exist?
                 var cityExists = await _repo.CityExistsAsync(cityGuid);
                 if (!cityExists)
@@ -307,7 +324,7 @@ namespace CityInfoAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while deleting city.");
+                _logger.LogError($"An error occurred while deleting city. {ex}");
                 return StatusCode(500, "An error occurred while deleting city.");
             }
         }
