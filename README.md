@@ -11,4 +11,5 @@ To do:
 - Add Caching
 - Add States
 - logging!
+- add child properties
 
