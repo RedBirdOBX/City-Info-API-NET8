@@ -3,7 +3,7 @@ using AutoMapper;
 using CityInfoAPI.Data.Entities;
 using CityInfoAPI.Data.Repositories;
 using CityInfoAPI.Dtos.Models;
-using CityInfoAPI.Web.Controllers.ResponseHelpers;
+using CityInfoAPI.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +27,8 @@ namespace CityInfoAPI.Controllers
     {
         private readonly ILogger<CitiesController> _logger;
         private readonly ICityInfoRepository _repo;
+        private readonly ICityInfoService _service;
+        private readonly IResponseHeaderService _headerService;
         private readonly IMapper _mapper;
         private readonly int _maxPageSize = 100;
 
@@ -36,13 +38,15 @@ namespace CityInfoAPI.Controllers
         /// <param name="logger"></param>
         /// <param name="repo"></param>
         /// <param name="mapper"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-
-        public CitiesController(ILogger<CitiesController> logger, ICityInfoRepository repo, IMapper mapper)
+        /// <param name="service"></param>
+        /// <param name="headerService"></param>
+        public CitiesController(ILogger<CitiesController> logger, ICityInfoRepository repo, IMapper mapper, ICityInfoService service, IResponseHeaderService headerService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _service = service ?? throw new ArgumentNullException(nameof(service));
+            _headerService = headerService ?? throw new ArgumentNullException(nameof(headerService));
         }
 
         /// <summary>Gets all Cities</summary>
@@ -70,15 +74,10 @@ namespace CityInfoAPI.Controllers
                     pageSize = _maxPageSize;
                 }
 
-                var cities = await _repo.GetCitiesAsync(name, search, pageNumber, pageSize);
-                var results = _mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cities);
+                var metaData = _headerService.BuildCitiesHeaderMetaData(pageNumber, pageSize);
+                Response.Headers.Append("X-CityParameters", JsonConvert.SerializeObject(metaData));
 
-                var totalCities = await _repo.GetCitiesCountAsync();
-                var metaData = MetaDataHelper.BuildCitiesMetaData(totalCities, pageNumber, pageSize);
-
-                // add as custom header
-                Response.Headers.Append("X-CityParameters", Newtonsoft.Json.JsonConvert.SerializeObject(metaData));
-
+                var results = await _service.GetCitiesAsync(name, search, pageNumber, pageSize);
                 return Ok(results);
             }
             catch (Exception ex)

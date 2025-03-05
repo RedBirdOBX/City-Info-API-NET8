@@ -1,4 +1,4 @@
-﻿namespace CityInfoAPI.Web.Controllers.ResponseHelpers
+﻿namespace CityInfoAPI.Dtos
 {
     public class PaginationMetaDataDto
     {

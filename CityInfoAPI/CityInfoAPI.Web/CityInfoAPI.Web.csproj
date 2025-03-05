@@ -24,6 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CityInfoAPI.Data\CityInfoAPI.Data.csproj" />
     <ProjectReference Include="..\CityInfoAPI.Dtos\CityInfoAPI.Dtos.csproj" />
+    <ProjectReference Include="..\CityInfoAPI.Service\CityInfoAPI.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,6 +50,10 @@
     <None Update="Downloads\Test.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\ResponseHelpers\" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,8 @@
-﻿namespace CityInfoAPI.Web.Controllers.ResponseHelpers
+﻿using CityInfoAPI.Dtos;
+
+namespace CityInfoAPI.Service
 {
-    public static class MetaDataHelper
+    public static class MetaDataUtil
     {
         // refactor; accept an obj, not primitive types
         public static PaginationMetaDataDto BuildCitiesMetaData(int citiesCount, int pageNumber, int pageSize)

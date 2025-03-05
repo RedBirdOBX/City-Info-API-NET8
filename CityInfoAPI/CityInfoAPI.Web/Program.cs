@@ -11,6 +11,7 @@ using Asp.Versioning;
 using System.Reflection;
 using Asp.Versioning.ApiExplorer;
 using Microsoft.OpenApi.Models;
+using CityInfoAPI.Service;
 
 #pragma warning disable CS1591
 
@@ -71,6 +72,8 @@ builder.Services.AddTransient<IMailService, CloudMailService>();
 builder.Services.AddSingleton<CityInfoMemoryDataStore>();
 builder.Services.AddDbContext<CityInfoDbContext>(dbContextOptions => dbContextOptions.UseSqlServer(builder.Configuration["DbConnectionString"]));
 builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>();
+builder.Services.AddScoped<IResponseHeaderService, ResponseHeaderService>();
+builder.Services.AddScoped<ICityInfoService, CityInfoService>();
 
 // AutoMapper.  Scan for profiles.
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
