@@ -15,6 +15,9 @@ namespace CityInfoAPI.Web.Profiles
             CreateMap<CityCreateDto, City>();
             CreateMap<CityUpdateDto, City>();
             CreateMap<City, CityUpdateDto>();
+            CreateMap<CityDto, CityWithoutPointsOfInterestDto>();
+            CreateMap<CityUpdateDto, CityDto>();
+            CreateMap<CityDto, CityUpdateDto>();
         }
     }
 }

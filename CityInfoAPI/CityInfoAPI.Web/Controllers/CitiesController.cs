@@ -26,7 +26,6 @@ namespace CityInfoAPI.Controllers
     public class CitiesController : ControllerBase
     {
         private readonly ILogger<CitiesController> _logger;
-        private readonly ICityInfoRepository _repo;
         private readonly ICityInfoService _service;
         private readonly IResponseHeaderService _headerService;
         private readonly IMapper _mapper;
@@ -36,14 +35,12 @@ namespace CityInfoAPI.Controllers
         /// Constructor
         /// </summary>
         /// <param name="logger"></param>
-        /// <param name="repo"></param>
         /// <param name="mapper"></param>
         /// <param name="service"></param>
         /// <param name="headerService"></param>
-        public CitiesController(ILogger<CitiesController> logger, ICityInfoRepository repo, IMapper mapper, ICityInfoService service, IResponseHeaderService headerService)
+        public CitiesController(ILogger<CitiesController> logger, IMapper mapper, ICityInfoService service, IResponseHeaderService headerService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _service = service ?? throw new ArgumentNullException(nameof(service));
             _headerService = headerService ?? throw new ArgumentNullException(nameof(headerService));
@@ -74,7 +71,7 @@ namespace CityInfoAPI.Controllers
                     pageSize = _maxPageSize;
                 }
 
-                var metaData = _headerService.BuildCitiesHeaderMetaData(pageNumber, pageSize);
+                var metaData = await _headerService.BuildCitiesHeaderMetaData(pageNumber, pageSize);
                 Response.Headers.Append("X-CityParameters", JsonConvert.SerializeObject(metaData));
 
                 var results = await _service.GetCitiesAsync(name, search, pageNumber, pageSize);
@@ -104,22 +101,21 @@ namespace CityInfoAPI.Controllers
                 var url = Url.Link("GetCityByCityId", new { cityGuid, includePointsOfInterest });
                 _logger.LogInformation($"Getting City By Id URL: {url}");
 
-                var cityExists = await _repo.CityExistsAsync(cityGuid);
+                var cityExists = await _service.CityExistsAsync(cityGuid);
                 if (!cityExists)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found.");
                     return NotFound();
                 }
 
-                var city = await _repo.GetCityByCityIdAsync(cityGuid, includePointsOfInterest);
                 if (includePointsOfInterest)
                 {
-                    var results = _mapper.Map<CityDto>(city);
+                    var results = await _service.GetCityAsync(cityGuid, includePointsOfInterest);
                     return Ok(results);
                 }
                 else
                 {
-                    var results = _mapper.Map<CityWithoutPointsOfInterestDto>(city);
+                    var results = await _service.GetCityWithoutPointsOfInterestAsync(cityGuid, includePointsOfInterest);
                     return Ok(results);
                 }
             }
@@ -146,23 +142,15 @@ namespace CityInfoAPI.Controllers
                 var url = Url.Link("CreateCity", null);
                 _logger.LogInformation($"CreateCity URL: {url}. Request: {JsonConvert.SerializeObject(request)}");
 
-                // guids are auto-generated and not provided by client. unlikely but just incase.
-                var cityExists = await _repo.CityExistsAsync(request.CityGuid);
+                // guids are auto-generated and not provided by client. unlikely but just in case.
+                var cityExists = await _service.CityExistsAsync(request.CityGuid);
                 if (cityExists)
                 {
                     return Conflict($"City {request.CityGuid} already exists.");
                 }
 
-                // map the request
-                var newCityRequest = _mapper.Map<City>(request);
-
-                // create new call
-                var newCity = await _repo.CreateCityAsync(newCityRequest);
-
-                // save changes
-                var success = await _repo.SaveChangesAsync();
-
-                if (!success)
+                var newCity = await _service.CreateCityAsync(request);
+                if (newCity == null)
                 {
                     _logger.LogError("An error occurred while creating city.");
                     return StatusCode(500, "An error occurred while creating city.");
@@ -197,20 +185,15 @@ namespace CityInfoAPI.Controllers
                 var url = Url.Link("UpdateCity", null);
                 _logger.LogInformation($"UpdateCity URL: {url}. Request: {JsonConvert.SerializeObject(request)}");
 
-                var cityExists = await _repo.CityExistsAsync(cityGuid);
+                var cityExists = await _service.CityExistsAsync(cityGuid);
                 if (!cityExists)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found.");
                     return NotFound();
                 }
 
-                var city = await _repo.GetCityByCityIdAsync(cityGuid, false);
-
-                // map the request - override the values of the destination object w/ source
-                _mapper.Map(request, city);
-
-                var success = await _repo.SaveChangesAsync();
-                if (!success)
+                var updatedCity = await _service.UpdateCityAsync(request, cityGuid);
+                if (updatedCity == null)
                 {
                     _logger.LogError("An error occurred while updating city.");
                     return StatusCode(500, "An error occurred while updating city.");
@@ -244,14 +227,14 @@ namespace CityInfoAPI.Controllers
                 var url = Url.Link("PatchCity", null);
                 _logger.LogInformation($"PatchCity URL: {url}. Request: {JsonConvert.SerializeObject(patchDocument)}");
 
-                var cityExists = await _repo.CityExistsAsync(cityGuid);
+                var cityExists = await _service.CityExistsAsync(cityGuid);
                 if (!cityExists)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found when patching city.");
                     return NotFound();
                 }
 
-                var existingCity = await _repo.GetCityByCityIdAsync(cityGuid, false);
+                var existingCity = await _service.GetCityAsync(cityGuid, false);
 
                 // map the request - override the values of the destination object w/ source
                 var cityToPatch = _mapper.Map<CityUpdateDto>(existingCity);
@@ -269,7 +252,7 @@ namespace CityInfoAPI.Controllers
                 // map changes back to the entity
                 _mapper.Map(cityToPatch, existingCity);
 
-                var success = await _repo.SaveChangesAsync();
+                var success = await _service.SaveChangesAsync();
                 if (!success)
                 {
                     _logger.LogError("An error occurred while patching city.");
@@ -302,7 +285,7 @@ namespace CityInfoAPI.Controllers
                 _logger.LogInformation($"DeleteCity URL: {url}.");
 
                 // does the city exist?
-                var cityExists = await _repo.CityExistsAsync(cityGuid);
+                var cityExists = await _service.CityExistsAsync(cityGuid);
                 if (!cityExists)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found.");
@@ -310,9 +293,7 @@ namespace CityInfoAPI.Controllers
                 }
 
                 // delete the city
-                await _repo.DeleteCityAsync(cityGuid);
-
-                var success = await _repo.SaveChangesAsync();
+                var success = await _service.DeleteCityAsync(cityGuid);
                 if (!success)
                 {
                     _logger.LogError("An error occurred while deleting city.");
