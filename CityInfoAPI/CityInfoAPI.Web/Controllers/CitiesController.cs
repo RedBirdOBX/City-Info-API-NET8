@@ -26,7 +26,7 @@ namespace CityInfoAPI.Controllers
     public class CitiesController : ControllerBase
     {
         private readonly ILogger<CitiesController> _logger;
-        private readonly ICityInfoService _service;
+        private readonly ICityService _service;
         private readonly IResponseHeaderService _headerService;
         private readonly IMapper _mapper;
         private readonly int _maxPageSize = 100;
@@ -38,7 +38,7 @@ namespace CityInfoAPI.Controllers
         /// <param name="mapper"></param>
         /// <param name="service"></param>
         /// <param name="headerService"></param>
-        public CitiesController(ILogger<CitiesController> logger, IMapper mapper, ICityInfoService service, IResponseHeaderService headerService)
+        public CitiesController(ILogger<CitiesController> logger, IMapper mapper, ICityService service, IResponseHeaderService headerService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -156,10 +156,7 @@ namespace CityInfoAPI.Controllers
                     return StatusCode(500, "An error occurred while creating city.");
                 }
 
-                // build proper results
-                var results = _mapper.Map<CityWithoutPointsOfInterestDto>(newCity);
-
-                return CreatedAtRoute("GetCityByCityId", new { cityGuid = results.CityGuid }, results);
+                return CreatedAtRoute("GetCityByCityId", new { cityGuid = newCity.CityGuid }, newCity);
             }
             catch (Exception ex)
             {

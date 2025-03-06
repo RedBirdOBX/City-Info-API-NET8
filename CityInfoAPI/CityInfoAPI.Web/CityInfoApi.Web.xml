@@ -71,7 +71,7 @@
             <response code="401">unauthorized request</response>
             <response code="500">internal error</response>
         </member>
-        <member name="M:CityInfoAPI.Controllers.CitiesController.#ctor(Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.CitiesController},AutoMapper.IMapper,CityInfoAPI.Service.ICityInfoService,CityInfoAPI.Service.IResponseHeaderService)">
+        <member name="M:CityInfoAPI.Controllers.CitiesController.#ctor(Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.CitiesController},AutoMapper.IMapper,CityInfoAPI.Service.ICityService,CityInfoAPI.Service.IResponseHeaderService)">
             <summary>
             Constructor
             </summary>
@@ -142,11 +142,12 @@
             <response code="401">unauthorized request</response>
             <response code="500">internal error</response>
         </member>
-        <member name="M:CityInfoAPI.Controllers.PointsOfInterestController.#ctor(CityInfoAPI.Data.Repositories.ICityInfoRepository,Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.PointsOfInterestController},CityInfoAPI.Web.Services.IMailService,AutoMapper.IMapper)">
+        <member name="M:CityInfoAPI.Controllers.PointsOfInterestController.#ctor(Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.PointsOfInterestController},CityInfoAPI.Web.Services.IMailService,AutoMapper.IMapper,CityInfoAPI.Service.IPointsOfInterestService,CityInfoAPI.Service.ICityService)">
             <summary>constructor</summary>
-            <param name="repo"></param>
             <param name="logger"></param>
             <param name="mailService"></param>
+            <param name="service"></param>
+            <param name="cityService"></param>
             <param name="mapper"></param>
             <exception cref="T:System.ArgumentNullException"></exception>
         </member>

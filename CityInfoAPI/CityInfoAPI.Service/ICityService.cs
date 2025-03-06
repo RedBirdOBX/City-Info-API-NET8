@@ -2,7 +2,7 @@
 
 namespace CityInfoAPI.Service
 {
-    public interface ICityInfoService
+    public interface ICityService
     {
         // cities
         Task<IEnumerable<CityWithoutPointsOfInterestDto>> GetCitiesAsync(string name, string search, int pageNumber, int pageSize);
@@ -13,9 +13,9 @@ namespace CityInfoAPI.Service
 
         Task<CityWithoutPointsOfInterestDto?> GetCityWithoutPointsOfInterestAsync(Guid cityGuid, bool includePointsOfInterest);
 
-        Task<CityDto?> CreateCityAsync(CityCreateDto newCityRequest);
+        Task<CityWithoutPointsOfInterestDto?> CreateCityAsync(CityCreateDto request);
 
-        Task<CityDto?> UpdateCityAsync(CityUpdateDto updateCityRequest, Guid cityGuid);
+        Task<CityDto?> UpdateCityAsync(CityUpdateDto request, Guid cityGuid);
 
         Task<bool> DeleteCityAsync(Guid cityGuid);
 

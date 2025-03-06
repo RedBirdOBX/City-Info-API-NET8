@@ -73,7 +73,8 @@ builder.Services.AddSingleton<CityInfoMemoryDataStore>();
 builder.Services.AddDbContext<CityInfoDbContext>(dbContextOptions => dbContextOptions.UseSqlServer(builder.Configuration["DbConnectionString"]));
 builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>();
 builder.Services.AddScoped<IResponseHeaderService, ResponseHeaderService>();
-builder.Services.AddScoped<ICityInfoService, CityInfoService>();
+builder.Services.AddScoped<ICityService, CityService>();
+builder.Services.AddScoped<IPointsOfInterestService, PointsOfInterestService>();
 
 // AutoMapper.  Scan for profiles.
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

@@ -286,7 +286,8 @@ namespace CityInfoAPI.Data.Repositories
         {
             try
             {
-                return await _dbContext.SaveChangesAsync() >= 0;
+                var results = await _dbContext.SaveChangesAsync() >= 0;
+                return results;
             }
             catch (Exception ex)
             {

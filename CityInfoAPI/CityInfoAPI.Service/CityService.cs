@@ -3,16 +3,17 @@ using CityInfoAPI.Data.Entities;
 using CityInfoAPI.Data.Repositories;
 using CityInfoAPI.Dtos.Models;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace CityInfoAPI.Service
 {
-    public class CityInfoService : ICityInfoService
+    public class CityService : ICityService
     {
         private readonly ICityInfoRepository _repo;
         private readonly IMapper _mapper;
-        private readonly ILogger<CityInfoService> _logger;
+        private readonly ILogger<CityService> _logger;
 
-        public CityInfoService(ICityInfoRepository repo, IMapper mapper, ILogger<CityInfoService> logger)
+        public CityService(ICityInfoRepository repo, IMapper mapper, ILogger<CityService> logger)
         {
             _repo = repo;
             _mapper = mapper;
@@ -78,17 +79,17 @@ namespace CityInfoAPI.Service
             }
         }
 
-        public async Task<CityDto?> CreateCityAsync(CityCreateDto newCityRequest)
+        public async Task<CityWithoutPointsOfInterestDto?> CreateCityAsync(CityCreateDto request)
         {
             try
             {
-                var newCityEntity = _mapper.Map<City>(newCityRequest);
+                var newCityEntity = _mapper.Map<City>(request);
 
                 // add it to memory.
                 await _repo.CreateCityAsync(newCityEntity);
 
                 // save it
-                bool success = await _repo.SaveChangesAsync();
+                bool success = await SaveChangesAsync();
 
                 if (!success)
                 {
@@ -96,27 +97,27 @@ namespace CityInfoAPI.Service
                 }
 
                 // map new entity to dto and return it
-                CityDto newCityDto = _mapper.Map<CityDto>(newCityEntity);
+                CityWithoutPointsOfInterestDto newCityDto = _mapper.Map<CityWithoutPointsOfInterestDto>(newCityEntity);
 
                 return newCityDto;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error occurred when creating a city: {ex}");
+                _logger.LogError($"Error occurred when creating a city. Request: {JsonConvert.SerializeObject(request)}: Error: {ex}");
                 throw;
             }
         }
 
-        public async Task<CityDto?> UpdateCityAsync(CityUpdateDto updateCityRequest, Guid cityGuid)
+        public async Task<CityDto?> UpdateCityAsync(CityUpdateDto request, Guid cityGuid)
         {
             try
             {
                 var city = await _repo.GetCityByCityIdAsync(cityGuid, false);
 
                 // map the request - override the values of the destination object w/ source
-                _mapper.Map(updateCityRequest, city);
+                _mapper.Map(request, city);
 
-                var success = await _repo.SaveChangesAsync();
+                var success = await SaveChangesAsync();
 
                 if (!success)
                 {
@@ -124,13 +125,13 @@ namespace CityInfoAPI.Service
                 }
 
                 // map new entity to dto and return it
-                CityDto updatedCityDto = _mapper.Map<CityDto>(updateCityRequest);
+                CityDto updatedCityDto = _mapper.Map<CityDto>(request);
 
                 return updatedCityDto;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error occurred when creating a city: {ex}");
+                _logger.LogError($"Error occurred when updating city. Request: {JsonConvert.SerializeObject(request)}: Error: {ex}");
                 throw;
             }
         }
@@ -141,12 +142,12 @@ namespace CityInfoAPI.Service
             {
                 // delete the city
                 await _repo.DeleteCityAsync(cityGuid);
-                var results = await _repo.SaveChangesAsync();
+                var results = await SaveChangesAsync();
                 return results;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error occurred when creating a city: {ex}");
+                _logger.LogError($"Error occurred when deleting city {cityGuid}. Error: {ex}");
                 throw;
             }
         }
