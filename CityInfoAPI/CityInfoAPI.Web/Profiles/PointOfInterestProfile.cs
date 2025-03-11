@@ -2,8 +2,10 @@
 using CityInfoAPI.Data.Entities;
 using CityInfoAPI.Dtos.Models;
 
+
 namespace CityInfoAPI.Web.Profiles
 {
+    #pragma warning disable CS1591
     public class PointOfInterestProfile : Profile
     {
         public PointOfInterestProfile()
@@ -17,4 +19,5 @@ namespace CityInfoAPI.Web.Profiles
             CreateMap<PointOfInterestUpdateDto, PointOfInterestDto>();
         }
     }
+    #pragma warning restore CS1591
 }

@@ -1,5 +1,5 @@
 ﻿using Asp.Versioning;
-using CityInfoAPI.Web.Controllers.RequestHelpers;
+using CityInfoAPI.Web.Controllers.RequestHelpers.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,7 +13,6 @@ namespace CityInfoAPI.Web.Controllers
     /// <response code="500">internal error</response>
     [Route("api/v{version:apiVersion}/authentication")]
     [ApiVersion(1.0)]
-    [ApiVersion(2.0)]
     [ApiController]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class AuthenticationController : ControllerBase

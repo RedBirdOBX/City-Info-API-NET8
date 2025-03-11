@@ -1,9 +1,10 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
-using CityInfoAPI.Data.Entities;
-using CityInfoAPI.Data.Repositories;
 using CityInfoAPI.Dtos.Models;
 using CityInfoAPI.Service;
+using CityInfoAPI.Web.Controllers.RequestHelpers;
+using CityInfoAPI.Web.Controllers.RequestHelpers.Models;
+using CityInfoAPI.Web.Controllers.ResponseHelpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -20,16 +21,15 @@ namespace CityInfoAPI.Controllers
     [ApiController]
     [Authorize]
     [ApiVersion(1.0)]
-    [ApiVersion(2.0)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class CitiesController : ControllerBase
     {
         private readonly ILogger<CitiesController> _logger;
         private readonly ICityService _service;
-        private readonly IResponseHeaderService _headerService;
         private readonly IMapper _mapper;
-        private readonly int _maxPageSize = 100;
+        private IHttpContextAccessor _httpContextAccessor;
+        private LinkGenerator _linkGenerator;
 
         /// <summary>
         /// Constructor
@@ -37,44 +37,79 @@ namespace CityInfoAPI.Controllers
         /// <param name="logger"></param>
         /// <param name="mapper"></param>
         /// <param name="service"></param>
-        /// <param name="headerService"></param>
-        public CitiesController(ILogger<CitiesController> logger, IMapper mapper, ICityService service, IResponseHeaderService headerService)
+        /// <param name="httpContextAccessor"></param>
+        /// <param name="linkGenerator"></param>
+        public CitiesController(ILogger<CitiesController> logger, IMapper mapper, ICityService service,
+            IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _service = service ?? throw new ArgumentNullException(nameof(service));
-            _headerService = headerService ?? throw new ArgumentNullException(nameof(headerService));
+            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(service));
+            _linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
         }
 
         /// <summary>Gets all Cities</summary>
         /// <returns>collection of CityDto</returns>
-        /// <param name="includePointsOfInterest"></param>
-        /// <param name="name"></param>
-        /// <param name="search"></param>
-        /// <param name="pageNumber"></param>
-        /// <param name="pageSize"></param>
         /// <example>{baseUrl}/api/cities</example>
         /// <response code="200">returns city by id</response>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("", Name = "GetCities")]
-        public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery] bool? includePointsOfInterest = true,
-            [FromQuery(Name = "name")] string? name = null, [FromQuery(Name = "search")] string? search = null,
-            [FromQuery(Name = "pageNumber")] int pageNumber = 1, [FromQuery(Name = "pageSize")] int pageSize = 100)
+        public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery] CityRequestParameters requestParams)
         {
             try
             {
-                var url = Url.Link("GetCities", new { includePointsOfInterest, name, search, pageNumber, pageSize });
+                // record the request
+                var url = Url.Link("GetCities", new { requestParams.IncludePointsOfInterest, requestParams.Name, requestParams.Search, requestParams.PageNumber, requestParams.PageSize });
                 _logger.LogInformation($"Getting cities URL: {url}");
 
-                if (pageSize > _maxPageSize)
+                // META DATA. building meta data. correct page size if needed
+                if (requestParams.PageSize > RequestConstants.MAX_PAGE_SIZE)
                 {
-                    pageSize = _maxPageSize;
+                    requestParams.PageSize = RequestConstants.MAX_PAGE_SIZE;
                 }
 
-                var metaData = await _headerService.BuildCitiesHeaderMetaData(pageNumber, pageSize);
-                Response.Headers.Append("X-CityParameters", JsonConvert.SerializeObject(metaData));
+                // how many total pages do we have?
+                int citiesCount = 0;
 
-                var results = await _service.GetCitiesAsync(name, search, pageNumber, pageSize);
+                // did they use a name filter? count all possible results
+                if (!string.IsNullOrEmpty(requestParams.Name))
+                {
+                    var allCities = await _service.GetAllCitiesAsync();
+                    var filteredCities = allCities.Where(c => c.Name.ToLower().Contains(requestParams.Name.ToLower()));
+                    citiesCount = filteredCities.Count();
+
+                    // bad filter was used
+                    if (citiesCount == 0)
+                    {
+                        return Ok($"No cities found with the name containing {requestParams.Name}.");
+                    }
+                }
+                else
+                {
+                    // count all
+                    citiesCount = (await _service.GetAllCitiesAsync()).Count();
+                }
+
+                int totalPages = (int)Math.Ceiling(citiesCount / (double)requestParams.PageSize);
+
+                if (requestParams.PageNumber > totalPages)
+                {
+                    return BadRequest("You have requested more pages that are available.");
+                }
+
+                var metaData = MetaDataUtility.BuildCitiesMetaData(requestParams, citiesCount, _httpContextAccessor, _linkGenerator);
+                Response.Headers.Append("X-CityParameters", JsonConvert.SerializeObject(metaData));
+                // end of META DATA
+
+                var results = await _service.GetCitiesAsync(requestParams.Name ?? string.Empty, requestParams.Search ?? string.Empty, requestParams.PageNumber, requestParams.PageSize);
+
+                // add helper links
+                foreach (var city in results)
+                {
+                    city.Links.Add(UriLinkHelper.CreateLinkForCityWithinCollection(HttpContext.Request, city));
+                }
+
                 return Ok(results);
             }
             catch (Exception ex)
@@ -110,13 +145,22 @@ namespace CityInfoAPI.Controllers
 
                 if (includePointsOfInterest)
                 {
-                    var results = await _service.GetCityAsync(cityGuid, includePointsOfInterest);
-                    return Ok(results);
+                    var city = await _service.GetCityAsync(cityGuid, includePointsOfInterest);
+                    city = UriLinkHelper.CreateLinksForCityWithPointsOfInterest(HttpContext.Request, city ?? new CityDto(), RequestConstants.MAX_PAGE_SIZE);
+
+                    // if points of interest were included
+                    foreach (PointOfInterestDto poi in city.PointsOfInterest)
+                    {
+                        poi.Links.Add(UriLinkHelper.CreateLinkForPointOfInterestWithinCollection(HttpContext.Request, poi));
+                    }
+
+                    return Ok(city);
                 }
                 else
                 {
-                    var results = await _service.GetCityWithoutPointsOfInterestAsync(cityGuid, includePointsOfInterest);
-                    return Ok(results);
+                    var city = await _service.GetCityWithoutPointsOfInterestAsync(cityGuid, includePointsOfInterest);
+                    city = UriLinkHelper.CreateLinksForCity(HttpContext.Request, city ?? new CityWithoutPointsOfInterestDto(), RequestConstants.MAX_PAGE_SIZE);
+                    return Ok(city);
                 }
             }
             catch (Exception ex)

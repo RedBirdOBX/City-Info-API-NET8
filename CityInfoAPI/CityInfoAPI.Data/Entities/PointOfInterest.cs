@@ -27,7 +27,6 @@ namespace CityInfoAPI.Data.Entities
         [ForeignKey("CityId")]
         public City? City { get; set; }
 
-        [Required(ErrorMessage = $"CreatedOn is required.")]
         public DateTime CreatedOn { get; set; } = DateTime.Now;
     }
 }

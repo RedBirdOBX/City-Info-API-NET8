@@ -9,11 +9,11 @@ namespace CityInfoAPI.Service
 {
     public class PointsOfInterestService : IPointsOfInterestService
     {
-        private readonly ICityInfoRepository _repo;
+        private readonly IPointsOfInterestRepository _repo;
         private readonly IMapper _mapper;
         private readonly ILogger<PointsOfInterestService> _logger;
 
-        public PointsOfInterestService(ICityInfoRepository repo, IMapper mapper, ILogger<PointsOfInterestService> logger)
+        public PointsOfInterestService(IPointsOfInterestRepository repo, IMapper mapper, ILogger<PointsOfInterestService> logger)
         {
             _repo = repo;
             _mapper = mapper;
@@ -54,7 +54,7 @@ namespace CityInfoAPI.Service
         {
             try
             {
-                var pointOfInterest = await _repo.GetPointOfInterestById(pointGuid);
+                var pointOfInterest = await _repo.GetPointOfInterestAsync(pointGuid);
                 var result = _mapper.Map<PointOfInterestDto>(pointOfInterest);
                 return result;
             }
@@ -95,13 +95,11 @@ namespace CityInfoAPI.Service
             }
         }
 
-
-        // why is this not saving?  check console....
         public async Task<PointOfInterestUpdateDto?> UpdatePointOfInterestAsync(Guid cityGuid, Guid pointGuid, PointOfInterestUpdateDto request)
         {
             try
             {
-                var existingPointOfInterest = await GetPointOfInterestAsync(pointGuid);
+                var existingPointOfInterest = await _repo.GetPointOfInterestAsync(pointGuid);
 
                 // map the request - override the values of the destination object w/ source
                 _mapper.Map(request, existingPointOfInterest);
@@ -153,14 +151,11 @@ namespace CityInfoAPI.Service
             }
         }
 
-
-        // global
         public async Task<bool> SaveChangesAsync()
         {
             try
             {
-                var results = await _repo.SaveChangesAsync();
-                return results;
+                return await _repo.SaveChangesAsync();
             }
             catch (Exception ex)
             {

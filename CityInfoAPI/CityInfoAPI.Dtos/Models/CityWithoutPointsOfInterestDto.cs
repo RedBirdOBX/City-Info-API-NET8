@@ -3,7 +3,7 @@
     /// <summary>
     /// City object without points of interest
     /// </summary>
-    public class CityWithoutPointsOfInterestDto
+    public class CityWithoutPointsOfInterestDto : LinkedResourcesDto
     {
         /// <summary>
         ///  unique identifier for city

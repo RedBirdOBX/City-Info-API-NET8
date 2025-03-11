@@ -4,6 +4,7 @@ using CityInfoAPI.Dtos.Models;
 
 namespace CityInfoAPI.Web.Profiles
 {
+    #pragma warning disable CS1591
     public class CityProfile : Profile
     {
         public CityProfile()
@@ -20,4 +21,5 @@ namespace CityInfoAPI.Web.Profiles
             CreateMap<CityDto, CityUpdateDto>();
         }
     }
+    #pragma warning restore CS1591
 }

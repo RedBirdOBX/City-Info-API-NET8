@@ -9,18 +9,17 @@ namespace CityInfoAPI.Service
 {
     public class CityService : ICityService
     {
-        private readonly ICityInfoRepository _repo;
+        private readonly ICityRepository _repo;
         private readonly IMapper _mapper;
         private readonly ILogger<CityService> _logger;
 
-        public CityService(ICityInfoRepository repo, IMapper mapper, ILogger<CityService> logger)
+        public CityService(ICityRepository repo, IMapper mapper, ILogger<CityService> logger)
         {
             _repo = repo;
             _mapper = mapper;
             _logger = logger;
         }
 
-        // cities
         public async Task<IEnumerable<CityWithoutPointsOfInterestDto>> GetCitiesAsync(string name, string search, int pageNumber, int pageSize)
         {
             try
@@ -32,6 +31,21 @@ namespace CityInfoAPI.Service
             catch (Exception ex)
             {
                 _logger.LogError($"An error occurred while getting cities. {ex}");
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<CityWithoutPointsOfInterestDto>> GetAllCitiesAsync()
+        {
+            try
+            {
+                var cities = await _repo.GetCitiesUnsortedAsync();
+                var results = _mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cities);
+                return results;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occurred while getting all cities. {ex}");
                 throw;
             }
         }
@@ -53,7 +67,7 @@ namespace CityInfoAPI.Service
         {
             try
             {
-                var city = await _repo.GetCityByCityIdAsync(cityGuid, includePointsOfInterest);
+                var city = await _repo.GetCityAsync(cityGuid, includePointsOfInterest);
                 var results = _mapper.Map<CityDto>(city);
                 return results;
             }
@@ -68,7 +82,7 @@ namespace CityInfoAPI.Service
         {
             try
             {
-                var city = await _repo.GetCityByCityIdAsync(cityGuid, includePointsOfInterest);
+                var city = await _repo.GetCityAsync(cityGuid, includePointsOfInterest);
                 var results = _mapper.Map<CityWithoutPointsOfInterestDto>(city);
                 return results;
             }
@@ -112,7 +126,7 @@ namespace CityInfoAPI.Service
         {
             try
             {
-                var city = await _repo.GetCityByCityIdAsync(cityGuid, false);
+                var city = await _repo.GetCityAsync(cityGuid, false);
 
                 // map the request - override the values of the destination object w/ source
                 _mapper.Map(request, city);
@@ -152,7 +166,6 @@ namespace CityInfoAPI.Service
             }
         }
 
-        // global
         public async Task<bool> SaveChangesAsync()
         {
             try

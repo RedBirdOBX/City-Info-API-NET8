@@ -13,7 +13,7 @@ namespace CityInfoAPI.Web.Controllers
     [ApiController]
     [Route("api/v{version:apiVersion}/files")]
     [Authorize]
-    [ApiVersion("2.0")]
+    [ApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class FilesController : Controller
@@ -91,7 +91,7 @@ namespace CityInfoAPI.Web.Controllers
             }
         }
 
-        /// <summary>Deprecated Example</summary>
+        /// <summary>Deprecated Annotation Example</summary>
         /// <param name="fileId"></param>
         /// <returns>file found by id</returns>
         /// <example>{baseUrl}/api/files/{fileId}</example>

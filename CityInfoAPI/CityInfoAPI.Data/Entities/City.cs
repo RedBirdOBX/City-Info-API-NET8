@@ -20,8 +20,6 @@ namespace CityInfoAPI.Data.Entities
         [MaxLength(200, ErrorMessage = $"{nameof(Description)} cannot exceed 200 characters.")]
         public string? Description { get; set; }
 
-        // since this has a default value, can we remove the Required attribute?
-        [Required(ErrorMessage = $"{nameof(CreatedOn)} is required.")]
         public DateTime CreatedOn { get; set; } = DateTime.Now;
 
         public ICollection<PointOfInterest> PointsOfInterest { get; set; } = new List<PointOfInterest>();

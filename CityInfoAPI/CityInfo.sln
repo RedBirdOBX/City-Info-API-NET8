@@ -16,8 +16,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{26EDF3EA-9
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sql-Scripts", "Sql-Scripts", "{530724D6-85F3-4BAD-BCF4-966751CEF182}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\Sql-Scripts\cities-and-poi.sql = Docs\Sql-Scripts\cities-and-poi.sql
+		Docs\Sql-Scripts\create-cities-tbl.sql = Docs\Sql-Scripts\create-cities-tbl.sql
+		Docs\Sql-Scripts\create-logs-tbl.sql = Docs\Sql-Scripts\create-logs-tbl.sql
+		Docs\Sql-Scripts\create-points-of-interest-tbl.sql = Docs\Sql-Scripts\create-points-of-interest-tbl.sql
+		Docs\Sql-Scripts\insert-initial-data-cities.sql = Docs\Sql-Scripts\insert-initial-data-cities.sql
+		Docs\Sql-Scripts\insert-initial-data-points-of-interest.sql = Docs\Sql-Scripts\insert-initial-data-points-of-interest.sql
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityInfoAPI.Service", "CityInfoAPI.Service\CityInfoAPI.Service.csproj", "{5F1A21DB-2EEF-4223-BB97-25101F64C92F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CityInfoAPI.Service", "CityInfoAPI.Service\CityInfoAPI.Service.csproj", "{5F1A21DB-2EEF-4223-BB97-25101F64C92F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

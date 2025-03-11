@@ -1,10 +1,8 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
-using CityInfoAPI.Data.Entities;
-using CityInfoAPI.Data.Repositories;
 using CityInfoAPI.Dtos.Models;
 using CityInfoAPI.Service;
-using CityInfoAPI.Web.Services;
+using CityInfoAPI.Web.Controllers.ResponseHelpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +19,6 @@ namespace CityInfoAPI.Controllers
     [ApiController]
     [Authorize]
     [ApiVersion(1.0)]
-    [ApiVersion(2.0)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class PointsOfInterestController : ControllerBase
@@ -63,9 +60,13 @@ namespace CityInfoAPI.Controllers
                 var url = Url.Link("GetPointsOfInterest", new { name = name, search = search });
                 _logger.LogInformation($"GetPointsOfInterest called. Url: {url}");
 
-                var results = await _service.GetPointsOfInterestAsync(name, search);
+                var pointsOfInterest = await _service.GetPointsOfInterestAsync(name, search);
 
-                return Ok(results);
+                foreach (var pointOfInterest in pointsOfInterest)
+                {
+                    pointOfInterest.Links.Add(UriLinkHelper.CreateLinkForPointOfInterestWithinCollection(HttpContext.Request, pointOfInterest));
+                }
+                return Ok(pointsOfInterest);
             }
             catch (Exception ex)
             {
@@ -97,9 +98,14 @@ namespace CityInfoAPI.Controllers
                     return NotFound();
                 }
 
-                var results = await _service.GetPointsOfInterestForCityAsync(cityGuid);
+                var pointsOfInterest = await _service.GetPointsOfInterestForCityAsync(cityGuid);
 
-                return Ok(results);
+                foreach (var pointOfInterest in pointsOfInterest)
+                {
+                    pointOfInterest.Links.Add(UriLinkHelper.CreateLinkForPointOfInterestWithinCollection(HttpContext.Request, pointOfInterest));
+                }
+
+                return Ok(pointsOfInterest);
             }
             catch (Exception ex)
             {
@@ -149,14 +155,16 @@ namespace CityInfoAPI.Controllers
                     return NotFound();
                 }
 
-                var results = await _service.GetPointOfInterestAsync(pointGuid);
-                if (results == null)
+                var pointOfInterest = await _service.GetPointOfInterestAsync(pointGuid);
+                if (pointOfInterest == null)
                 {
                     _logger.LogWarning($"Point of interest with id {pointGuid}  for City {cityGuid} wasn't found.");
                     return NotFound();
                 }
 
-                return Ok(results);
+                pointOfInterest = UriLinkHelper.CreateLinksForPointOfInterest(HttpContext.Request, pointOfInterest);
+
+                return Ok(pointOfInterest);
             }
             catch (Exception ex)
             {
@@ -210,7 +218,7 @@ namespace CityInfoAPI.Controllers
         /// <param name="cityGuid"></param>
         /// <param name="pointGuid"></param>
         /// <param name="updatePointOfInterest"></param>
-        /// <returns></returns>
+        /// <returns>No Content</returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
         /// <response code="204">updated point of interest</response>
         /// <response code="404">city or point of interest not found</response>
@@ -241,7 +249,7 @@ namespace CityInfoAPI.Controllers
 
                 // does the point of interest belong to the city?
                 var existingPointOfInterest = await _service.GetPointOfInterestAsync(pointGuid);
-                if (existingPointOfInterest.CityGuid != cityGuid)
+                if (existingPointOfInterest == null || existingPointOfInterest.CityGuid != cityGuid)
                 {
                     _logger.LogWarning($"Point of interest with id {pointGuid} doesn't belong to city with id {cityGuid}.");
                     return NotFound();
@@ -267,7 +275,7 @@ namespace CityInfoAPI.Controllers
         /// <param name="cityGuid"></param>
         /// <param name="pointGuid"></param>
         /// <param name="patchDocument"></param>
-        /// <returns></returns>
+        /// <returns>No Content</returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
         /// <response code="204">updated point of interest</response>
         /// <response code="404">city or point of interest not found</response>
@@ -298,7 +306,7 @@ namespace CityInfoAPI.Controllers
 
                 // does the point of interest belong to the city?
                 var existingPointOfInterest = await _service.GetPointOfInterestAsync(pointGuid);
-                if (existingPointOfInterest.CityGuid != cityGuid)
+                if (existingPointOfInterest == null || existingPointOfInterest.CityGuid != cityGuid)
                 {
                     _logger.LogWarning($"Point of interest with id {pointGuid} doesn't belong to city with id {cityGuid}.");
                     return NotFound();
@@ -339,7 +347,7 @@ namespace CityInfoAPI.Controllers
         /// <summary>deletes point of interest</summary>
         /// <param name="cityGuid"></param>
         /// <param name="pointGuid"></param>
-        /// <returns></returns>
+        /// <returns>No Content</returns>
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
         /// <response code="204">deleted point of interest</response>
         /// <response code="404">city or point of interest not found</response>
@@ -371,7 +379,7 @@ namespace CityInfoAPI.Controllers
 
                 // does the point of interest belong to the city?
                 var existingPointOfInterest = await _service.GetPointOfInterestAsync(pointGuid);
-                if (existingPointOfInterest.CityGuid != cityGuid)
+                if (existingPointOfInterest == null || existingPointOfInterest.CityGuid != cityGuid)
                 {
                     _logger.LogWarning($"Point of interest with id {pointGuid} doesn't belong to city with id {cityGuid}.");
                     return NotFound();

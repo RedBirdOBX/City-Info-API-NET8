@@ -4,8 +4,9 @@ namespace CityInfoAPI.Service
 {
     public interface ICityService
     {
-        // cities
         Task<IEnumerable<CityWithoutPointsOfInterestDto>> GetCitiesAsync(string name, string search, int pageNumber, int pageSize);
+
+        Task<IEnumerable<CityWithoutPointsOfInterestDto>> GetAllCitiesAsync();
 
         Task<bool> CityExistsAsync(Guid cityGuid);
 
@@ -19,8 +20,6 @@ namespace CityInfoAPI.Service
 
         Task<bool> DeleteCityAsync(Guid cityGuid);
 
-
-        // global
         Task<bool> SaveChangesAsync();
     }
 }
