@@ -1,15 +1,25 @@
 # City-Info-API-NET8
 
+- // refactor; accept an obj, not primitive types public static PaginationMetaDataDto
+- 
+
 To do:
 
-- add objs to error logs
-- search and filter to Points of Interest
-- add links in results
-- Postman city and POI id variables
-- Logs in db
-- add service layer
+
+- create points of interest WITH a city request
+- Block POSTS
+- use Azure KV
+- [HttpOptions]
+
+V2
 - Add Caching
 - Add States
-- logging!
 - add child properties
-- link helpers
+- custom validators (annotations)
+- unit tests
+- make version configurable. don't forget UriLinkHelper
+
+[ProducesDefaultResponseType]
+[HttpGet("", Name = "GetPagedCities")]
+[HttpHead("", Name = "GetPagedCities")]
+

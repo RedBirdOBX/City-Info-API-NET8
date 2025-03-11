@@ -3,7 +3,7 @@
     /// <summary>
     /// point of interest object
     /// </summary>
-    public class PointOfInterestDto
+    public class PointOfInterestDto : LinkedResourcesDto
     {
         /// <summary>
         /// unique identifier for point of interest
@@ -11,7 +11,7 @@
         public Guid PointGuid { get; set; } = new Guid();
 
         /// <summary>
-        /// unique indentifier for city
+        /// unique identifier for city
         /// </summary>
         public Guid CityGuid { get; set; } = new Guid();
 

@@ -3,7 +3,7 @@
     /// <summary>
     /// city object
     /// </summary>
-    public class CityDto
+    public class CityDto : LinkedResourcesDto
     {
         /// <summary>
         /// unique identifier for the city

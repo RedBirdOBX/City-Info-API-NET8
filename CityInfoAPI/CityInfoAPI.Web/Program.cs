@@ -1,44 +1,43 @@
-using Microsoft.AspNetCore.StaticFiles;
-using Serilog.Events;
-using Serilog;
-using CityInfoAPI.Web.Services;
-using CityInfoAPI.Data;
-using CityInfoAPI.Data.DbContents;
-using Microsoft.EntityFrameworkCore;
-using CityInfoAPI.Data.Repositories;
-using Microsoft.IdentityModel.Tokens;
 using Asp.Versioning;
-using System.Reflection;
 using Asp.Versioning.ApiExplorer;
+using CityInfoAPI.Data.DbContents;
+using CityInfoAPI.Data.Repositories;
+using CityInfoAPI.Service;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.MSSqlServer;
 
 #pragma warning disable CS1591
-
-//--LOGGING--//
-Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                //.WriteTo.MSSqlServer
-                //(
-                //    connectionString: builder.Configuration["ConnectionStrings:drummersDbConnectionString"],
-                //    sinkOptions: new MSSqlServerSinkOptions
-                //    {
-                //        TableName = "Logs",
-                //        SchemaName = "dbo",
-                //        AutoCreateSqlTable = true
-                //    },
-                //    restrictedToMinimumLevel: LogEventLevel.Information,
-                //    formatProvider: null,
-                //    columnOptions: null,
-                //    logEventFormatter: null
-                //)
-                .WriteTo.Console()
-                .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
-            .CreateLogger();
-
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 builder.Host.UseSerilog();
+
+//--LOGGING--//
+Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.MSSqlServer
+                (
+                    connectionString: builder.Configuration["DbConnectionString"],
+                    sinkOptions: new MSSqlServerSinkOptions
+                    {
+                        TableName = "Logs",
+                        SchemaName = "dbo",
+                        AutoCreateSqlTable = true
+                    },
+                    restrictedToMinimumLevel: LogEventLevel.Information,
+                    formatProvider: null,
+                    columnOptions: null,
+                    logEventFormatter: null
+                )
+                .WriteTo.Console()
+                .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+
 
 
 //--SERVICES--//
@@ -68,9 +67,14 @@ builder.Services.AddProblemDetails(options =>
 // custom services: inject interfaceX, provide an implementation of concrete type Y
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 builder.Services.AddTransient<IMailService, CloudMailService>();
-builder.Services.AddSingleton<CityInfoMemoryDataStore>();
 builder.Services.AddDbContext<CityInfoDbContext>(dbContextOptions => dbContextOptions.UseSqlServer(builder.Configuration["DbConnectionString"]));
-builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>();
+//builder.Services.AddSingleton<CityInfoMemoryDataStore>();
+//builder.Services.AddScoped<ICityRepository, CityRepository>();
+builder.Services.AddScoped<IPointsOfInterestRepository, PointsOfInterestRepository>();
+builder.Services.AddScoped<ICityService, CityService>();
+builder.Services.AddScoped<IPointsOfInterestService, PointsOfInterestService>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 
 // AutoMapper.  Scan for profiles.
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

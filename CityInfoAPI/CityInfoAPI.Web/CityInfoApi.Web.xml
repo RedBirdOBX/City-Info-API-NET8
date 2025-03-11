@@ -17,7 +17,7 @@
             <param name="configuration"></param>
             <exception cref="T:System.ArgumentNullException"></exception>
         </member>
-        <member name="M:CityInfoAPI.Web.Controllers.AuthenticationController.Authenticate(CityInfoAPI.Web.Controllers.RequestHelpers.AuthenticationUserRequest)">
+        <member name="M:CityInfoAPI.Web.Controllers.AuthenticationController.Authenticate(CityInfoAPI.Web.Controllers.RequestHelpers.Models.AuthenticationUserRequest)">
             <summary>
             provides user token
             </summary>
@@ -64,6 +64,129 @@
             <response code="200">file created</response>
             <response code="400">bad request for file upload</response>
         </member>
+        <member name="T:CityInfoAPI.Web.Controllers.RequestHelpers.Models.AuthenticationUserRequest">
+            <summary>
+            obj for mapping a user requesting to get token
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.RequestHelpers.Models.AuthenticationUserRequest.UserName">
+            <summary>
+            username
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.RequestHelpers.Models.AuthenticationUserRequest.Password">
+            <summary>
+            password
+            </summary>
+        </member>
+        <member name="T:CityInfoAPI.Web.Controllers.RequestHelpers.Models.CityInfoUser">
+            <summary>
+            approved user of api w/ token.  details below create token.
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.RequestHelpers.Models.CityInfoUser.UserId">
+            <summary>
+            user id
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.RequestHelpers.Models.CityInfoUser.UserName">
+            <summary>
+            username
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.RequestHelpers.Models.CityInfoUser.FirstName">
+            <summary>
+            first name
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.RequestHelpers.Models.CityInfoUser.LastName">
+            <summary>
+            last name
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.RequestHelpers.Models.CityInfoUser.City">
+            <summary>
+            city
+            </summary>
+        </member>
+        <member name="M:CityInfoAPI.Web.Controllers.RequestHelpers.Models.CityInfoUser.#ctor(System.Int32,System.String,System.String,System.String,System.String)">
+            <summary>
+            constructor
+            </summary>
+            <param name="userId"></param>
+            <param name="userName"></param>
+            <param name="firstName"></param>
+            <param name="lastName"></param>
+            <param name="city"></param>
+        </member>
+        <member name="T:CityInfoAPI.Web.Controllers.RequestHelpers.Models.CityRequestParameters">
+            <summary>
+            obj used to filer / search / page results of cities
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.RequestHelpers.Models.CityRequestParameters.IncludePointsOfInterest">
+            <summary>
+            flag to include points of interest in results
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.RequestHelpers.Models.CityRequestParameters.Name">
+            <summary>
+            name filter
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.RequestHelpers.Models.CityRequestParameters.Search">
+            <summary>
+            search string
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.RequestHelpers.Models.CityRequestParameters.PageNumber">
+            <summary>
+            requested page number
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.RequestHelpers.Models.CityRequestParameters.PageSize">
+            <summary>
+            requested page size
+            </summary>
+        </member>
+        <member name="T:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaData">
+            <summary>
+            obj used to provide metadata in response header
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaData.TotalItemCount">
+            <summary>
+            total items in the collection
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaData.TotalPageCount">
+            <summary>
+            total page count
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaData.PageSize">
+            <summary>
+            page size
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaData.CurrentPage">
+            <summary>
+            current page number
+            </summary>
+        </member>
+        <member name="M:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaData.#ctor(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            constructor
+            </summary>
+            <param name="totalItemCount"></param>
+            <param name="pageSize"></param>
+            <param name="currentPage"></param>
+        </member>
+        <member name="T:CityInfoAPI.Web.Controllers.ResponseHelpers.UriLinkHelper">
+            <summary>
+            Used for building links in GET responses.
+            </summary>
+        </member>
         <member name="T:CityInfoAPI.Controllers.CitiesController">
             <summary>
             Cities controller
@@ -71,23 +194,19 @@
             <response code="401">unauthorized request</response>
             <response code="500">internal error</response>
         </member>
-        <member name="M:CityInfoAPI.Controllers.CitiesController.#ctor(Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.CitiesController},CityInfoAPI.Data.Repositories.ICityInfoRepository,AutoMapper.IMapper)">
+        <member name="M:CityInfoAPI.Controllers.CitiesController.#ctor(Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.CitiesController},AutoMapper.IMapper,CityInfoAPI.Service.ICityService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.AspNetCore.Routing.LinkGenerator)">
             <summary>
             Constructor
             </summary>
             <param name="logger"></param>
-            <param name="repo"></param>
             <param name="mapper"></param>
-            <exception cref="T:System.ArgumentNullException"></exception>
+            <param name="service"></param>
+            <param name="httpContextAccessor"></param>
+            <param name="linkGenerator"></param>
         </member>
-        <member name="M:CityInfoAPI.Controllers.CitiesController.GetCities(System.Nullable{System.Boolean},System.String,System.String,System.Int32,System.Int32)">
+        <member name="M:CityInfoAPI.Controllers.CitiesController.GetCities(CityInfoAPI.Web.Controllers.RequestHelpers.Models.CityRequestParameters)">
             <summary>Gets all Cities</summary>
             <returns>collection of CityDto</returns>
-            <param name="includePointsOfInterest"></param>
-            <param name="name"></param>
-            <param name="search"></param>
-            <param name="pageNumber"></param>
-            <param name="pageSize"></param>
             <example>{baseUrl}/api/cities</example>
             <response code="200">returns city by id</response>
         </member>
@@ -142,11 +261,12 @@
             <response code="401">unauthorized request</response>
             <response code="500">internal error</response>
         </member>
-        <member name="M:CityInfoAPI.Controllers.PointsOfInterestController.#ctor(CityInfoAPI.Data.Repositories.ICityInfoRepository,Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.PointsOfInterestController},CityInfoAPI.Web.Services.IMailService,AutoMapper.IMapper)">
+        <member name="M:CityInfoAPI.Controllers.PointsOfInterestController.#ctor(Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.PointsOfInterestController},CityInfoAPI.Service.IMailService,AutoMapper.IMapper,CityInfoAPI.Service.IPointsOfInterestService,CityInfoAPI.Service.ICityService)">
             <summary>constructor</summary>
-            <param name="repo"></param>
             <param name="logger"></param>
             <param name="mailService"></param>
+            <param name="service"></param>
+            <param name="cityService"></param>
             <param name="mapper"></param>
             <exception cref="T:System.ArgumentNullException"></exception>
         </member>
@@ -187,7 +307,7 @@
             <param name="cityGuid"></param>
             <param name="pointGuid"></param>
             <param name="updatePointOfInterest"></param>
-            <returns></returns>
+            <returns>No Content</returns>
             <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
             <response code="204">updated point of interest</response>
             <response code="404">city or point of interest not found</response>
@@ -197,7 +317,7 @@
             <param name="cityGuid"></param>
             <param name="pointGuid"></param>
             <param name="patchDocument"></param>
-            <returns></returns>
+            <returns>No Content</returns>
             <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
             <response code="204">updated point of interest</response>
             <response code="404">city or point of interest not found</response>
@@ -206,7 +326,7 @@
             <summary>deletes point of interest</summary>
             <param name="cityGuid"></param>
             <param name="pointGuid"></param>
-            <returns></returns>
+            <returns>No Content</returns>
             <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
             <response code="204">deleted point of interest</response>
             <response code="404">city or point of interest not found</response>

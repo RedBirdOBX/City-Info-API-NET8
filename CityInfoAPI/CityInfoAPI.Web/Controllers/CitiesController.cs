@@ -1,8 +1,9 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
-using CityInfoAPI.Data.Entities;
-using CityInfoAPI.Data.Repositories;
 using CityInfoAPI.Dtos.Models;
+using CityInfoAPI.Service;
+using CityInfoAPI.Web.Controllers.RequestHelpers;
+using CityInfoAPI.Web.Controllers.RequestHelpers.Models;
 using CityInfoAPI.Web.Controllers.ResponseHelpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
@@ -20,64 +21,94 @@ namespace CityInfoAPI.Controllers
     [ApiController]
     [Authorize]
     [ApiVersion(1.0)]
-    [ApiVersion(2.0)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class CitiesController : ControllerBase
     {
         private readonly ILogger<CitiesController> _logger;
-        private readonly ICityInfoRepository _repo;
+        private readonly ICityService _service;
         private readonly IMapper _mapper;
-        private readonly int _maxPageSize = 100;
+        private IHttpContextAccessor _httpContextAccessor;
+        private LinkGenerator _linkGenerator;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="logger"></param>
-        /// <param name="repo"></param>
         /// <param name="mapper"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-
-        public CitiesController(ILogger<CitiesController> logger, ICityInfoRepository repo, IMapper mapper)
+        /// <param name="service"></param>
+        /// <param name="httpContextAccessor"></param>
+        /// <param name="linkGenerator"></param>
+        public CitiesController(ILogger<CitiesController> logger, IMapper mapper, ICityService service,
+            IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _service = service ?? throw new ArgumentNullException(nameof(service));
+            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(service));
+            _linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
         }
 
         /// <summary>Gets all Cities</summary>
         /// <returns>collection of CityDto</returns>
-        /// <param name="includePointsOfInterest"></param>
-        /// <param name="name"></param>
-        /// <param name="search"></param>
-        /// <param name="pageNumber"></param>
-        /// <param name="pageSize"></param>
         /// <example>{baseUrl}/api/cities</example>
         /// <response code="200">returns city by id</response>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("", Name = "GetCities")]
-        public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery] bool? includePointsOfInterest = true,
-            [FromQuery(Name = "name")] string? name = null, [FromQuery(Name = "search")] string? search = null,
-            [FromQuery(Name = "pageNumber")] int pageNumber = 1, [FromQuery(Name = "pageSize")] int pageSize = 100)
+        public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery] CityRequestParameters requestParams)
         {
             try
             {
-                var url = Url.Link("GetCities", new { includePointsOfInterest, name, search, pageNumber, pageSize });
+                // record the request
+                var url = Url.Link("GetCities", new { requestParams.IncludePointsOfInterest, requestParams.Name, requestParams.Search, requestParams.PageNumber, requestParams.PageSize });
                 _logger.LogInformation($"Getting cities URL: {url}");
 
-                if (pageSize > _maxPageSize)
+                // META DATA. building meta data. correct page size if needed
+                if (requestParams.PageSize > RequestConstants.MAX_PAGE_SIZE)
                 {
-                    pageSize = _maxPageSize;
+                    requestParams.PageSize = RequestConstants.MAX_PAGE_SIZE;
                 }
 
-                var cities = await _repo.GetCitiesAsync(name, search, pageNumber, pageSize);
-                var results = _mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cities);
+                // how many total pages do we have?
+                int citiesCount = 0;
 
-                var totalCities = await _repo.GetCitiesCountAsync();
-                var metaData = MetaDataHelper.BuildCitiesMetaData(totalCities, pageNumber, pageSize);
+                // did they use a name filter? count all possible results
+                if (!string.IsNullOrEmpty(requestParams.Name))
+                {
+                    var allCities = await _service.GetAllCitiesAsync();
+                    var filteredCities = allCities.Where(c => c.Name.ToLower().Contains(requestParams.Name.ToLower()));
+                    citiesCount = filteredCities.Count();
 
-                // add as custom header
-                Response.Headers.Append("X-CityParameters", Newtonsoft.Json.JsonConvert.SerializeObject(metaData));
+                    // bad filter was used
+                    if (citiesCount == 0)
+                    {
+                        return Ok($"No cities found with the name containing {requestParams.Name}.");
+                    }
+                }
+                else
+                {
+                    // count all
+                    citiesCount = (await _service.GetAllCitiesAsync()).Count();
+                }
+
+                int totalPages = (int)Math.Ceiling(citiesCount / (double)requestParams.PageSize);
+
+                if (requestParams.PageNumber > totalPages)
+                {
+                    return BadRequest("You have requested more pages that are available.");
+                }
+
+                var metaData = MetaDataUtility.BuildCitiesMetaData(requestParams, citiesCount, _httpContextAccessor, _linkGenerator);
+                Response.Headers.Append("X-CityParameters", JsonConvert.SerializeObject(metaData));
+                // end of META DATA
+
+                var results = await _service.GetCitiesAsync(requestParams.Name ?? string.Empty, requestParams.Search ?? string.Empty, requestParams.PageNumber, requestParams.PageSize);
+
+                // add helper links
+                foreach (var city in results)
+                {
+                    city.Links.Add(UriLinkHelper.CreateLinkForCityWithinCollection(HttpContext.Request, city));
+                }
 
                 return Ok(results);
             }
@@ -105,23 +136,31 @@ namespace CityInfoAPI.Controllers
                 var url = Url.Link("GetCityByCityId", new { cityGuid, includePointsOfInterest });
                 _logger.LogInformation($"Getting City By Id URL: {url}");
 
-                var cityExists = await _repo.CityExistsAsync(cityGuid);
+                var cityExists = await _service.CityExistsAsync(cityGuid);
                 if (!cityExists)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found.");
                     return NotFound();
                 }
 
-                var city = await _repo.GetCityByCityIdAsync(cityGuid, includePointsOfInterest);
                 if (includePointsOfInterest)
                 {
-                    var results = _mapper.Map<CityDto>(city);
-                    return Ok(results);
+                    var city = await _service.GetCityAsync(cityGuid, includePointsOfInterest);
+                    city = UriLinkHelper.CreateLinksForCityWithPointsOfInterest(HttpContext.Request, city ?? new CityDto(), RequestConstants.MAX_PAGE_SIZE);
+
+                    // if points of interest were included
+                    foreach (PointOfInterestDto poi in city.PointsOfInterest)
+                    {
+                        poi.Links.Add(UriLinkHelper.CreateLinkForPointOfInterestWithinCollection(HttpContext.Request, poi));
+                    }
+
+                    return Ok(city);
                 }
                 else
                 {
-                    var results = _mapper.Map<CityWithoutPointsOfInterestDto>(city);
-                    return Ok(results);
+                    var city = await _service.GetCityWithoutPointsOfInterestAsync(cityGuid, includePointsOfInterest);
+                    city = UriLinkHelper.CreateLinksForCity(HttpContext.Request, city ?? new CityWithoutPointsOfInterestDto(), RequestConstants.MAX_PAGE_SIZE);
+                    return Ok(city);
                 }
             }
             catch (Exception ex)
@@ -147,32 +186,21 @@ namespace CityInfoAPI.Controllers
                 var url = Url.Link("CreateCity", null);
                 _logger.LogInformation($"CreateCity URL: {url}. Request: {JsonConvert.SerializeObject(request)}");
 
-                // guids are auto-generated and not provided by client. unlikely but just incase.
-                var cityExists = await _repo.CityExistsAsync(request.CityGuid);
+                // guids are auto-generated and not provided by client. unlikely but just in case.
+                var cityExists = await _service.CityExistsAsync(request.CityGuid);
                 if (cityExists)
                 {
                     return Conflict($"City {request.CityGuid} already exists.");
                 }
 
-                // map the request
-                var newCityRequest = _mapper.Map<City>(request);
-
-                // create new call
-                var newCity = await _repo.CreateCityAsync(newCityRequest);
-
-                // save changes
-                var success = await _repo.SaveChangesAsync();
-
-                if (!success)
+                var newCity = await _service.CreateCityAsync(request);
+                if (newCity == null)
                 {
                     _logger.LogError("An error occurred while creating city.");
                     return StatusCode(500, "An error occurred while creating city.");
                 }
 
-                // build proper results
-                var results = _mapper.Map<CityWithoutPointsOfInterestDto>(newCity);
-
-                return CreatedAtRoute("GetCityByCityId", new { cityGuid = results.CityGuid }, results);
+                return CreatedAtRoute("GetCityByCityId", new { cityGuid = newCity.CityGuid }, newCity);
             }
             catch (Exception ex)
             {
@@ -198,20 +226,15 @@ namespace CityInfoAPI.Controllers
                 var url = Url.Link("UpdateCity", null);
                 _logger.LogInformation($"UpdateCity URL: {url}. Request: {JsonConvert.SerializeObject(request)}");
 
-                var cityExists = await _repo.CityExistsAsync(cityGuid);
+                var cityExists = await _service.CityExistsAsync(cityGuid);
                 if (!cityExists)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found.");
                     return NotFound();
                 }
 
-                var city = await _repo.GetCityByCityIdAsync(cityGuid, false);
-
-                // map the request - override the values of the destination object w/ source
-                _mapper.Map(request, city);
-
-                var success = await _repo.SaveChangesAsync();
-                if (!success)
+                var updatedCity = await _service.UpdateCityAsync(request, cityGuid);
+                if (updatedCity == null)
                 {
                     _logger.LogError("An error occurred while updating city.");
                     return StatusCode(500, "An error occurred while updating city.");
@@ -245,14 +268,14 @@ namespace CityInfoAPI.Controllers
                 var url = Url.Link("PatchCity", null);
                 _logger.LogInformation($"PatchCity URL: {url}. Request: {JsonConvert.SerializeObject(patchDocument)}");
 
-                var cityExists = await _repo.CityExistsAsync(cityGuid);
+                var cityExists = await _service.CityExistsAsync(cityGuid);
                 if (!cityExists)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found when patching city.");
                     return NotFound();
                 }
 
-                var existingCity = await _repo.GetCityByCityIdAsync(cityGuid, false);
+                var existingCity = await _service.GetCityAsync(cityGuid, false);
 
                 // map the request - override the values of the destination object w/ source
                 var cityToPatch = _mapper.Map<CityUpdateDto>(existingCity);
@@ -270,7 +293,7 @@ namespace CityInfoAPI.Controllers
                 // map changes back to the entity
                 _mapper.Map(cityToPatch, existingCity);
 
-                var success = await _repo.SaveChangesAsync();
+                var success = await _service.SaveChangesAsync();
                 if (!success)
                 {
                     _logger.LogError("An error occurred while patching city.");
@@ -303,7 +326,7 @@ namespace CityInfoAPI.Controllers
                 _logger.LogInformation($"DeleteCity URL: {url}.");
 
                 // does the city exist?
-                var cityExists = await _repo.CityExistsAsync(cityGuid);
+                var cityExists = await _service.CityExistsAsync(cityGuid);
                 if (!cityExists)
                 {
                     _logger.LogWarning($"City with id {cityGuid} wasn't found.");
@@ -311,9 +334,7 @@ namespace CityInfoAPI.Controllers
                 }
 
                 // delete the city
-                await _repo.DeleteCityAsync(cityGuid);
-
-                var success = await _repo.SaveChangesAsync();
+                var success = await _service.DeleteCityAsync(cityGuid);
                 if (!success)
                 {
                     _logger.LogError("An error occurred while deleting city.");
