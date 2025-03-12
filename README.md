@@ -1,6 +1,6 @@
 # The City Info Demo API (.NET 8.0 version)
 ---
-*Version 1.0.0*
+*Version 1.0*
 
 ## Summary
 Welcome to the City Info Demo API - .NET 8 Version. Original version was in .NET 2.1 written in 2019. 
@@ -13,7 +13,8 @@ you needed to be able to provide all the "touristy" things to do for that specif
 This demo RESTful API does just that. It allows consumers to make request for USA Cities and their known "Points of Interest" (tourist attractions). It supports and demonstrates all HTTP verbs: GET, POST, PUT, PATCH, and DELETE.
 
 
-`https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/`
+`https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/`  
+
 `https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index.html`
 
 ## Platform 
