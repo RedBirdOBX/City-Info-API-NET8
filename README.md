@@ -1,6 +1,6 @@
 # The City Info Demo API (.NET 8.0 version)
 ---
-*Version 1.0.0
+*Version 1.0.0*
 
 ## Summary
 Welcome to the City Info Demo API - .NET 8 Version. Original version was in .NET 2.1 written in 2019. 
@@ -14,6 +14,7 @@ This demo RESTful API does just that. It allows consumers to make request for US
 
 
 `https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/`
+`https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index.html`
 
 ## Platform 
 - ASP.NET 8  
@@ -369,9 +370,9 @@ The Controllers and types in which they return are fully documented and notated 
 
 You can see all of this documentation via the Swagger UI interface.
 
-**Local:**  
+**Local**  
 [https://localhost:7024/swagger/index.html](https://localhost:7024/swagger/index.html)
 
 
-**Production:**  
-{url needed}
+**Production**  
+https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index.html
