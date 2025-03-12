@@ -1,26 +1,21 @@
 ﻿// Ignore Spelling: Href
 
+using System.Runtime.Serialization;
+
 namespace CityInfoAPI.Dtos.Models
 {
     /// <summary>
     /// link type to be included in responses
     /// </summary>
+    [DataContractAttribute]
     public class LinkDto
     {
         /// <summary>
-        /// the uri of the resource
+        /// default constructor
         /// </summary>
-        public string Href { get; set; }
-
-        /// <summary>
-        /// the responsibility of the uri
-        /// </summary>
-        public string Rel { get; set; }
-
-        /// <summary>
-        /// the type of request to be made
-        /// </summary>
-        public string Method { get; set; }
+        public LinkDto()
+        {
+        }
 
         /// <summary>
         /// constructor
@@ -34,5 +29,23 @@ namespace CityInfoAPI.Dtos.Models
             Rel = rel;
             Method = method;
         }
+
+        /// <summary>
+        /// the uri of the resource
+        /// </summary>
+        [DataMemberAttribute]
+        public string Href { get; set; }
+
+        /// <summary>
+        /// the responsibility of the uri
+        /// </summary>
+        [DataMemberAttribute]
+        public string Rel { get; set; }
+
+        /// <summary>
+        /// the type of request to be made
+        /// </summary>
+        [DataMemberAttribute]
+        public string Method { get; set; }
     }
 }

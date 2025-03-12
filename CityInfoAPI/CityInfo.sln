@@ -27,6 +27,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sql-Scripts", "Sql-Scripts"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CityInfoAPI.Service", "CityInfoAPI.Service\CityInfoAPI.Service.csproj", "{5F1A21DB-2EEF-4223-BB97-25101F64C92F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Postman", "Postman", "{9A4A01D1-0A93-41CB-9C55-E65CEA8B0D2B}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\Postman\Cities API NET8.postman_collection.json = Docs\Postman\Cities API NET8.postman_collection.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Imgs", "Imgs", "{4DE88F82-B59E-43FB-BA30-E5877C750054}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\Imgs\406.png = Docs\Imgs\406.png
+		Docs\Imgs\created-at-route.png = Docs\Imgs\created-at-route.png
+		Docs\Imgs\custom-response-header.png = Docs\Imgs\custom-response-header.png
+		Docs\Imgs\json.png = Docs\Imgs\json.png
+		Docs\Imgs\media-links.png = Docs\Imgs\media-links.png
+		Docs\Imgs\request-token.png = Docs\Imgs\request-token.png
+		Docs\Imgs\using-token-2.png = Docs\Imgs\using-token-2.png
+		Docs\Imgs\using-token.png = Docs\Imgs\using-token.png
+		Docs\Imgs\xml.png = Docs\Imgs\xml.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +73,8 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{530724D6-85F3-4BAD-BCF4-966751CEF182} = {26EDF3EA-95D6-474D-9FC3-C9A1EAF14B38}
+		{9A4A01D1-0A93-41CB-9C55-E65CEA8B0D2B} = {26EDF3EA-95D6-474D-9FC3-C9A1EAF14B38}
+		{4DE88F82-B59E-43FB-BA30-E5877C750054} = {26EDF3EA-95D6-474D-9FC3-C9A1EAF14B38}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B7EB108E-F67C-47B1-9502-43ECFE0F3950}

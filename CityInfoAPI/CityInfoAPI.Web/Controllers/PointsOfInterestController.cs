@@ -318,6 +318,13 @@ namespace CityInfoAPI.Controllers
                 // apply the patch - grab the updates and update the dto
                 patchDocument.ApplyTo(pointOfInterestToPatch, ModelState);
 
+                // see if updates are valid
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogWarning($"Invalid model state for the patch.");
+                    return BadRequest(ModelState);
+                }
+
                 // validate the final version
                 if (!TryValidateModel(pointOfInterestToPatch))
                 {
@@ -325,11 +332,12 @@ namespace CityInfoAPI.Controllers
                     return BadRequest(ModelState);
                 }
 
-                // map changes back to the entity
+                // map changes back to the entity. source / destination
                 _mapper.Map(pointOfInterestToPatch, existingPointOfInterest);
 
-                var success = await _service.SaveChangesAsync();
-                if (!success)
+                // now that we have a updated entity, try to save it.
+                var updatedPoint = await _service.UpdatePointOfInterestAsync(cityGuid, pointGuid, pointOfInterestToPatch);
+                if (updatedPoint == null)
                 {
                     _logger.LogError("An error occurred while patching point of interest.");
                     return StatusCode(500, "An error occurred while patching point of interest.");

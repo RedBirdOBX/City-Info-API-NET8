@@ -283,6 +283,13 @@ namespace CityInfoAPI.Controllers
                 // apply the patch - grab the updates and update the dto
                 patchDocument.ApplyTo(cityToPatch, ModelState);
 
+                // see if updates are valid
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogWarning($"Invalid model state for the patch.");
+                    return BadRequest(ModelState);
+                }
+
                 // validate the final version
                 if (!TryValidateModel(cityToPatch))
                 {
@@ -290,11 +297,12 @@ namespace CityInfoAPI.Controllers
                     return BadRequest(ModelState);
                 }
 
-                // map changes back to the entity
+                // map changes back to the entity. source / destination
                 _mapper.Map(cityToPatch, existingCity);
 
-                var success = await _service.SaveChangesAsync();
-                if (!success)
+                // now that we have a updated entity, try to save it.
+                var updatedCity = await _service.UpdateCityAsync(cityToPatch, cityGuid);
+                if (updatedCity == null)
                 {
                     _logger.LogError("An error occurred while patching city.");
                     return StatusCode(500, "An error occurred while patching city.");

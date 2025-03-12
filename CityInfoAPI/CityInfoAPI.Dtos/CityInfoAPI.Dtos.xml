@@ -109,6 +109,19 @@
             link type to be included in responses
             </summary>
         </member>
+        <member name="M:CityInfoAPI.Dtos.Models.LinkDto.#ctor">
+            <summary>
+            default constructor
+            </summary>
+        </member>
+        <member name="M:CityInfoAPI.Dtos.Models.LinkDto.#ctor(System.String,System.String,System.String)">
+            <summary>
+            constructor
+            </summary>
+            <param name="href">uri to return</param>
+            <param name="rel">responsibility of uri</param>
+            <param name="method">type of request</param>
+        </member>
         <member name="P:CityInfoAPI.Dtos.Models.LinkDto.Href">
             <summary>
             the uri of the resource
@@ -123,14 +136,6 @@
             <summary>
             the type of request to be made
             </summary>
-        </member>
-        <member name="M:CityInfoAPI.Dtos.Models.LinkDto.#ctor(System.String,System.String,System.String)">
-            <summary>
-            constructor
-            </summary>
-            <param name="href">uri to return</param>
-            <param name="rel">responsibility of uri</param>
-            <param name="method">type of request</param>
         </member>
         <member name="T:CityInfoAPI.Dtos.Models.LinkedResourcesDto">
             <summary>
