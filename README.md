@@ -13,7 +13,7 @@ you needed to be able to provide all the "touristy" things to do for that specif
 This demo RESTful API does just that. It allows consumers to make request for USA Cities and their known "Points of Interest" (tourist attractions). It supports and demonstrates all HTTP verbs: GET, POST, PUT, PATCH, and DELETE.
 
 
-`{url here}`
+`https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/`
 
 ## Platform 
 - ASP.NET 8  

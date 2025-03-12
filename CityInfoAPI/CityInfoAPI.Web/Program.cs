@@ -181,7 +181,17 @@ var app = builder.Build();
 // Configure the HTTP request pipeline. //
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler();
+    //app.UseExceptionHandler();
+    app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI(setUpAction =>
+    {
+        var descriptions = app.DescribeApiVersions();
+        foreach (var description in descriptions)
+        {
+            setUpAction.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+        }
+    });
 }
 else
 {
