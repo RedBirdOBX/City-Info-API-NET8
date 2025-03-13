@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{26EDF3EA-95D6-474D-9FC3-C9A1EAF14B38}"
 	ProjectSection(SolutionItems) = preProject
 		..\.gitignore = ..\.gitignore
+		..\pull_request_template.md = ..\pull_request_template.md
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject

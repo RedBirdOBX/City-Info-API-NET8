@@ -1,4 +1,4 @@
-# The City Info Demo API (.NET 8.0 version)
+# City Info Demo API (.NET 8.0 version)
 ---
 *Version 1.0*
 
