@@ -3,6 +3,7 @@ using Asp.Versioning.ApiExplorer;
 using CityInfoAPI.Data.DbContents;
 using CityInfoAPI.Data.Repositories;
 using CityInfoAPI.Service;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,32 @@ builder.Logging.ClearProviders();
 builder.Host.UseSerilog();
 
 //--LOGGING--//
-Log.Logger = new LoggerConfiguration()
+var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+if (environment == Environments.Development)
+{
+    Log.Logger = new LoggerConfiguration()
+                    .MinimumLevel.Information()
+                    .WriteTo.MSSqlServer
+                    (
+                        connectionString: builder.Configuration["DbConnectionString"],
+                        sinkOptions: new MSSqlServerSinkOptions
+                        {
+                            TableName = "Logs",
+                            SchemaName = "dbo",
+                            AutoCreateSqlTable = true
+                        },
+                        restrictedToMinimumLevel: LogEventLevel.Information,
+                        formatProvider: null,
+                        columnOptions: null,
+                        logEventFormatter: null
+                    )
+                    .WriteTo.Console()
+                    .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
+                    .CreateLogger();
+}
+else
+{
+    Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .WriteTo.MSSqlServer
                 (
@@ -35,9 +61,12 @@ Log.Logger = new LoggerConfiguration()
                     columnOptions: null,
                     logEventFormatter: null
                 )
-                .WriteTo.Console()
-                .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
-            .CreateLogger();
+                .WriteTo.ApplicationInsights(new TelemetryConfiguration()
+                {
+                    InstrumentationKey = builder.Configuration["ApplicationInsightsInstrumentationKey:InstrumentationKey"]
+                }, TelemetryConverter.Traces)
+                .CreateLogger();
+}
 
 
 
