@@ -53,6 +53,8 @@ may be off.
 - Allow for multiple Cities creation (endpoint).
 - Allow for multiple Points of Interest creation (endpoint).
 - Use Docker.
+- Add true user authentication / token assign.
+- Build log table maintenance routine.
 
 ---
 
