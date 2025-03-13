@@ -3,6 +3,7 @@ using Asp.Versioning.ApiExplorer;
 using CityInfoAPI.Data.DbContents;
 using CityInfoAPI.Data.Repositories;
 using CityInfoAPI.Service;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -174,6 +175,13 @@ builder.Services.AddSwaggerGen(setUpAction =>
 // https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-8.0
 builder.Services.AddHealthChecks();
 
+// add header forwarding
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
+
+
 
 //--APPLICATION--//
 var app = builder.Build();
@@ -181,6 +189,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline. //
 if (!app.Environment.IsDevelopment())
 {
+    // for now, since this is a demo, let's expose the errors and swagger in production.
     //app.UseExceptionHandler();
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
@@ -206,6 +215,8 @@ else
         }
     });
 }
+
+app.UseForwardedHeaders();
 
 app.UseHttpsRedirection();
 

@@ -1,4 +1,4 @@
-# The City Info Demo API (.NET 8.0 version)
+# City Info Demo API (.NET 8.0 version)
 ---
 *Version 1.0*
 
@@ -52,6 +52,7 @@ may be off.
 - Use [HttpHead] attribute.
 - Allow for multiple Cities creation (endpoint).
 - Allow for multiple Points of Interest creation (endpoint).
+- Use Docker.
 
 ---
 
