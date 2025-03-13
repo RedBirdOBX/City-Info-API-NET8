@@ -6,12 +6,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DocumentationFile>CityInfoApi.Web.xml</DocumentationFile>
+    <ApplicationInsightsResourceId>/subscriptions/7e05dc19-1660-4889-9b5a-4f15ead1b8a9/resourceGroups/DSF-Resource-Group/providers/microsoft.insights/components/city-info-api-app-insights</ApplicationInsightsResourceId>
+    <UserSecretsId>bb24f9ec-6645-4148-b961-54e7010e185a</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.13" />

@@ -41,6 +41,10 @@ if (environment == Environments.Development)
                     )
                     .WriteTo.Console()
                     .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
+                    .WriteTo.ApplicationInsights(new TelemetryConfiguration()
+                    {
+                        InstrumentationKey = builder.Configuration["Azure:ApplicationInsightsInstrumentationKey"]
+                    }, TelemetryConverter.Traces)
                     .CreateLogger();
 }
 else
@@ -208,6 +212,10 @@ builder.Services.AddHealthChecks();
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
+builder.Services.AddApplicationInsightsTelemetry(new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions
+{
+    ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]
 });
 
 
