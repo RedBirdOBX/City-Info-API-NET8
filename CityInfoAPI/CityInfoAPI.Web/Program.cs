@@ -63,7 +63,7 @@ else
                 )
                 .WriteTo.ApplicationInsights(new TelemetryConfiguration()
                 {
-                    InstrumentationKey = builder.Configuration["ApplicationInsightsInstrumentationKey:InstrumentationKey"]
+                    InstrumentationKey = builder.Configuration["Azure:ApplicationInsightsInstrumentationKey"]
                 }, TelemetryConverter.Traces)
                 .CreateLogger();
 }
