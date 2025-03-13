@@ -52,6 +52,7 @@ may be off.
 - Use [HttpHead] attribute.
 - Allow for multiple Cities creation (endpoint).
 - Allow for multiple Points of Interest creation (endpoint).
+- Use Docker.
 
 ---
 
