@@ -1,6 +1,3 @@
-USE [redbirdobx]
-GO
-
 /****** Object:  Table [dbo].[Logs]    Script Date: 6/21/2023 1:06:55 PM ******/
 SET ANSI_NULLS ON
 GO
