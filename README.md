@@ -36,25 +36,26 @@ may be off.
 ### Enhancements
 
 - Consolidate database & server in Azure.
+- Add Unit Tests.
 - Allow create City endpoint (POST) to accept new Points of Interest with single save. Create the new Point(s) of Interest as well as new City.
 - Block POSTS on resource root endpoints.
-- use Azure KV for connection strings and other secrets.
 - Utilize [HttpOptions] attribute.
+- Use [ProducesDefaultResponseType] attribute.
+- Use [HttpHead] attribute.
 - Implement better validation for patches (see orig .NET 2 api)
 - Implement a Point of Interest limit. A city cannot have more than 25 Points of Interest. Assuming the city is under the limit, you can create a new Point of Interest.
-- Add caching. 
 - Add States entities and all resources.
 - Add child navigational property to Point of Interest; add City to Point of Interest.
 - Add Custom Validation Annotations (like duplicate name check). 
-- Add Unit Tests.
 - Make version number configurable. Don't forget UriLinkHelper.
-- Use [ProducesDefaultResponseType] attribute.
-- Use [HttpHead] attribute.
 - Allow for multiple Cities creation (endpoint).
 - Allow for multiple Points of Interest creation (endpoint).
+- use Azure KV for connection strings and other secrets.
+- Add caching.  
 - Use Docker.
 - Add true user authentication / token assign.
 - Build log table maintenance routine.
+- Add Application Insights
 
 ---
 
