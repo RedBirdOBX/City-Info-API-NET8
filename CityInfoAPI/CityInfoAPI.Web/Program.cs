@@ -3,7 +3,6 @@ using Asp.Versioning.ApiExplorer;
 using CityInfoAPI.Data.DbContents;
 using CityInfoAPI.Data.Repositories;
 using CityInfoAPI.Service;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
@@ -41,10 +40,6 @@ if (environment == Environments.Development)
                     )
                     .WriteTo.Console()
                     .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
-                    .WriteTo.ApplicationInsights(new TelemetryConfiguration()
-                    {
-                        InstrumentationKey = builder.Configuration["Azure:ApplicationInsightsInstrumentationKey"]
-                    }, TelemetryConverter.Traces)
                     .CreateLogger();
 }
 else
@@ -65,10 +60,6 @@ else
                     columnOptions: null,
                     logEventFormatter: null
                 )
-                .WriteTo.ApplicationInsights(new TelemetryConfiguration()
-                {
-                    InstrumentationKey = builder.Configuration["Azure:ApplicationInsightsInstrumentationKey"]
-                }, TelemetryConverter.Traces)
                 .CreateLogger();
 }
 
@@ -212,10 +203,6 @@ builder.Services.AddHealthChecks();
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-});
-builder.Services.AddApplicationInsightsTelemetry(new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions
-{
-    ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]
 });
 
 

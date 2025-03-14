@@ -55,6 +55,7 @@ may be off.
 - Use Docker.
 - Add true user authentication / token assign.
 - Build log table maintenance routine.
+- Add Application Insights
 
 ---
 
