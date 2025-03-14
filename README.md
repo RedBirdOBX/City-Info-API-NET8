@@ -35,7 +35,6 @@ may be off.
 
 ### Enhancements
 
-- Consolidate database & server in Azure.
 - Add Unit Tests.
 - Allow create City endpoint (POST) to accept new Points of Interest with single save. Create the new Point(s) of Interest as well as new City.
 - Block POSTS on resource root endpoints.

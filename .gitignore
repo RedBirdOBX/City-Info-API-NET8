@@ -11,3 +11,4 @@ CityInfoAPI/CityInfoAPI.Web/CityInfoAPI.Web.csproj.user
 /CityInfoAPI/CityInfoAPI.Web/Uploads
 /CityInfoAPI/CityInfoAPI.Service/bin/Debug/net8.0
 /CityInfoAPI/CityInfoAPI.Service/obj
+/CityInfoAPI/CityInfoAPI.Web/Properties/launchSettings.json

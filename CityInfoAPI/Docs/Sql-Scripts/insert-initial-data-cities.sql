@@ -1,7 +1,3 @@
-USE [city-info]
-GO
-
-
 BEGIN TRANSACTION;
 	INSERT INTO [dbo].[Cities]
 			   ([CityGuid],[Name],[Description],[CreatedOn])
