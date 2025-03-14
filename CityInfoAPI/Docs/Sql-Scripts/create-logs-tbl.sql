@@ -1,4 +1,4 @@
-USE [city-info]
+USE [redbirdobx]
 GO
 
 /****** Object:  Table [dbo].[Logs]    Script Date: 6/21/2023 1:06:55 PM ******/
@@ -16,7 +16,7 @@ CREATE TABLE [dbo].[Logs](
 	[TimeStamp] [datetime] NOT NULL,
 	[Exception] [nvarchar](max) NULL,
 	[Properties] [nvarchar](max) NULL,
- CONSTRAINT [PK_Logs] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_Logs] PRIMARY KEY CLUSTERED
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
