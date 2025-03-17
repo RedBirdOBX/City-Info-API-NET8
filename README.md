@@ -39,6 +39,7 @@ may be off.
 - Allow create City endpoint (POST) to accept new Points of Interest with single save. Create the new Point(s) of Interest as well as new City.
 - Block POSTS on resource root endpoints.
 - Utilize [HttpOptions] attribute.
+- Utilize [NotMapped] attribute.
 - Use [ProducesDefaultResponseType] attribute.
 - Use [HttpHead] attribute.
 - Implement better validation for patches (see orig .NET 2 api)
@@ -55,6 +56,8 @@ may be off.
 - Add true user authentication / token assign.
 - Build log table maintenance routine.
 - Add Application Insights
+- Learn how to add svc registrations as a method extension.
+- Factory Pattern / Svc.
 
 ---
 
