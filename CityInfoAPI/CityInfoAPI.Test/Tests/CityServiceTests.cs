@@ -6,7 +6,7 @@ using CityInfoAPI.Service;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace CityInfoAPI.Test
+namespace CityInfoAPI.Test.Tests
 {
     public class CityServiceTests
     {
@@ -15,6 +15,8 @@ namespace CityInfoAPI.Test
         private readonly Mock<ICityRepository> _repo = new Mock<ICityRepository>();
         private readonly IMapper _mapper;
         private readonly Mock<ILogger<CityService>> _logger = new Mock<ILogger<CityService>>();
+        private readonly Guid _cityGuid = Guid.Parse("38276231-1918-452d-a3e9-6f50873a95d2");
+        private readonly Guid _invalidCityGuid = Guid.Parse("e5a5f605-627d-4aec-9f5c-e9939ea0a6cf");
 
         public CityServiceTests()
         {
@@ -22,10 +24,12 @@ namespace CityInfoAPI.Test
             _cityService = new CityService(_repo.Object, _mapper, _logger.Object);
         }
 
+        // what about filters and searches?
+
         [Fact]
-        public async Task GetCities_RequestingCities_ReturnsListOfCityWithoutPointOfInterestDtos()
+        public async Task GetCitiesAsync_RequestingCities_ReturnsListOfCityWithoutPointOfInterestDtos()
         {
-            // arrange. build moq'd response
+            // arrange. build moq'd repo response
             var cities = new List<City>
             {
                 new City()
@@ -50,7 +54,7 @@ namespace CityInfoAPI.Test
             _repo.Setup(x => x.GetCitiesAsync(string.Empty, string.Empty, 1, 100)).ReturnsAsync(cities);
 
             // act
-            var cityDtos = await _cityService.GetCitiesAsync(string.Empty,string.Empty, 1, 100);
+            var cityDtos = await _cityService.GetCitiesAsync(string.Empty, string.Empty, 1, 100);
 
             // assert
             Assert.True(cityDtos.Count() > 0, "GetCitiesAsync did not return any Cities.");
@@ -84,7 +88,7 @@ namespace CityInfoAPI.Test
             _repo.Setup(x => x.GetCitiesAsync(string.Empty, string.Empty, 1, 100)).ReturnsAsync(cities);
 
             // act
-            var cityDtos = await _cityService.GetCitiesAsync(string.Empty,string.Empty, 1, 100);
+            var cityDtos = await _cityService.GetCitiesAsync(string.Empty, string.Empty, 1, 100);
 
             // assert
             Assert.All(cityDtos, c => Assert.IsType<CityWithoutPointsOfInterestDto>(c));
@@ -162,10 +166,9 @@ namespace CityInfoAPI.Test
         public async Task CityExists_CityIfValidCityExists_ReturnsTrue()
         {
             // arrange. build moq'd response
-            var cityGuid = Guid.Parse("38276231-1918-452d-a3e9-6f50873a95d2");
             var city = new City()
             {
-                CityGuid = cityGuid,
+                CityGuid = _cityGuid,
                 Name = "City 1",
                 Description = "Description 1",
                 CreatedOn = DateTime.Today,
@@ -174,10 +177,10 @@ namespace CityInfoAPI.Test
             // setting up the method of the repo we want to mock.
             // Mock the REPO method - prevents making a true db call.
             // Instructs the moq to return what we just created
-            _repo.Setup(x => x.CityExistsAsync(cityGuid)).ReturnsAsync(true);
+            _repo.Setup(x => x.CityExistsAsync(_cityGuid)).ReturnsAsync(true);
 
             // act
-            var response = await _cityService.CityExistsAsync(cityGuid);
+            var response = await _cityService.CityExistsAsync(_cityGuid);
 
             // assert
             Assert.True(response);
@@ -187,11 +190,9 @@ namespace CityInfoAPI.Test
         public async Task CityExists_CityIfInvalidCityExists_ReturnsFalse()
         {
             // arrange. build moq'd response
-            var invalidCityGuid = Guid.Parse("e5a5f605-627d-4aec-9f5c-e9939ea0a6cf");
-            var cityGuid = Guid.Parse("38276231-1918-452d-a3e9-6f50873a95d2");
             var city = new City()
             {
-                CityGuid = cityGuid,
+                CityGuid = _cityGuid,
                 Name = "City 1",
                 Description = "Description 1",
                 CreatedOn = DateTime.Today,
@@ -200,10 +201,10 @@ namespace CityInfoAPI.Test
             // setting up the method of the repo we want to mock.
             // Mock the REPO method - prevents making a true db call.
             // Instructs the moq to return what we just created
-            _repo.Setup(x => x.CityExistsAsync(invalidCityGuid)).ReturnsAsync(false);
+            _repo.Setup(x => x.CityExistsAsync(_invalidCityGuid)).ReturnsAsync(false);
 
             // act
-            var response = await _cityService.CityExistsAsync(cityGuid);
+            var response = await _cityService.CityExistsAsync(_cityGuid);
 
             // assert
             Assert.False(response);
