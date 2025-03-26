@@ -93,7 +93,6 @@ builder.Services.AddProblemDetails(options =>
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 builder.Services.AddTransient<IMailService, CloudMailService>();
 builder.Services.AddDbContext<CityInfoDbContext>(dbContextOptions => dbContextOptions.UseSqlServer(builder.Configuration["DbConnectionString"]));
-//builder.Services.AddSingleton<CityInfoMemoryDataStore>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IPointsOfInterestRepository, PointsOfInterestRepository>();
 builder.Services.AddScoped<ICityService, CityService>();

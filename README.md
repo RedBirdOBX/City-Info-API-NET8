@@ -35,10 +35,10 @@ may be off.
 
 ### Enhancements
 
-- Add Unit Tests.
 - Allow create City endpoint (POST) to accept new Points of Interest with single save. Create the new Point(s) of Interest as well as new City.
 - Block POSTS on resource root endpoints.
 - Utilize [HttpOptions] attribute.
+- Utilize [NotMapped] attribute.
 - Use [ProducesDefaultResponseType] attribute.
 - Use [HttpHead] attribute.
 - Implement better validation for patches (see orig .NET 2 api)
@@ -55,6 +55,8 @@ may be off.
 - Add true user authentication / token assign.
 - Build log table maintenance routine.
 - Add Application Insights
+- Learn how to add svc registrations as a method extension.
+- Factory Pattern / Svc.
 
 ---
 
@@ -68,7 +70,7 @@ may be off.
 - [Versions](#versions)
 - [HATEOS](#hateos)
 - [Swagger and Documentation](#swagger)
- 
+- [Releases](#releases)
 
 <a href="" id="test" name="test"></a>
 ## How To Test and Run Locally
@@ -380,3 +382,13 @@ You can see all of this documentation via the Swagger UI interface.
 
 **Production**  
 https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index.html
+
+
+<a href="" id="releases" name="releases"></a>
+## Releases
+
+1.0.0 - Initial Release, 03.14.2025 
+1.1.0 - Added xUnit Unit Tests 03.26.2025
+
+
+
