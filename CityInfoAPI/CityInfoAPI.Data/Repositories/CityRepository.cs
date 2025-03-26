@@ -54,7 +54,6 @@ namespace CityInfoAPI.Data.Repositories
                                     .Contains(search) || (c.Description != null && c.Description.ToLower().Contains(search)));
                 }
 
-                DateTime start = DateTime.Now;
                 // query is sent
                 var results = await cities.OrderBy(c => c.Name)
                                             .Skip(pageSize * (pageNumber - 1))
