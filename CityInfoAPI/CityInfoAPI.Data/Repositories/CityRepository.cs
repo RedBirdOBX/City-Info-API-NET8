@@ -60,16 +60,6 @@ namespace CityInfoAPI.Data.Repositories
                                             .Skip(pageSize * (pageNumber - 1))
                                             .Take(pageSize)
                                             .ToListAsync();
-
-
-                Console.WriteLine("");
-                Console.WriteLine("");
-                TimeSpan timeSpan = DateTime.Now - start;
-                Console.WriteLine($"seconds: {timeSpan.TotalSeconds}");
-                Console.WriteLine("");
-                Console.WriteLine("");
-
-
                 return results;
             }
             catch (Exception ex)
