@@ -93,12 +93,11 @@ builder.Services.AddProblemDetails(options =>
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 builder.Services.AddTransient<IMailService, CloudMailService>();
 builder.Services.AddDbContext<CityInfoDbContext>(dbContextOptions => dbContextOptions.UseSqlServer(builder.Configuration["DbConnectionString"]));
-builder.Services.AddScoped<ICityRepository, CityMemoryRepository>();
+builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IPointsOfInterestRepository, PointsOfInterestRepository>();
 builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<IPointsOfInterestService, PointsOfInterestService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-//builder.Services.AddSingleton<CityInfoMemoryDataStore>();
 
 
 // AutoMapper.  Scan for profiles.

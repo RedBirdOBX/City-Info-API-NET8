@@ -1,8 +1,9 @@
 using AutoMapper;
-using CityInfoAPI.Data.Entities;
+using CityInfoAPI.Data;
 using CityInfoAPI.Data.Repositories;
 using CityInfoAPI.Dtos.Models;
 using CityInfoAPI.Service;
+using CityInfoAPI.Web.Controllers.RequestHelpers.Models;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -24,33 +25,12 @@ namespace CityInfoAPI.Test.Tests
             _cityService = new CityService(_repo.Object, _mapper, _logger.Object);
         }
 
-        // what about filters and searches?
-
         [Fact]
+        [Trait("Category","City Service Tests")]
         public async Task GetCitiesAsync_RequestingCities_ReturnsListOfCityWithoutPointOfInterestDtos()
         {
             // arrange. build moq'd repo response
-            var cities = new List<City>
-            {
-                new City()
-                {
-                    CityGuid = Guid.NewGuid(),
-                    Name = "City 1",
-                    Description = "Description 1",
-                    CreatedOn = DateTime.Today,
-                },
-                new City()
-                {
-                    CityGuid = Guid.NewGuid(),
-                    Name = "City 2",
-                    Description = "Description 2",
-                    CreatedOn = DateTime.Today,
-                }
-            };
-
-            // setting up the method of the repo we want to mock.
-            // Mock the REPO method - prevents making a true db call.
-            // Instructs the moq to return what we just created
+            var cities = new CityInfoTestEntityData().Cities;
             _repo.Setup(x => x.GetCitiesAsync(string.Empty, string.Empty, 1, 100)).ReturnsAsync(cities);
 
             // act
@@ -61,30 +41,11 @@ namespace CityInfoAPI.Test.Tests
         }
 
         [Fact]
+        [Trait("Category","City Service Tests")]
         public async Task GetCities_RequestingCities_ReturnsListOfTypeCityWithoutPointOfInterestDtos()
         {
             // arrange. build moq'd response
-            var cities = new List<City>
-            {
-                new City()
-                {
-                    CityGuid = Guid.NewGuid(),
-                    Name = "City 1",
-                    Description = "Description 1",
-                    CreatedOn = DateTime.Today,
-                },
-                new City()
-                {
-                    CityGuid = Guid.NewGuid(),
-                    Name = "City 2",
-                    Description = "Description 2",
-                    CreatedOn = DateTime.Today,
-                }
-            };
-
-            // setting up the method of the repo we want to mock.
-            // Mock the REPO method - prevents making a true db call.
-            // Instructs the moq to return what we just created
+            var cities = new CityInfoTestEntityData().Cities;
             _repo.Setup(x => x.GetCitiesAsync(string.Empty, string.Empty, 1, 100)).ReturnsAsync(cities);
 
             // act
@@ -95,30 +56,11 @@ namespace CityInfoAPI.Test.Tests
         }
 
         [Fact]
+        [Trait("Category","City Service Tests")]
         public async Task GetAllCities_RequestingCities_ReturnsListOfCityWithoutPointOfInterestDtos()
         {
             // arrange. build moq'd response
-            var cities = new List<City>
-            {
-                new City()
-                {
-                    CityGuid = Guid.NewGuid(),
-                    Name = "City 1",
-                    Description = "Description 1",
-                    CreatedOn = DateTime.Today,
-                },
-                new City()
-                {
-                    CityGuid = Guid.NewGuid(),
-                    Name = "City 2",
-                    Description = "Description 2",
-                    CreatedOn = DateTime.Today,
-                }
-            };
-
-            // setting up the method of the repo we want to mock.
-            // Mock the REPO method - prevents making a true db call.
-            // Instructs the moq to return what we just created
+            var cities = new CityInfoTestEntityData().Cities;
             _repo.Setup(x => x.GetCitiesUnsortedAsync()).ReturnsAsync(cities);
 
             // act
@@ -129,30 +71,11 @@ namespace CityInfoAPI.Test.Tests
         }
 
         [Fact]
+        [Trait("Category","City Service Tests")]
         public async Task GetAllCities_RequestingCities_ReturnsListOfTypeCityWithoutPointOfInterestDtos()
         {
             // arrange. build moq'd response
-            var cities = new List<City>
-            {
-                new City()
-                {
-                    CityGuid = Guid.NewGuid(),
-                    Name = "City 1",
-                    Description = "Description 1",
-                    CreatedOn = DateTime.Today,
-                },
-                new City()
-                {
-                    CityGuid = Guid.NewGuid(),
-                    Name = "City 2",
-                    Description = "Description 2",
-                    CreatedOn = DateTime.Today,
-                }
-            };
-
-            // setting up the method of the repo we want to mock.
-            // Mock the REPO method - prevents making a true db call.
-            // Instructs the moq to return what we just created
+            var cities = new CityInfoTestEntityData().Cities;
             _repo.Setup(x => x.GetCitiesUnsortedAsync()).ReturnsAsync(cities);
 
             // act
@@ -163,20 +86,10 @@ namespace CityInfoAPI.Test.Tests
         }
 
         [Fact]
+        [Trait("Category","City Service Tests")]
         public async Task CityExists_CityIfValidCityExists_ReturnsTrue()
         {
             // arrange. build moq'd response
-            var city = new City()
-            {
-                CityGuid = _cityGuid,
-                Name = "City 1",
-                Description = "Description 1",
-                CreatedOn = DateTime.Today,
-            };
-
-            // setting up the method of the repo we want to mock.
-            // Mock the REPO method - prevents making a true db call.
-            // Instructs the moq to return what we just created
             _repo.Setup(x => x.CityExistsAsync(_cityGuid)).ReturnsAsync(true);
 
             // act
@@ -187,20 +100,10 @@ namespace CityInfoAPI.Test.Tests
         }
 
         [Fact]
+        [Trait("Category","City Service Tests")]
         public async Task CityExists_CityIfInvalidCityExists_ReturnsFalse()
         {
             // arrange. build moq'd response
-            var city = new City()
-            {
-                CityGuid = _cityGuid,
-                Name = "City 1",
-                Description = "Description 1",
-                CreatedOn = DateTime.Today,
-            };
-
-            // setting up the method of the repo we want to mock.
-            // Mock the REPO method - prevents making a true db call.
-            // Instructs the moq to return what we just created
             _repo.Setup(x => x.CityExistsAsync(_invalidCityGuid)).ReturnsAsync(false);
 
             // act
@@ -208,6 +111,65 @@ namespace CityInfoAPI.Test.Tests
 
             // assert
             Assert.False(response);
+        }
+
+        [Fact]
+        [Trait("Category","City Service Tests")]
+        public async Task GetCitiesAsync_PagingWorksProperty_ProperNumberOfResultsAreSkipped()
+        {
+            // arrange
+            var page = 2;
+            var pageSize = 5;
+            var nameFilter = string.Empty;
+            var searchString = string.Empty;
+
+            // should skip first 5
+            var cities = new CityInfoTestEntityData().Cities.Skip((page - 1) * pageSize).Take(pageSize);
+            _repo.Setup(x => x.GetCitiesAsync(nameFilter, searchString, page, pageSize)).ReturnsAsync(cities);
+
+            // act
+            var response = await _cityService.GetCitiesAsync(nameFilter, searchString, page, pageSize);
+
+            // assert - should return 5
+            Assert.True(response.Count() == 5);
+        }
+
+        [Fact]
+        [Trait("Category","City Service Tests")]
+        public async Task GetCitiesAsync_NameSearch_ProperlyFindsCitiesMatchingSearchCriteria()
+        {
+            // arrange
+            var requestParams = new CityRequestParameters()
+            {
+                Search = "the"
+            };
+            var cities = new CityInfoTestEntityData().Cities.Where(c => c.Name.Contains(requestParams.Search) || c.Description.Contains(requestParams.Search)).Take(requestParams.PageSize);
+            _repo.Setup(x => x.GetCitiesAsync(string.Empty, requestParams.Search, requestParams.PageNumber, requestParams.PageSize)).ReturnsAsync(cities);
+
+            // act
+            var response = await _cityService.GetCitiesAsync(string.Empty, requestParams.Search, requestParams.PageNumber, requestParams.PageSize);
+
+            // assert - should return 4
+            Assert.True(response.Count() == 4);
+        }
+
+        [Fact]
+        [Trait("Category","City Service Tests")]
+        public async Task GetCitiesAsync_NameFilter_ProperlyFindsCitiesMatchingName()
+        {
+            // arrange
+            var requestParams = new CityRequestParameters()
+            {
+                Name = "Richmond (in memory)"
+            };
+            var cities = new CityInfoTestEntityData().Cities.Where(c => c.Name.ToLower().Equals(requestParams.Name.ToLower()));
+            _repo.Setup(x => x.GetCitiesAsync(requestParams.Name.ToLower(), string.Empty, requestParams.PageNumber, requestParams.PageSize)).ReturnsAsync(cities);
+
+            // act
+            var response = await _cityService.GetCitiesAsync(requestParams.Name.ToLower(), string.Empty, requestParams.PageNumber, requestParams.PageSize);
+
+            // assert - should return
+            Assert.True(response.Count() == 1);
         }
     }
 }

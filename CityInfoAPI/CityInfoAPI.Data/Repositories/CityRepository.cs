@@ -54,11 +54,22 @@ namespace CityInfoAPI.Data.Repositories
                                     .Contains(search) || (c.Description != null && c.Description.ToLower().Contains(search)));
                 }
 
+                DateTime start = DateTime.Now;
                 // query is sent
                 var results = await cities.OrderBy(c => c.Name)
                                             .Skip(pageSize * (pageNumber - 1))
                                             .Take(pageSize)
                                             .ToListAsync();
+
+
+                Console.WriteLine("");
+                Console.WriteLine("");
+                TimeSpan timeSpan = DateTime.Now - start;
+                Console.WriteLine($"seconds: {timeSpan.TotalSeconds}");
+                Console.WriteLine("");
+                Console.WriteLine("");
+
+
                 return results;
             }
             catch (Exception ex)
