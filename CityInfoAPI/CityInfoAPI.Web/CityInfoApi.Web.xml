@@ -194,13 +194,15 @@
             <response code="401">unauthorized request</response>
             <response code="500">internal error</response>
         </member>
-        <member name="M:CityInfoAPI.Controllers.CitiesController.#ctor(Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.CitiesController},AutoMapper.IMapper,CityInfoAPI.Service.ICityService,Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.AspNetCore.Routing.LinkGenerator)">
+        <member name="M:CityInfoAPI.Controllers.CitiesController.#ctor(Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.CitiesController},AutoMapper.IMapper,CityInfoAPI.Service.ICityService,CityInfoAPI.Service.IPointsOfInterestService,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.AspNetCore.Routing.LinkGenerator)">
             <summary>
             Constructor
             </summary>
             <param name="logger"></param>
             <param name="mapper"></param>
             <param name="service"></param>
+            <param name="pointsService"></param>
+            <param name="configuration"></param>
             <param name="httpContextAccessor"></param>
             <param name="linkGenerator"></param>
         </member>
@@ -226,6 +228,12 @@
             <example>{baseUrl}/api/cities</example>
             <response code="201">city created</response>
             <response code="409">conflict of data - city already exists</response>
+        </member>
+        <member name="M:CityInfoAPI.Controllers.CitiesController.BlockPostToExistingCity(System.Guid)">
+            <summary>
+            prevents posts to existing cities
+            </summary>
+            <param name="cityGuid"></param>
         </member>
         <member name="M:CityInfoAPI.Controllers.CitiesController.UpdateCity(System.Guid,CityInfoAPI.Dtos.Models.CityUpdateDto)">
             <summary>updates city through PUT</summary>
@@ -261,7 +269,7 @@
             <response code="401">unauthorized request</response>
             <response code="500">internal error</response>
         </member>
-        <member name="M:CityInfoAPI.Controllers.PointsOfInterestController.#ctor(Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.PointsOfInterestController},CityInfoAPI.Service.IMailService,AutoMapper.IMapper,CityInfoAPI.Service.IPointsOfInterestService,CityInfoAPI.Service.ICityService)">
+        <member name="M:CityInfoAPI.Controllers.PointsOfInterestController.#ctor(Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.PointsOfInterestController},CityInfoAPI.Service.IMailService,AutoMapper.IMapper,CityInfoAPI.Service.IPointsOfInterestService,CityInfoAPI.Service.ICityService,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>constructor</summary>
             <param name="logger"></param>
             <param name="mailService"></param>
@@ -301,6 +309,13 @@
             <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest</example>
             <response code="201">returns created at route for new point of interest</response>
             <response code="404">city not found</response>
+        </member>
+        <member name="M:CityInfoAPI.Controllers.PointsOfInterestController.BlockPostToExistingPointOfInterest(System.Guid,System.Guid)">
+            <summary>
+            user should not be able to POST to an existing point of interest.
+            </summary>
+            <param name="cityGuid"></param>
+            <param name="pointGuid"></param>
         </member>
         <member name="M:CityInfoAPI.Controllers.PointsOfInterestController.UpdatePointOfInterest(System.Guid,System.Guid,CityInfoAPI.Dtos.Models.PointOfInterestUpdateDto)">
             <summary>updates point of interest through PUT</summary>

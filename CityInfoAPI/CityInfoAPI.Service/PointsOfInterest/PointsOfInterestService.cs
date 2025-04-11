@@ -65,6 +65,20 @@ namespace CityInfoAPI.Service
             }
         }
 
+        public async Task<int> CountPointsOfInterestForCityAsync(Guid cityGuid)
+        {
+            try
+            {
+                var count = await _repo.CountPointOfInterestForCityAsync(cityGuid);
+                return count;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occurred while counting the point of interests for city: {cityGuid}. {ex}");
+                throw;
+            }
+        }
+
         public async Task<PointOfInterestDto?> CreatePointOfInterestAsync(Guid cityGuid, PointOfInterestCreateDto request)
         {
             try

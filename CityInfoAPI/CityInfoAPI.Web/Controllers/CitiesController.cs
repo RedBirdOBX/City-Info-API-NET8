@@ -1,5 +1,6 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
+using CityInfoAPI.Data.Entities;
 using CityInfoAPI.Dtos.Models;
 using CityInfoAPI.Service;
 using CityInfoAPI.Web.Controllers.RequestHelpers;
@@ -27,6 +28,8 @@ namespace CityInfoAPI.Controllers
     {
         private readonly ILogger<CitiesController> _logger;
         private readonly ICityService _service;
+        private readonly IPointsOfInterestService _pointsService;
+        private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private IHttpContextAccessor _httpContextAccessor;
         private LinkGenerator _linkGenerator;
@@ -37,14 +40,18 @@ namespace CityInfoAPI.Controllers
         /// <param name="logger"></param>
         /// <param name="mapper"></param>
         /// <param name="service"></param>
+        /// <param name="pointsService"></param>
+        /// <param name="configuration"></param>
         /// <param name="httpContextAccessor"></param>
         /// <param name="linkGenerator"></param>
         public CitiesController(ILogger<CitiesController> logger, IMapper mapper, ICityService service,
-            IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator)
+                                IPointsOfInterestService pointsService, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _service = service ?? throw new ArgumentNullException(nameof(service));
+            _pointsService = pointsService ?? throw new ArgumentNullException(nameof(pointsService));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(service));
             _linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
         }
@@ -83,6 +90,19 @@ namespace CityInfoAPI.Controllers
                     if (citiesCount == 0)
                     {
                         return Ok($"No cities found with the name containing {requestParams.Name}.");
+                    }
+                }
+                else if (!string.IsNullOrEmpty(requestParams.Search))
+                {
+                    var allCities = await _service.GetAllCitiesAsync();
+                    var searchedCities = allCities.Where(c => (c.Name.ToLower().Contains(requestParams.Search.ToLower())) || c.Description.ToLower().Contains(requestParams.Search.ToLower()));
+
+                    citiesCount = searchedCities.Count();
+
+                    // bad filter was used
+                    if (citiesCount == 0)
+                    {
+                        return Ok($"No cities found with the name or description containing '{requestParams.Search}'.");
                     }
                 }
                 else
@@ -179,7 +199,7 @@ namespace CityInfoAPI.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost("", Name = "CreateCity")]
-        public async Task<ActionResult<CityWithoutPointsOfInterestDto>> CreateCity([FromBody] CityCreateDto request)
+        public async Task<ActionResult<CityDto>> CreateCity([FromBody] CityCreateDto request)
         {
             try
             {
@@ -193,14 +213,52 @@ namespace CityInfoAPI.Controllers
                     return Conflict($"City {request.CityGuid} already exists.");
                 }
 
+                // check poi count
+                if (int.TryParse(_configuration["PointsOfInterestCityLimit"], out var poiLimit))
+                {
+                    if (request.PointsOfInterest.Count() > poiLimit)
+                    {
+                        return BadRequest($"City can only have {poiLimit} points of interest.");
+                    }
+                }
+
+                // create the city first...
                 var newCity = await _service.CreateCityAsync(request);
                 if (newCity == null)
                 {
                     _logger.LogError("An error occurred while creating city.");
                     return StatusCode(500, "An error occurred while creating city.");
                 }
-
                 return CreatedAtRoute("GetCityByCityId", new { cityGuid = newCity.CityGuid }, newCity);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occurred while creating city. {ex}");
+                return StatusCode(500, "An error occurred while creating city.");
+            }
+        }
+
+        /// <summary>
+        /// prevents posts to existing cities
+        /// </summary>
+        /// <param name="cityGuid"></param>
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [HttpPost("{cityGuid}", Name = "BlockPostToExistingCity")]
+        public async Task<ActionResult> BlockPostToExistingCity(Guid cityGuid)
+        {
+            // user should not be able to POST to an existing city. anything with an id should
+            // be done with a PUT or a PATCH.
+            try
+            {
+                bool doesCityExist = await _service.CityExistsAsync(cityGuid);
+                if (!doesCityExist)
+                {
+                    return BadRequest("You cannot post to cities like this.");
+                }
+                else
+                {
+                    return StatusCode(409, "You cannot post to an existing city!");
+                }
             }
             catch (Exception ex)
             {
