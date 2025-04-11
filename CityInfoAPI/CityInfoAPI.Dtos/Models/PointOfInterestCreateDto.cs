@@ -16,7 +16,7 @@ namespace CityInfoAPI.Dtos.Models
         /// unique identifier for the city
         /// </summary>
         [Required(ErrorMessage = $"{nameof(CityGuid)} is required.")]
-        public Guid CityGuid { get; set; } = Guid.NewGuid();
+        public Guid CityGuid { get; set; } //= Guid.NewGuid(); // this could be a problem.  these shouldn't be auto-generated.
 
         /// <summary>
         /// name of the point of interest

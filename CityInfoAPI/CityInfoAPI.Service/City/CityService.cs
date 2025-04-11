@@ -93,7 +93,7 @@ namespace CityInfoAPI.Service
             }
         }
 
-        public async Task<CityWithoutPointsOfInterestDto?> CreateCityAsync(CityCreateDto request)
+        public async Task<CityDto?> CreateCityAsync(CityCreateDto request)
         {
             try
             {
@@ -101,6 +101,15 @@ namespace CityInfoAPI.Service
 
                 // add it to memory.
                 await _repo.CreateCityAsync(newCityEntity);
+
+                // if the city has POIs from the request, handle those. update the city guids.
+                if (newCityEntity.PointsOfInterest.Any())
+                {
+                    foreach (var poi in newCityEntity.PointsOfInterest)
+                    {
+                        poi.CityGuid = newCityEntity.CityGuid;
+                    }
+                }
 
                 // save it
                 bool success = await SaveChangesAsync();
@@ -111,7 +120,7 @@ namespace CityInfoAPI.Service
                 }
 
                 // map new entity to dto and return it
-                CityWithoutPointsOfInterestDto newCityDto = _mapper.Map<CityWithoutPointsOfInterestDto>(newCityEntity);
+                CityDto newCityDto = _mapper.Map<CityDto>(newCityEntity);
 
                 return newCityDto;
             }

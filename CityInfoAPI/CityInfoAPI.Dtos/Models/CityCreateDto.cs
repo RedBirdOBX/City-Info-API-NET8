@@ -29,5 +29,10 @@ namespace CityInfoAPI.Dtos.Models
         /// created on date for the city
         /// </summary>
         public DateTime CreatedOn { get; set; } = DateTime.Now;
+
+        /// <summary>
+        /// points of interest to be created with city
+        /// </summary>
+        public List<PointOfInterestCreateDto> PointsOfInterest { get; set; } = new List<PointOfInterestCreateDto>();
     }
 }

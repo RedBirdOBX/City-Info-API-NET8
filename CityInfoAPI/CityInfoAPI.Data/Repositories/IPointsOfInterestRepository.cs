@@ -12,6 +12,8 @@ namespace CityInfoAPI.Data.Repositories
 
         Task<PointOfInterest?> GetPointOfInterestAsync(Guid pointGuid);
 
+        Task<int> CountPointOfInterestForCityAsync(Guid cityGuid);
+
         Task<PointOfInterest?> CreatePointOfInterestAsync(PointOfInterest newPointOfInterest);
 
         Task<bool> PointOfInterestExistsAsync(Guid pointGuid);

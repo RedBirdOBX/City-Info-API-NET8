@@ -28,6 +28,7 @@ namespace CityInfoAPI.Controllers
         private readonly IMapper _mapper;
         private readonly IPointsOfInterestService _service;
         private readonly ICityService _cityService;
+        private readonly IConfiguration _configuration;
 
         /// <summary>constructor</summary>
         /// <param name="logger"></param>
@@ -37,13 +38,14 @@ namespace CityInfoAPI.Controllers
         /// <param name="mapper"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public PointsOfInterestController(ILogger<PointsOfInterestController> logger, IMailService mailService, IMapper mapper,
-                                            IPointsOfInterestService service, ICityService cityService)
+                                            IPointsOfInterestService service, ICityService cityService, IConfiguration configuration)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mailService = mailService ?? throw new ArgumentNullException(nameof(mailService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _service = service ?? throw new ArgumentNullException(nameof(service));
             _cityService = cityService ?? throw new ArgumentNullException(nameof(service));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         /// <summary>Gets all Points of Interest</summary>
@@ -197,6 +199,16 @@ namespace CityInfoAPI.Controllers
                     return NotFound();
                 }
 
+                // check poi count
+                var countOfPointsOfInterest = await _service.CountPointsOfInterestForCityAsync(cityGuid);
+                if (int.TryParse(_configuration["PointsOfInterestCityLimit"], out var poiLimit))
+                {
+                    if (countOfPointsOfInterest > poiLimit)
+                    {
+                        return BadRequest($"City can only have {poiLimit} points of interest.");
+                    }
+                }
+
                 var newPointResults = await _service.CreatePointOfInterestAsync(cityGuid, request);
 
                 if (newPointResults == null)
@@ -211,6 +223,43 @@ namespace CityInfoAPI.Controllers
             {
                 _logger.LogError($"An error occurred while creating point of interest. {ex}");
                 return StatusCode(500, "An error occurred while creating point of interest.");
+            }
+        }
+
+		/// <summary>
+        /// user should not be able to POST to an existing point of interest.
+        /// </summary>
+        /// <param name="cityGuid"></param>
+        /// <param name="pointGuid"></param>
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [HttpPost("cities/{cityGuid}/pointsofinterest/{pointGuid}", Name = "BlockPostToExistingPointOfInterest")]
+        public async Task<ActionResult> BlockPostToExistingPointOfInterest([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid)
+        {
+            // user should not be able to POST to an existing point of interest. anything with an id should
+            // be done with a PUT or a PATCH.
+            try
+            {
+                bool doesCityExist = await _cityService.CityExistsAsync(cityGuid);
+                if (!doesCityExist)
+                {
+                    return BadRequest("City does not exist.");
+                }
+
+                bool doesPointOfInterestExist = await _service.PointOfInterestExistsAsync(pointGuid);
+                if (!doesPointOfInterestExist)
+                {
+                    return BadRequest("You cannot post to points of interest like this.");
+                }
+                else
+                {
+                    return StatusCode(409, "You cannot post to an existing point of interest!");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occurred while creating city. {ex}");
+                return StatusCode(500, "An error occurred while creating city.");
             }
         }
 

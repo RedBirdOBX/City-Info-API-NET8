@@ -30,19 +30,15 @@ This demo RESTful API does just that. It allows consumers to make request for US
 
 ### Bugs
 
-- Check the MetaData for Searches: Ex:  {{CitiesInfoNET8BaseUrl}}/v{{version}}/cities?search=city. Page calculations 
-may be off.
+ - None at the moment.
 
 ### Enhancements
 
-- Allow create City endpoint (POST) to accept new Points of Interest with single save. Create the new Point(s) of Interest as well as new City.
-- Block POSTS on resource root endpoints.
 - Utilize [HttpOptions] attribute.
 - Utilize [NotMapped] attribute.
-- Use [ProducesDefaultResponseType] attribute.
-- Use [HttpHead] attribute.
+- Utilize [ProducesDefaultResponseType] attribute.
+- Utilize [HttpHead] attribute.
 - Implement better validation for patches (see orig .NET 2 api)
-- Implement a Point of Interest limit. A city cannot have more than 25 Points of Interest. Assuming the city is under the limit, you can create a new Point of Interest.
 - Add States entities and all resources.
 - Add child navigational property to Point of Interest; add City to Point of Interest.
 - Add Custom Validation Annotations (like duplicate name check). 
@@ -57,6 +53,7 @@ may be off.
 - Add Application Insights
 - Learn how to add svc registrations as a method extension.
 - Factory Pattern / Svc.
+- Add db connection to Health check and Uptime Robot.
 
 ---
 
@@ -387,8 +384,17 @@ https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index
 <a href="" id="releases" name="releases"></a>
 ## Releases
 
-1.0.0 - Initial Release, 03.14.2025 
-1.1.0 - Added xUnit Unit Tests 03.26.2025
+**1.0.0**  
+Initial Release.  
+03.14.2025 
 
+**1.1.0**  
+Added xUnit Unit Tests. 
+03.26.2025
+
+**1.2.0**  
+Updated CreateCity action to allow Points of Interest to be created with a CreateCity request.  
+Put limit on Points of Interest per City to 20.  Will not allow more than 20 Points of Interest to be created per city.
+04.11.2024
 
 

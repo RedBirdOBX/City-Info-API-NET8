@@ -14,7 +14,7 @@ namespace CityInfoAPI.Service
 
         Task<CityWithoutPointsOfInterestDto?> GetCityWithoutPointsOfInterestAsync(Guid cityGuid, bool includePointsOfInterest);
 
-        Task<CityWithoutPointsOfInterestDto?> CreateCityAsync(CityCreateDto request);
+        Task<CityDto?> CreateCityAsync(CityCreateDto request);
 
         Task<CityDto?> UpdateCityAsync(CityUpdateDto request, Guid cityGuid);
 

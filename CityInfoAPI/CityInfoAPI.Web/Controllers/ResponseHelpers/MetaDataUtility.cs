@@ -41,7 +41,7 @@ public static class MetaDataUtility
         }
     }
 
-    private static string CreateCitiesResourceUri(CityRequestParameters requestParams, ResourceUriType type, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator)
+    public static string CreateCitiesResourceUri(CityRequestParameters requestParams, ResourceUriType type, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator)
     {
         try
         {
