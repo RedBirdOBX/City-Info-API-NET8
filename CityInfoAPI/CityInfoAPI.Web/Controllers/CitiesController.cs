@@ -20,7 +20,7 @@ namespace CityInfoAPI.Controllers
     /// <response code="500">internal error</response>
     [Route("api/v{version:apiVersion}/cities")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [ApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -62,6 +62,7 @@ namespace CityInfoAPI.Controllers
         /// <response code="200">returns city by id</response>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("", Name = "GetCities")]
+        [HttpHead("", Name = "GetCities")]
         public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery] CityRequestParameters requestParams)
         {
             try
@@ -139,6 +140,21 @@ namespace CityInfoAPI.Controllers
             }
         }
 
+        /// <summary>mostly for demo purposes. returns options available for city by id requests</summary>
+        /// <param name="cityGuid"></param>
+        /// <returns>CityDto</returns>
+        /// <example>{baseUrl}/api/cities/{cityGuid}?includePointsOfInterest={bool}</example>
+        /// <response code="200">returns city by id</response>
+        /// <response code="400">bad request for getting city by id</response>
+        [HttpOptions("{cityGuid}", Name = "GetCityByCityIdOptions")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult GetCityByCityIdOptions([FromRoute] Guid cityGuid)
+        {
+            Response.Headers.Add("Allow", "GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD");
+            return Ok();
+        }
+
         /// <summary>returns city by id</summary>
         /// <param name="cityGuid"></param>
         /// <param name="includePointsOfInterest"></param>
@@ -147,6 +163,7 @@ namespace CityInfoAPI.Controllers
         /// <response code="200">returns city by id</response>
         /// <response code="400">bad request for getting city by id</response>
         [HttpGet("{cityGuid}", Name = "GetCityByCityId")]
+        [HttpHead("{cityGuid}", Name = "GetCityByCityId")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<CityWithoutPointsOfInterestDto>> GetCityByCityId([FromRoute] Guid cityGuid, [FromQuery] bool includePointsOfInterest = true)
