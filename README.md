@@ -395,7 +395,7 @@ https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index
 04.11.2024
 
 **1.3.0**
-- Added example of [HttpOptions] verb.	
+- Added example of [HttpOptions] on Cities endpoint.	
 - Added example of [HttpHead] attribute. Would be useful in pagination requests. Wanting header data back but not the body.
 - Updated Postman collection.
 - Added [ProducesDefaultResponseType] attributes to Controller actions.
