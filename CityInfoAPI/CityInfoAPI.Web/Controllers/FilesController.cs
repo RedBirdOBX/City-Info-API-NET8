@@ -36,6 +36,7 @@ namespace CityInfoAPI.Web.Controllers
         /// <example>{baseUrl}/api/files/{fileId}</example>
         /// <response code="200">returns file</response>
         /// <response code="404">file not found</response>
+        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("{fileId}", Name = "GetFile")]
@@ -110,6 +111,7 @@ namespace CityInfoAPI.Web.Controllers
         /// <example>{baseUrl}/api/files</example>
         /// <response code="200">file created</response>
         /// <response code="400">bad request for file upload</response>
+        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost(Name = "CreateFile")]

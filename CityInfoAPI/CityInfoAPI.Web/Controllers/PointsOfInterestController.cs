@@ -52,6 +52,7 @@ namespace CityInfoAPI.Controllers
         /// <returns>collection of points of interest</returns>
         /// <example>{baseUrl}/api/pointsofinterest</example>
         /// <response code="200">returns points of interest for city</response>
+        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("pointsofinterest", Name = "GetPointsOfInterest")]
         public async Task<ActionResult<IEnumerable<PointOfInterestDto>>> GetPointsOfInterest([FromQuery(Name = "name")] string? name = null,
@@ -83,6 +84,7 @@ namespace CityInfoAPI.Controllers
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest</example>
         /// <response code="200">returns points of interest for city</response>
         /// <response code="404">city not found</response>
+        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("cities/{cityGuid}/pointsofinterest", Name = "GetPointsOfInterestForCity")]
@@ -124,6 +126,7 @@ namespace CityInfoAPI.Controllers
         /// <response code="200">returns point of interest by id for city</response>
         /// <response code="404">city or point of interest not found</response>
         //[Authorize(Policy = "MustBeFromRichmond")] - DEMO policy enforcement
+        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpGet("cities/{cityGuid}/pointsofinterest/{pointGuid}", Name = "GetPointOfInterestById")]
@@ -182,6 +185,7 @@ namespace CityInfoAPI.Controllers
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest</example>
         /// <response code="201">returns created at route for new point of interest</response>
         /// <response code="404">city not found</response>
+        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("cities/{cityGuid}/pointsofinterest/", Name = "CreatePointOfInterest")]
@@ -231,6 +235,7 @@ namespace CityInfoAPI.Controllers
         /// </summary>
         /// <param name="cityGuid"></param>
         /// <param name="pointGuid"></param>
+        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost("cities/{cityGuid}/pointsofinterest/{pointGuid}", Name = "BlockPostToExistingPointOfInterest")]
         public async Task<ActionResult> BlockPostToExistingPointOfInterest([FromRoute] Guid cityGuid, [FromRoute] Guid pointGuid)
@@ -271,6 +276,7 @@ namespace CityInfoAPI.Controllers
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
         /// <response code="204">updated point of interest</response>
         /// <response code="404">city or point of interest not found</response>
+        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("cities/{cityGuid}/pointsofinterest/{pointGuid}", Name = "UpdatePointOfInterest")]
@@ -328,6 +334,7 @@ namespace CityInfoAPI.Controllers
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
         /// <response code="204">updated point of interest</response>
         /// <response code="404">city or point of interest not found</response>
+        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPatch("cities/{cityGuid}/pointsofinterest/{pointGuid}", Name = "PatchPointOfInterest")]
@@ -408,6 +415,7 @@ namespace CityInfoAPI.Controllers
         /// <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
         /// <response code="204">deleted point of interest</response>
         /// <response code="404">city or point of interest not found</response>
+        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("cities/{cityGuid}/pointsofinterest/{pointGuid}", Name = "DeletePointOfInterest")]

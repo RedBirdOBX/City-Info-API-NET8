@@ -33,6 +33,12 @@
 								"key": "Accept",
 								"value": "application/json",
 								"type": "text"
+							},
+							{
+								"key": "Bearer",
+								"value": "xxxx",
+								"type": "text",
+								"disabled": true
 							}
 						],
 						"url": {
@@ -74,6 +80,60 @@
 							]
 						},
 						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities?pageSize=10&pageNumber=2",
+							"host": [
+								"{{CitiesInfoNET8BaseUrl}}"
+							],
+							"path": [
+								"v{{version}}",
+								"cities"
+							],
+							"query": [
+								{
+									"key": "Accept",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								},
+								{
+									"key": "pageNumber",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cities with Paging Head",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "HEAD",
 						"header": [
 							{
 								"key": "Accept",
@@ -186,7 +246,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities?search=city",
+							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities?search=city&pageNumber=1&pageSize=25",
 							"host": [
 								"{{CitiesInfoNET8BaseUrl}}"
 							],
@@ -196,13 +256,21 @@
 							],
 							"query": [
 								{
+									"key": "search",
+									"value": "city"
+								},
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
 									"key": "Accept",
 									"value": null,
 									"disabled": true
 								},
 								{
-									"key": "search",
-									"value": "city"
+									"key": "pageSize",
+									"value": "25"
 								}
 							]
 						}
@@ -223,7 +291,100 @@
 							]
 						},
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities/{{cityGuid}}",
+							"host": [
+								"{{CitiesInfoNET8BaseUrl}}"
+							],
+							"path": [
+								"v{{version}}",
+								"cities",
+								"{{cityGuid}}"
+							],
+							"query": [
+								{
+									"key": "includePointsOfInterest",
+									"value": "true",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "City by Id Options",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "OPTIONS",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities/{{cityGuid}}",
+							"host": [
+								"{{CitiesInfoNET8BaseUrl}}"
+							],
+							"path": [
+								"v{{version}}",
+								"cities",
+								"{{cityGuid}}"
+							],
+							"query": [
+								{
+									"key": "includePointsOfInterest",
+									"value": "true",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "City by Id Head",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
 						"url": {
 							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities/{{cityGuid}}",
 							"host": [
@@ -318,6 +479,118 @@
 					"response": []
 				},
 				{
+					"name": "POST to Existing City Test",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"CITY Test 3\",\r\n  \"description\": \"CITY Test 3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities/{{cityGuid}}",
+							"host": [
+								"{{CitiesInfoNET8BaseUrl}}"
+							],
+							"path": [
+								"v{{version}}",
+								"cities",
+								"{{cityGuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create City With Points of Interest",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"xMega City 8\",\r\n  \"description\": \"City of the future 8\",\r\n  \"pointsOfInterest\" : \r\n  [\r\n    {\r\n        \"name\" : \"xxPoint of Interest 8\",\r\n        \"description\" : \"description for point of interest 8\"\r\n    },\r\n    {\r\n        \"name\" : \"xxPoint of Interest 8\",\r\n        \"description\" : \"description for point of interest 8\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities",
+							"host": [
+								"{{CitiesInfoNET8BaseUrl}}"
+							],
+							"path": [
+								"v{{version}}",
+								"cities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create City With over 20 Points of Interest",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Mega City\",\r\n  \"description\": \"City of the future\",\r\n  \"pointsOfInterest\" : \r\n  [\r\n    {\r\n        \"name\" : \"Point of Interest 1\",\r\n        \"description\" : \"description for point of interest 1\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 2\",\r\n        \"description\" : \"description for point of interest 2\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 3\",\r\n        \"description\" : \"description for point of interest 3\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 4\",\r\n        \"description\" : \"description for point of interest 4\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 5\",\r\n        \"description\" : \"description for point of interest 5\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 6\",\r\n        \"description\" : \"description for point of interest 6\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 7\",\r\n        \"description\" : \"description for point of interest 7\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 8\",\r\n        \"description\" : \"description for point of interest 8\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 9\",\r\n        \"description\" : \"description for point of interest 9\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 10\",\r\n        \"description\" : \"description for point of interest 10\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 11\",\r\n        \"description\" : \"description for point of interest 11\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 12\",\r\n        \"description\" : \"description for point of interest 12\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 13\",\r\n        \"description\" : \"description for point of interest 13\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 14\",\r\n        \"description\" : \"description for point of interest 14\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 15\",\r\n        \"description\" : \"description for point of interest 15\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 16\",\r\n        \"description\" : \"description for point of interest 16\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 17\",\r\n        \"description\" : \"description for point of interest 17\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 18\",\r\n        \"description\" : \"description for point of interest 18\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 19\",\r\n        \"description\" : \"description for point of interest 19\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 20\",\r\n        \"description\" : \"description for point of interest 20\"\r\n    },\r\n    {\r\n        \"name\" : \"Point of Interest 21\",\r\n        \"description\" : \"description for point of interest 21\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities",
+							"host": [
+								"{{CitiesInfoNET8BaseUrl}}"
+							],
+							"path": [
+								"v{{version}}",
+								"cities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Update City",
 					"request": {
 						"auth": {
@@ -334,7 +607,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"CITY Test 3 http updated\",\r\n  \"description\": \"description 3 http updated\"\r\n}",
+							"raw": "{\r\n  \"name\": \"Charleston\",\r\n  \"description\": \"Historic, and sophisticated ambiance is exemplary of southern culture\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -610,7 +883,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"cityGuid\": \"38276231-1918-452d-a3e9-6f50873a95d2\",\r\n  \"name\": \"POI Test 3\",\r\n  \"description\": \"POI Test 3\"\r\n}",
+							"raw": "{\r\n  \"cityGuid\": \"7649A0A5-6CDE-474A-823F-5AA2FB3A7B6B\",\r\n  \"name\": \"test POI\",\r\n  \"description\": \"test POI description\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -627,6 +900,46 @@
 								"cities",
 								"{{cityGuid}}",
 								"pointsofinterest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST to existing Point of Interest TEST",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"cityGuid\": \"ce09626b-e19e-47f5-82f3-2bbf60866a47\",\r\n  \"name\": \"test POI\",\r\n  \"description\": \"test POI description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities/{{cityGuid}}/pointsofinterest/{{pointGuid}}",
+							"host": [
+								"{{CitiesInfoNET8BaseUrl}}"
+							],
+							"path": [
+								"v{{version}}",
+								"cities",
+								"{{cityGuid}}",
+								"pointsofinterest",
+								"{{pointGuid}}"
 							]
 						}
 					},
@@ -885,7 +1198,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"UserName\" : \"a\",\r\n    \"Password\" : \"b\"\r\n}",
+							"raw": "{\r\n    \"UserName\" : \"xxx\",\r\n    \"Password\" : \"xxx\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

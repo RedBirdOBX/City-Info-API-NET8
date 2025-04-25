@@ -1,6 +1,6 @@
 # City Info Demo API (.NET 8.0 version)
 ---
-*Version 1.0*
+*Version 1.3.0*
 
 ## Summary
 Welcome to the City Info Demo API - .NET 8 Version. Original version was in .NET 2.1 written in 2019. 
@@ -33,11 +33,6 @@ This demo RESTful API does just that. It allows consumers to make request for US
  - None at the moment.
 
 ### Enhancements
-
-- Utilize [HttpOptions] attribute.
-- Utilize [NotMapped] attribute.
-- Utilize [ProducesDefaultResponseType] attribute.
-- Utilize [HttpHead] attribute.
 - Implement better validation for patches (see orig .NET 2 api)
 - Add States entities and all resources.
 - Add child navigational property to Point of Interest; add City to Point of Interest.
@@ -51,9 +46,11 @@ This demo RESTful API does just that. It allows consumers to make request for US
 - Add true user authentication / token assign.
 - Build log table maintenance routine.
 - Add Application Insights
-- Learn how to add svc registrations as a method extension.
+- Learn how to add svc registrations as a method extension (see EmployeeManagement demo api)
 - Factory Pattern / Svc.
 - Add db connection to Health check and Uptime Robot.
+- Unit Tests with CICD / Build Server / Azure.  https://app.pluralsight.com/ilx/video-courses/d1a07995-8bbd-4124-a48f-b1f7f672091e/cded68ee-4744-48a4-ab47-8f8c47c03158/47dd3c95-b1b2-460a-bb59-ee177cfca9f1
+
 
 ---
 
@@ -385,16 +382,21 @@ https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index
 ## Releases
 
 **1.0.0**  
-Initial Release.  
+- Initial Release.  
 03.14.2025 
 
 **1.1.0**  
-Added xUnit Unit Tests. 
+- Added xUnit Unit Tests.  
 03.26.2025
 
 **1.2.0**  
-Updated CreateCity action to allow Points of Interest to be created with a CreateCity request.  
-Put limit on Points of Interest per City to 20.  Will not allow more than 20 Points of Interest to be created per city.
+- Updated CreateCity action to allow Points of Interest to be created with a CreateCity request.  
+- Put limit on Points of Interest per City to 20.  Will not allow more than 20 Points of Interest to be created per city.  
 04.11.2024
 
-
+**1.3.0**
+- Added example of [HttpOptions] on Cities endpoint.	
+- Added example of [HttpHead] attribute. Would be useful in pagination requests. Wanting header data back but not the body.
+- Updated Postman collection.
+- Added [ProducesDefaultResponseType] attributes to Controller actions.
+ 

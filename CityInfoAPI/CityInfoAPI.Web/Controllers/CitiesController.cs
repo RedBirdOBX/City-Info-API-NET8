@@ -60,8 +60,10 @@ namespace CityInfoAPI.Controllers
         /// <returns>collection of CityDto</returns>
         /// <example>{baseUrl}/api/cities</example>
         /// <response code="200">returns city by id</response>
+        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("", Name = "GetCities")]
+        [HttpHead("", Name = "GetCities")]
         public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery] CityRequestParameters requestParams)
         {
             try
@@ -139,6 +141,22 @@ namespace CityInfoAPI.Controllers
             }
         }
 
+        /// <summary>mostly for demo purposes. returns options available for city by id requests</summary>
+        /// <param name="cityGuid"></param>
+        /// <returns>CityDto</returns>
+        /// <example>{baseUrl}/api/cities/{cityGuid}?includePointsOfInterest={bool}</example>
+        /// <response code="200">returns city by id</response>
+        /// <response code="400">bad request for getting city by id</response>
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpOptions("{cityGuid}", Name = "GetCityByCityIdOptions")]
+        public ActionResult GetCityByCityIdOptions([FromRoute] Guid cityGuid)
+        {
+            Response.Headers.Add("Allow", "GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD");
+            return Ok();
+        }
+
         /// <summary>returns city by id</summary>
         /// <param name="cityGuid"></param>
         /// <param name="includePointsOfInterest"></param>
@@ -146,9 +164,11 @@ namespace CityInfoAPI.Controllers
         /// <example>{baseUrl}/api/cities/{cityGuid}?includePointsOfInterest={bool}</example>
         /// <response code="200">returns city by id</response>
         /// <response code="400">bad request for getting city by id</response>
-        [HttpGet("{cityGuid}", Name = "GetCityByCityId")]
+        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpGet("{cityGuid}", Name = "GetCityByCityId")]
+        [HttpHead("{cityGuid}", Name = "GetCityByCityId")]
         public async Task<ActionResult<CityWithoutPointsOfInterestDto>> GetCityByCityId([FromRoute] Guid cityGuid, [FromQuery] bool includePointsOfInterest = true)
         {
             try
@@ -196,6 +216,7 @@ namespace CityInfoAPI.Controllers
         /// <example>{baseUrl}/api/cities</example>
         /// <response code="201">city created</response>
         /// <response code="409">conflict of data - city already exists</response>
+        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost("", Name = "CreateCity")]
@@ -242,6 +263,7 @@ namespace CityInfoAPI.Controllers
         /// prevents posts to existing cities
         /// </summary>
         /// <param name="cityGuid"></param>
+        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [HttpPost("{cityGuid}", Name = "BlockPostToExistingCity")]
         public async Task<ActionResult> BlockPostToExistingCity(Guid cityGuid)
@@ -274,6 +296,7 @@ namespace CityInfoAPI.Controllers
         /// <example>{baseUrl}/api/cities/{cityGuid}</example>
         /// <response code="204">city updated</response>
         /// <response code="404">city not found</response>
+        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{cityGuid}", Name = "UpdateCity")]
@@ -315,6 +338,7 @@ namespace CityInfoAPI.Controllers
         /// <response code="204">city updated</response>
         /// <response code="400">city has bad data</response>
         /// <response code="404">city not found</response>
+        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -381,6 +405,7 @@ namespace CityInfoAPI.Controllers
         /// <example>{baseUrl}/api/cities/{cityGuid}</example>
         /// <response code="204">city deleted</response>
         /// <response code="404">city not found</response>
+        [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpDelete("{cityGuid}", Name = "DeleteCity")]
