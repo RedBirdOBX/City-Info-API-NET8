@@ -5,6 +5,7 @@ using CityInfoAPI.Service;
 using CityInfoAPI.Web.Controllers.ResponseHelpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Operations;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -342,64 +343,85 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
-                var url = Url.Link("PatchPointOfInterest", null);
-                _logger.LogInformation($"PatchPointOfInterest called. Url: {url}. Request: {JsonConvert.SerializeObject(patchDocument)}");
-
-                var cityExists = await _cityService.CityExistsAsync(cityGuid);
-                if (!cityExists)
+                if (patchDocument.Operations.Count > 0)
                 {
-                    _logger.LogWarning($"City with id {cityGuid} wasn't found when patching point of interest.");
-                    return NotFound();
+                    Operation operation = patchDocument.Operations[0];
+                    if (operation.op == null)
+                    {
+                        ModelState.AddModelError("Description", "The operation is missing (replace, add, remove, etc).");
+                        return BadRequest(ModelState);
+                    }
+
+                    if (operation.path == null)
+                    {
+                        ModelState.AddModelError("Description", "The path is missing. What do you want to update?");
+                        return BadRequest(ModelState);
+                    }
+
+                    var url = Url.Link("PatchPointOfInterest", null);
+                    _logger.LogInformation($"PatchPointOfInterest called. Url: {url}. Request: {JsonConvert.SerializeObject(patchDocument)}");
+
+                    var cityExists = await _cityService.CityExistsAsync(cityGuid);
+                    if (!cityExists)
+                    {
+                        _logger.LogWarning($"City with id {cityGuid} wasn't found when patching point of interest.");
+                        return NotFound();
+                    }
+
+                    // find the point of interest
+                    var pointExists = await _service.PointOfInterestExistsAsync(pointGuid);
+                    if (!pointExists)
+                    {
+                        _logger.LogWarning($"Point of interest with id {pointGuid} wasn't found.");
+                        return NotFound();
+                    }
+
+                    // does the point of interest belong to the city?
+                    var existingPointOfInterest = await _service.GetPointOfInterestAsync(pointGuid);
+                    if (existingPointOfInterest == null || existingPointOfInterest.CityGuid != cityGuid)
+                    {
+                        _logger.LogWarning($"Point of interest with id {pointGuid} doesn't belong to city with id {cityGuid}.");
+                        return NotFound();
+                    }
+
+                    // map the request - override the values of the destination object w/ source
+                    var pointOfInterestToPatch = _mapper.Map<PointOfInterestUpdateDto>(existingPointOfInterest);
+
+                    // apply the patch - grab the updates and update the dto
+                    patchDocument.ApplyTo(pointOfInterestToPatch, ModelState);
+
+                    // see if updates are valid
+                    if (!ModelState.IsValid)
+                    {
+                        _logger.LogWarning($"Invalid model state for the patch.");
+                        return BadRequest(ModelState);
+                    }
+
+                    // validate the final version
+                    if (!TryValidateModel(pointOfInterestToPatch))
+                    {
+                        _logger.LogWarning($"Invalid model state for the patch.");
+                        return BadRequest(ModelState);
+                    }
+
+                    // map changes back to the entity. source / destination
+                    _mapper.Map(pointOfInterestToPatch, existingPointOfInterest);
+
+                    // now that we have a updated entity, try to save it.
+                    var updatedPoint = await _service.UpdatePointOfInterestAsync(cityGuid, pointGuid, pointOfInterestToPatch);
+                    if (updatedPoint == null)
+                    {
+                        _logger.LogError("An error occurred while patching point of interest.");
+                        return StatusCode(500, "An error occurred while patching point of interest.");
+                    }
+
+                    return NoContent();
                 }
-
-                // find the point of interest
-                var pointExists = await _service.PointOfInterestExistsAsync(pointGuid);
-                if (!pointExists)
+                else
                 {
-                    _logger.LogWarning($"Point of interest with id {pointGuid} wasn't found.");
-                    return NotFound();
-                }
-
-                // does the point of interest belong to the city?
-                var existingPointOfInterest = await _service.GetPointOfInterestAsync(pointGuid);
-                if (existingPointOfInterest == null || existingPointOfInterest.CityGuid != cityGuid)
-                {
-                    _logger.LogWarning($"Point of interest with id {pointGuid} doesn't belong to city with id {cityGuid}.");
-                    return NotFound();
-                }
-
-                // map the request - override the values of the destination object w/ source
-                var pointOfInterestToPatch = _mapper.Map<PointOfInterestUpdateDto>(existingPointOfInterest);
-
-                // apply the patch - grab the updates and update the dto
-                patchDocument.ApplyTo(pointOfInterestToPatch, ModelState);
-
-                // see if updates are valid
-                if (!ModelState.IsValid)
-                {
-                    _logger.LogWarning($"Invalid model state for the patch.");
+                    ModelState.AddModelError("Description", "The patch document is not correct.");
                     return BadRequest(ModelState);
                 }
-
-                // validate the final version
-                if (!TryValidateModel(pointOfInterestToPatch))
-                {
-                    _logger.LogWarning($"Invalid model state for the patch.");
-                    return BadRequest(ModelState);
-                }
-
-                // map changes back to the entity. source / destination
-                _mapper.Map(pointOfInterestToPatch, existingPointOfInterest);
-
-                // now that we have a updated entity, try to save it.
-                var updatedPoint = await _service.UpdatePointOfInterestAsync(cityGuid, pointGuid, pointOfInterestToPatch);
-                if (updatedPoint == null)
-                {
-                    _logger.LogError("An error occurred while patching point of interest.");
-                    return StatusCode(500, "An error occurred while patching point of interest.");
-                }
-
-                return NoContent();
             }
             catch (Exception ex)
             {

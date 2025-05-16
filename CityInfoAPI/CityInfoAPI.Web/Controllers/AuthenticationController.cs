@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using CityInfoAPI.Dtos.Models;
 using CityInfoAPI.Web.Controllers.RequestHelpers.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -39,7 +40,7 @@ namespace CityInfoAPI.Web.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost("Authenticate", Name = "Authenticate")]
-        public ActionResult<string> Authenticate([FromBody] AuthenticationUserRequest userRequest)
+        public ActionResult<RequestForTokenResponse> Authenticate([FromBody] AuthenticationUserRequest userRequest)
         {
             // 1) validate the user
             var user = ValidateUserCredentials(userRequest.UserName, userRequest.Password);
@@ -59,7 +60,7 @@ namespace CityInfoAPI.Web.Controllers
 
             // custom policy - will generate claim. client must provide proper resources of "all".
             // industry standards:
-            claimsForToken.Add(new Claim("sub", user.UserId.ToString()));
+            claimsForToken.Add(new Claim("sub", user.UserId.ToString()));  // standard for UserId
             claimsForToken.Add(new Claim("given_name", user.FirstName));
             claimsForToken.Add(new Claim("family_name", user.LastName));
             claimsForToken.Add(new Claim("city", user.City));
@@ -74,8 +75,12 @@ namespace CityInfoAPI.Web.Controllers
                                                     signingCredentials);
 
             var tokenToReturn = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-
-            return Ok(tokenToReturn);
+            var response = new RequestForTokenResponse()
+            {
+                Token = tokenToReturn,
+                Success = true
+            };
+            return Ok(response);
         }
 
         /// <summary>

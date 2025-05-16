@@ -74,7 +74,11 @@ builder.Services.AddControllers(options =>
 })
 
 // replaces default json input and output formatters with Json.NET
-.AddNewtonsoftJson()
+.AddNewtonsoftJson(options =>
+{
+    //configure your JSON serializer to handle or ignore self-referencing loops.
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+})
 
 // enables XML input and output formatters
 .AddXmlDataContractSerializerFormatters();
@@ -100,13 +104,14 @@ builder.Services.AddScoped<IPointsOfInterestService, PointsOfInterestService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 
+
 // AutoMapper.  Scan for profiles.
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // swagger, swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-// token
+// token - configure how we will validate the token
 builder.Services.AddAuthentication("Bearer")
         .AddJwtBearer("Bearer", options =>
         {
@@ -117,6 +122,9 @@ builder.Services.AddAuthentication("Bearer")
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = builder.Configuration["Authentication:Issuer"],
                 ValidAudience = builder.Configuration["Authentication:Audience"],
+
+                // this is the same logic as we used creating the signature in the auth controller,
+                // therefore we know it matches.
                 IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(builder.Configuration["Authentication:SecretForKey"]))
             };
         });
@@ -212,8 +220,16 @@ var app = builder.Build();
 // Configure the HTTP request pipeline. //
 if (!app.Environment.IsDevelopment())
 {
+    //app.UseExceptionHandler(appBuilder =>
+    //{
+    //    appBuilder.Run(async context =>
+    //    {
+    //        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+    //        await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
+    //    });
+    //});
+
     // for now, since this is a demo, let's expose the errors and swagger in production.
-    //app.UseExceptionHandler();
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI(setUpAction =>

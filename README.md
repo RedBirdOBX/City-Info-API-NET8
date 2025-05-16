@@ -12,10 +12,14 @@ you needed to be able to provide all the "touristy" things to do for that specif
 
 This demo RESTful API does just that. It allows consumers to make request for USA Cities and their known "Points of Interest" (tourist attractions). It supports and demonstrates all HTTP verbs: GET, POST, PUT, PATCH, and DELETE.
 
+API can be found at: 
+- https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/  
+- https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index.html
 
-`https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/`  
+API was built with knowledge from the following tutorials:
+- https://app.pluralsight.com/ilx/video-courses/clips/7e1ef85b-2480-452d-ab67-1eb4e65fad1e
+- https://app.pluralsight.com/ilx/video-courses/clips/849fef24-22a1-496f-9d8b-ebc4c146edc4
 
-`https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index.html`
 
 ## Platform 
 - ASP.NET 8  
@@ -33,9 +37,9 @@ This demo RESTful API does just that. It allows consumers to make request for US
  - None at the moment.
 
 ### Enhancements
-- Implement better validation for patches (see orig .NET 2 api)
+--- 
+ 
 - Add States entities and all resources.
-- Add child navigational property to Point of Interest; add City to Point of Interest.
 - Add Custom Validation Annotations (like duplicate name check). 
 - Make version number configurable. Don't forget UriLinkHelper.
 - Allow for multiple Cities creation (endpoint).
@@ -46,10 +50,14 @@ This demo RESTful API does just that. It allows consumers to make request for US
 - Add true user authentication / token assign.
 - Build log table maintenance routine.
 - Add Application Insights
-- Learn how to add svc registrations as a method extension (see EmployeeManagement demo api)
+- Learn how to add svc registrations as a method extension (see EmployeeManagement demo API and Authors & Courses API by Kevin Dockx)
 - Factory Pattern / Svc.
 - Add db connection to Health check and Uptime Robot.
 - Unit Tests with CICD / Build Server / Azure.  https://app.pluralsight.com/ilx/video-courses/d1a07995-8bbd-4124-a48f-b1f7f672091e/cded68ee-4744-48a4-ab47-8f8c47c03158/47dd3c95-b1b2-460a-bb59-ee177cfca9f1
+- ICollection vs IEnumerable vs IQueryable
+- Expand on ProblemDetails implementation: https://app.pluralsight.com/ilx/video-courses/1b57d9e1-fb13-4f6c-9a6d-850dc8e5a78f/f618cfb7-a70d-4f26-9e67-0a7bdfe22dd4/ba1f72e2-558e-4c7d-9fa2-9bd607d19fab (download final product)
+- Abstract classes: https://app.pluralsight.com/ilx/video-courses/clips/d5f818ac-9cec-4d19-a442-4123ea483ba3
+Virtual vs abstract. Watch video.  https://app.pluralsight.com/ilx/video-courses/1b57d9e1-fb13-4f6c-9a6d-850dc8e5a78f/f618cfb7-a70d-4f26-9e67-0a7bdfe22dd4/f0a7d9c7-d3eb-4f22-ba57-05a962dd4f52  Also see orig City Info API
 
 
 ---
@@ -400,3 +408,6 @@ https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index
 - Updated Postman collection.
 - Added [ProducesDefaultResponseType] attributes to Controller actions.
  
+**1.4.0**
+ - Added parent object (City) to child objects (Points of Interest).
+

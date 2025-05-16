@@ -4,7 +4,7 @@ namespace CityInfoAPI.Data.Repositories
 {
     public interface IPointsOfInterestRepository
     {
-        Task<IEnumerable<PointOfInterest>> GetPointsOfInterestAsync();
+        Task<IEnumerable<PointOfInterest>> GetPointsOfInterestGenericAsync();
 
         Task<IEnumerable<PointOfInterest>> GetPointsOfInterestAsync(string? name, string? search);
 

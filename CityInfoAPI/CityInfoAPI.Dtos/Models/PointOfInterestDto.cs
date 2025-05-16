@@ -29,5 +29,10 @@
         /// created on date for point of interest
         /// </summary>
         public DateTime CreatedOn { get; set; } = DateTime.Now;
+
+        /// <summary>
+        /// city object
+        /// </summary>
+        public CityDto City { get; set; }
     }
 }

@@ -1042,7 +1042,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/name\",\r\n        \"value\": \"POI Test 2 patched\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/description\",\r\n        \"value\": \"POI Test 2 description patched\"\r\n    }\r\n]",
+							"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/name\",\r\n        \"value\": \"Charleston Boat Tours patched\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/description\",\r\n        \"value\": \"Charleston Boat Tours description patched\"\r\n    }\r\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1186,6 +1186,24 @@
 			"item": [
 				{
 					"name": "Authenticate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) \r",
+									"{\r",
+									"    console.log(pm.response);\r",
+									"    console.log(pm.response.json().token);\r",
+									"    pm.collectionVariables.set('token', pm.response.json().token);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [

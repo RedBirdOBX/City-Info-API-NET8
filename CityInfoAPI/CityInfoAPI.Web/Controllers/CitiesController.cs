@@ -8,6 +8,7 @@ using CityInfoAPI.Web.Controllers.RequestHelpers.Models;
 using CityInfoAPI.Web.Controllers.ResponseHelpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Operations;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -347,50 +348,75 @@ namespace CityInfoAPI.Controllers
         {
             try
             {
-                var url = Url.Link("PatchCity", null);
-                _logger.LogInformation($"PatchCity URL: {url}. Request: {JsonConvert.SerializeObject(patchDocument)}");
-
-                var cityExists = await _service.CityExistsAsync(cityGuid);
-                if (!cityExists)
+                if (patchDocument.Operations.Count > 0)
                 {
-                    _logger.LogWarning($"City with id {cityGuid} wasn't found when patching city.");
-                    return NotFound();
+                    Operation operation = patchDocument.Operations[0];
+                    if (operation.op == null)
+                    {
+                        ModelState.AddModelError("Description", "The operation is missing (replace, add, remove, etc).");
+                        return BadRequest(ModelState);
+                    }
+
+                    if (operation.path == null)
+                    {
+                        ModelState.AddModelError("Description", "The path is missing. What do you want to update?");
+                        return BadRequest(ModelState);
+                    }
+
+                    var url = Url.Link("PatchCity", null);
+                    _logger.LogInformation($"PatchCity URL: {url}. Request: {JsonConvert.SerializeObject(patchDocument)}");
+
+                    var cityExists = await _service.CityExistsAsync(cityGuid);
+                    if (!cityExists)
+                    {
+                        _logger.LogWarning($"City with id {cityGuid} wasn't found when patching city.");
+                        return NotFound();
+                    }
+
+                    var existingCity = await _service.GetCityAsync(cityGuid, false);
+
+                    // map the request - override the values of the destination object w/ source
+                    var cityToPatch = _mapper.Map<CityUpdateDto>(existingCity);
+
+                    // If we include the optional ModelState argument, it will send back any potential errors.
+                    // This is where we map new values to the properties.
+                    // ModelState was created here when the Model Binding was applied to the input model...the JSONPatchDocument.
+                    // Since the framework has no way of knowing what was required and valid in the document, it will usually have
+                    // no errors and be valid.
+                    patchDocument.ApplyTo(cityToPatch, ModelState);
+
+                    // see if updates are valid
+                    if (!ModelState.IsValid)
+                    {
+                        _logger.LogWarning($"Invalid model state for the patch.");
+                        return BadRequest(ModelState);
+                    }
+
+                    // validate the final version
+                    if (!TryValidateModel(cityToPatch))
+                    {
+                        _logger.LogWarning($"Invalid model state for the patch.");
+                        return BadRequest(ModelState);
+                    }
+
+                    // map changes back to the entity. source / destination
+                    _mapper.Map(cityToPatch, existingCity);
+
+                    // now that we have a updated entity, try to save it.
+                    var updatedCity = await _service.UpdateCityAsync(cityToPatch, cityGuid);
+                    if (updatedCity == null)
+                    {
+                        _logger.LogError("An error occurred while patching city.");
+                        return StatusCode(500, "An error occurred while patching city.");
+                    }
+
+                    return NoContent();
                 }
-
-                var existingCity = await _service.GetCityAsync(cityGuid, false);
-
-                // map the request - override the values of the destination object w/ source
-                var cityToPatch = _mapper.Map<CityUpdateDto>(existingCity);
-
-                // apply the patch - grab the updates and update the dto
-                patchDocument.ApplyTo(cityToPatch, ModelState);
-
-                // see if updates are valid
-                if (!ModelState.IsValid)
+                else
                 {
-                    _logger.LogWarning($"Invalid model state for the patch.");
+                    ModelState.AddModelError("Description", "The patch document is not correct.");
                     return BadRequest(ModelState);
                 }
-
-                // validate the final version
-                if (!TryValidateModel(cityToPatch))
-                {
-                    _logger.LogWarning($"Invalid model state for the patch.");
-                    return BadRequest(ModelState);
-                }
-
-                // map changes back to the entity. source / destination
-                _mapper.Map(cityToPatch, existingCity);
-
-                // now that we have a updated entity, try to save it.
-                var updatedCity = await _service.UpdateCityAsync(cityToPatch, cityGuid);
-                if (updatedCity == null)
-                {
-                    _logger.LogError("An error occurred while patching city.");
-                    return StatusCode(500, "An error occurred while patching city.");
-                }
-
-                return NoContent();
             }
             catch (Exception ex)
             {
