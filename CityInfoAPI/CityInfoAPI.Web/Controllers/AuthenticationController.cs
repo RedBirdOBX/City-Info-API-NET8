@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using CityInfoAPI.Dtos.Models;
 using CityInfoAPI.Web.Controllers.RequestHelpers.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -39,7 +40,7 @@ namespace CityInfoAPI.Web.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost("Authenticate", Name = "Authenticate")]
-        public ActionResult<string> Authenticate([FromBody] AuthenticationUserRequest userRequest)
+        public ActionResult<RequestForTokenResponse> Authenticate([FromBody] AuthenticationUserRequest userRequest)
         {
             // 1) validate the user
             var user = ValidateUserCredentials(userRequest.UserName, userRequest.Password);
@@ -74,12 +75,12 @@ namespace CityInfoAPI.Web.Controllers
                                                     signingCredentials);
 
             var tokenToReturn = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-
-            var authResponse = new AuthResponse()
+            var response = new RequestForTokenResponse()
             {
-                Token = tokenToReturn
+                Token = tokenToReturn,
+                Success = true
             };
-            return Ok(authResponse);
+            return Ok(response);
         }
 
         /// <summary>
@@ -97,10 +98,5 @@ namespace CityInfoAPI.Web.Controllers
 
             return new CityInfoUser(1, username, "John", "Doe", "Richmond");
         }
-    }
-
-    public class AuthResponse()
-    {
-        public string Token { get; set; }
     }
 }
