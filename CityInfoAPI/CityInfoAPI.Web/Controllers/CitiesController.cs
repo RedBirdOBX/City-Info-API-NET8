@@ -72,7 +72,6 @@ namespace CityInfoAPI.Controllers
                 // record the request
                 var url = Url.Link("GetCities", new { requestParams.IncludePointsOfInterest, requestParams.Name, requestParams.Search, requestParams.PageNumber, requestParams.PageSize });
                 _logger.LogInformation($"Getting cities URL: {url}");
-                _logger.LogError($"TEST Getting cities URL: {url}");
 
                 // META DATA. building meta data. correct page size if needed
                 if (requestParams.PageSize > RequestConstants.MAX_PAGE_SIZE)
