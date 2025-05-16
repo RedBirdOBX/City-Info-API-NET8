@@ -59,7 +59,7 @@ namespace CityInfoAPI.Web.Controllers
 
             // custom policy - will generate claim. client must provide proper resources of "all".
             // industry standards:
-            claimsForToken.Add(new Claim("sub", user.UserId.ToString()));
+            claimsForToken.Add(new Claim("sub", user.UserId.ToString()));  // standard for UserId
             claimsForToken.Add(new Claim("given_name", user.FirstName));
             claimsForToken.Add(new Claim("family_name", user.LastName));
             claimsForToken.Add(new Claim("city", user.City));
@@ -75,7 +75,11 @@ namespace CityInfoAPI.Web.Controllers
 
             var tokenToReturn = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
 
-            return Ok(tokenToReturn);
+            var authResponse = new AuthResponse()
+            {
+                Token = tokenToReturn
+            };
+            return Ok(authResponse);
         }
 
         /// <summary>
@@ -93,5 +97,10 @@ namespace CityInfoAPI.Web.Controllers
 
             return new CityInfoUser(1, username, "John", "Doe", "Richmond");
         }
+    }
+
+    public class AuthResponse()
+    {
+        public string Token { get; set; }
     }
 }

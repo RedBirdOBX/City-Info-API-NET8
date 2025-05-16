@@ -212,6 +212,11 @@
             created on date for point of interest
             </summary>
         </member>
+        <member name="P:CityInfoAPI.Dtos.Models.PointOfInterestDto.City">
+            <summary>
+            city object
+            </summary>
+        </member>
         <member name="T:CityInfoAPI.Dtos.Models.PointOfInterestUpdateDto">
             <summary>
             object for updating a point of interest

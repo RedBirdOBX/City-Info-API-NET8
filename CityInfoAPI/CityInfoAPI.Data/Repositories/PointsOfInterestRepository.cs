@@ -19,11 +19,15 @@ namespace CityInfoAPI.Data.Repositories
             _logger = logger ?? throw new ArgumentNullException();
         }
 
-        public async Task<IEnumerable<PointOfInterest>> GetPointsOfInterestAsync()
+        public async Task<IEnumerable<PointOfInterest>> GetPointsOfInterestGenericAsync()
         {
             try
             {
-                var pointsOfInterest = await _dbContext.PointsOfInterest.OrderBy(p => p.Name).ToListAsync();
+                var pointsOfInterest = await _dbContext.PointsOfInterest
+                                                        .Include(p => p.City)
+                                                        .AsNoTracking()
+                                                        .OrderBy(p => p.Name)
+                                                        .ToListAsync();
                 return pointsOfInterest;
             }
             catch (Exception ex)
@@ -39,7 +43,7 @@ namespace CityInfoAPI.Data.Repositories
             {
                 if (string.IsNullOrWhiteSpace(name) && string.IsNullOrEmpty(search))
                 {
-                    return await GetPointsOfInterestAsync();
+                    return await GetPointsOfInterestGenericAsync();
                 }
 
                 // IQueryable uses deferred execution
@@ -63,7 +67,10 @@ namespace CityInfoAPI.Data.Repositories
                 }
 
                 // query is sent
-                var results = await pointsOfInterest.OrderBy(p => p.Name).ToListAsync();
+                var results = await pointsOfInterest.AsNoTracking()
+                                                    .OrderBy(p => p.Name)
+                                                    .Include(p => p.City)
+                                                    .ToListAsync();
                 return results;
             }
             catch (Exception ex)
@@ -77,7 +84,11 @@ namespace CityInfoAPI.Data.Repositories
         {
             try
             {
-                var pointsOfInterest = await _dbContext.PointsOfInterest.Where(p => p.CityGuid == cityGuid).ToListAsync();
+                var pointsOfInterest = await _dbContext.PointsOfInterest
+                                                        .Include(p => p.City)
+                                                        .AsNoTracking()
+                                                        .Where(p => p.CityGuid == cityGuid)
+                                                        .ToListAsync();
                 return pointsOfInterest;
             }
             catch (Exception ex)
@@ -91,7 +102,12 @@ namespace CityInfoAPI.Data.Repositories
         {
             try
             {
-                return await _dbContext.PointsOfInterest.Where(p => p.PointGuid == pointGuid).FirstOrDefaultAsync();
+                var pointofInterest = await _dbContext.PointsOfInterest
+                                                        .Where(p => p.PointGuid == pointGuid)
+                                                        .Include(p => p.City)
+                                                        .AsNoTracking()
+                                                        .FirstOrDefaultAsync();
+                return pointofInterest;
             }
             catch (Exception ex)
             {

@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DocumentationFile>CityInfoApi.Web.xml</DocumentationFile>
+    <UserSecretsId>079ee887-51a9-4baa-934e-0f696c1f93ba</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
