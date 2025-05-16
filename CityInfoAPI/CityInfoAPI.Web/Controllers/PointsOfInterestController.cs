@@ -18,7 +18,7 @@ namespace CityInfoAPI.Controllers
     /// <response code="500">internal error</response>
     [Route("api/v{version:apiVersion}")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     [ApiVersion(1.0)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
