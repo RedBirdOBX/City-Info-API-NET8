@@ -1,6 +1,3 @@
-USE [redbirdobx]
-GO
-
 INSERT INTO [dbo].[States]
 			([StateGuid],[StateCode])
      VALUES

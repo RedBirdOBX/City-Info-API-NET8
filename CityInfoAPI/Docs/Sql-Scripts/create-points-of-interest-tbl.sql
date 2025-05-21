@@ -1,4 +1,3 @@
-/****** Object:  Table [dbo].[PointsOfInterest]    Script Date: 2/19/2025 7:33:40 AM ******/
 SET ANSI_NULLS ON
 GO
 
