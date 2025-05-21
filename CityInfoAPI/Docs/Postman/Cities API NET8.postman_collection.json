@@ -7,6 +7,116 @@
 	},
 	"item": [
 		{
+			"name": "States",
+			"item": [
+				{
+					"name": "States",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Bearer",
+								"value": "xxxx",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/states",
+							"host": [
+								"{{CitiesInfoNET8BaseUrl}}"
+							],
+							"path": [
+								"v{{version}}",
+								"states"
+							],
+							"query": [
+								{
+									"key": "Accept",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get State",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Bearer",
+								"value": "xxxx",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/states/va",
+							"host": [
+								"{{CitiesInfoNET8BaseUrl}}"
+							],
+							"path": [
+								"v{{version}}",
+								"states",
+								"va"
+							],
+							"query": [
+								{
+									"key": "Accept",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Cities",
 			"item": [
 				{
