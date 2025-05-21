@@ -39,7 +39,8 @@ API was built with knowledge from the following tutorials:
 ### Enhancements
 --- 
  
-- Add States entities and all resources.
+- Repos are inconsistently named.
+- Entity Guids?  StateId vs StateGuid.... etc
 - Add Custom Validation Annotations (like duplicate name check). 
 - Make version number configurable. Don't forget UriLinkHelper.
 - Allow for multiple Cities creation (endpoint).
@@ -58,8 +59,6 @@ API was built with knowledge from the following tutorials:
 - Expand on ProblemDetails implementation: https://app.pluralsight.com/ilx/video-courses/1b57d9e1-fb13-4f6c-9a6d-850dc8e5a78f/f618cfb7-a70d-4f26-9e67-0a7bdfe22dd4/ba1f72e2-558e-4c7d-9fa2-9bd607d19fab (download final product)
 - Abstract classes: https://app.pluralsight.com/ilx/video-courses/clips/d5f818ac-9cec-4d19-a442-4123ea483ba3
 Virtual vs abstract. Watch video.  https://app.pluralsight.com/ilx/video-courses/1b57d9e1-fb13-4f6c-9a6d-850dc8e5a78f/f618cfb7-a70d-4f26-9e67-0a7bdfe22dd4/f0a7d9c7-d3eb-4f22-ba57-05a962dd4f52  Also see orig City Info API
-- Repos are inconsistently named.
-- Entity Guids?  StateId vs StateGuid.... etc
 - Improve on pagination:  https://app.pluralsight.com/ilx/video-courses/1b57d9e1-fb13-4f6c-9a6d-850dc8e5a78f/a9261365-6296-41ce-ae0e-6b42958f77d0/b29f6bf8-36e5-4250-9912-dff3f1c5910c 
 
 ---
