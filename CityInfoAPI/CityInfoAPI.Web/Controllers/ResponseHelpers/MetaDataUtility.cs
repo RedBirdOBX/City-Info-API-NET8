@@ -1,6 +1,4 @@
-﻿// Ignore Spelling: Accessor
-
-using CityInfoAPI.Dtos;
+﻿using CityInfoAPI.Dtos;
 using CityInfoAPI.Web.Controllers.RequestHelpers.Models;
 using CityInfoAPI.Web.Controllers.ResponseHelpers;
 
