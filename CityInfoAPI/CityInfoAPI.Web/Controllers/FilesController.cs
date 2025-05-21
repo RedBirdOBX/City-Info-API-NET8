@@ -23,6 +23,7 @@ namespace CityInfoAPI.Web.Controllers
 
         /// <summary>constructor</summary>
         /// <param name="fileExtensionContentTypeProvider"></param>
+        /// <param name="logger"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public FilesController(FileExtensionContentTypeProvider fileExtensionContentTypeProvider, ILogger<FilesController> logger)
         {

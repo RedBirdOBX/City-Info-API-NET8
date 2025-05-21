@@ -1,4 +1,4 @@
-/****** Object:  Table [dbo].[Cities]    Script Date: 2/19/2025 7:34:34 AM ******/
+/****** Object:  Table [dbo].[Cities]    Script Date: 5/20/2025 4:00:36 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -11,6 +11,8 @@ CREATE TABLE [dbo].[Cities](
 	[Name] [nvarchar](50) NOT NULL,
 	[Description] [nvarchar](200) NULL,
 	[CreatedOn] [datetime] NOT NULL,
+	[StateId] [int] NOT NULL,
+	[StateGuid] [uniqueidentifier] NOT NULL,
  CONSTRAINT [PK_Demo.Cities] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

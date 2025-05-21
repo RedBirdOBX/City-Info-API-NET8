@@ -31,6 +31,11 @@
         public int NumberOfPointsOfInterest { get { return PointsOfInterest.Count;  }  }
 
         /// <summary>
+        /// state
+        /// </summary>
+        public StateDto? State { get; set; }
+
+        /// <summary>
         /// points of interest for city
         /// </summary>
         public ICollection<PointOfInterestDto> PointsOfInterest { get; set; } = new List<PointOfInterestDto>();

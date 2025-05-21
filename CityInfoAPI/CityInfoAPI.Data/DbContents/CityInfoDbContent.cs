@@ -9,6 +9,8 @@ namespace CityInfoAPI.Data.DbContents
         {
         }
 
+        public DbSet<State> States { get; set; }
+
         public DbSet<City> Cities { get; set; }
 
         public DbSet<PointOfInterest> PointsOfInterest { get; set; }

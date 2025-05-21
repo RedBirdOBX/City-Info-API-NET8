@@ -210,7 +210,7 @@
             <summary>Gets all Cities</summary>
             <returns>collection of CityDto</returns>
             <example>{baseUrl}/api/cities</example>
-            <response code="200">returns city by id</response>
+            <response code="200">returns cities</response>
         </member>
         <member name="M:CityInfoAPI.Controllers.CitiesController.GetCityByCityIdOptions(System.Guid)">
             <summary>mostly for demo purposes. returns options available for city by id requests</summary>
@@ -353,6 +353,38 @@
             <example>{baseUrl}/api/cities/{cityGuid}/pointsofinterest/{pointGuid}</example>
             <response code="204">deleted point of interest</response>
             <response code="404">city or point of interest not found</response>
+        </member>
+        <member name="T:CityInfoAPI.Controllers.StatesController">
+            <summary>
+            States controller
+            </summary>
+            <response code="401">unauthorized request</response>
+            <response code="500">internal error</response>
+        </member>
+        <member name="M:CityInfoAPI.Controllers.StatesController.#ctor(Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.StatesController},AutoMapper.IMapper,CityInfoAPI.Service.IStateService)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="logger"></param>
+            <param name="mapper"></param>
+            <param name="service"></param>
+            <param name="configuration"></param>
+            <param name="httpContextAccessor"></param>
+            <param name="linkGenerator"></param>
+        </member>
+        <member name="M:CityInfoAPI.Controllers.StatesController.GetStates">
+            <summary>Gets all States</summary>
+            <returns>collection of StateDto</returns>
+            <example>{baseUrl}/api/states</example>
+            <response code="200">returns states</response>B
+        </member>
+        <member name="M:CityInfoAPI.Controllers.StatesController.GetStateByStateCode(System.String)">
+            <summary>returns state by state code</summary>
+            <param name="stateCode"></param>
+            <returns>StateDto</returns>
+            <example>{baseUrl}/api/states/{stateAbbrev}</example>
+            <response code="200">returns state by state code</response>
+            <response code="400">bad request for getting state by state code</response>
         </member>
     </members>
 </doc>

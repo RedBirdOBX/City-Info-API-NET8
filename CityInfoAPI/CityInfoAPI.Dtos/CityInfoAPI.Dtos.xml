@@ -64,6 +64,11 @@
             count of points of interest for city
             </summary>
         </member>
+        <member name="P:CityInfoAPI.Dtos.Models.CityDto.State">
+            <summary>
+            state
+            </summary>
+        </member>
         <member name="P:CityInfoAPI.Dtos.Models.CityDto.PointsOfInterest">
             <summary>
             points of interest for city
@@ -102,6 +107,11 @@
         <member name="P:CityInfoAPI.Dtos.Models.CityWithoutPointsOfInterestDto.Description">
             <summary>
             description of city
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.Models.CityWithoutPointsOfInterestDto.State">
+            <summary>
+            state of city
             </summary>
         </member>
         <member name="P:CityInfoAPI.Dtos.Models.CityWithoutPointsOfInterestDto.CreatedOn">
@@ -230,6 +240,36 @@
         <member name="P:CityInfoAPI.Dtos.Models.PointOfInterestUpdateDto.Description">
             <summary>
             description of point of interest
+            </summary>
+        </member>
+        <member name="T:CityInfoAPI.Dtos.Models.RequestForTokenResponseDto">
+            <summary>
+            holds response for request for token
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.Models.RequestForTokenResponseDto.Success">
+            <summary>
+            success flag
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.Models.RequestForTokenResponseDto.Token">
+            <summary>
+            token string
+            </summary>
+        </member>
+        <member name="T:CityInfoAPI.Dtos.Models.StateDto">
+            <summary>
+            state object
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.Models.StateDto.StateGuid">
+            <summary>
+            unique identifier for the state
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.Models.StateDto.StateCode">
+            <summary>
+            state abbreviation
             </summary>
         </member>
         <member name="T:CityInfoAPI.Dtos.PaginationMetaDataDto">

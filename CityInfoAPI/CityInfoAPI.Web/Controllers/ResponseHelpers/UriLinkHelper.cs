@@ -11,6 +11,40 @@ namespace CityInfoAPI.Web.Controllers.ResponseHelpers
     /// </summary>
     public static class UriLinkHelper
     {
+        public static LinkDto CreateLinkForStateWithinCollection(HttpRequest request, StateDto state)
+        {
+            string protocol = (request.IsHttps) ? "https" : "http";
+            string version = "v1.0";    // we should probably look this up
+            try
+            {
+                LinkDto link = new LinkDto($"{protocol}://{request.Host}/api/{version}/states/{state.StateCode}", "state", "GET");
+                return link;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static StateDto CreateLinksForState(HttpRequest request, StateDto state)
+        {
+            string protocol = (request.IsHttps) ? "https" : "http";
+            string version = "v1.0";    // we should probably look this up
+            try
+            {
+                // link to self
+                state.Links.Add(new LinkDto($"{protocol}://{request.Host}/api/{version}/states/{state.StateCode}", "self", "GET"));
+
+                // link to collection
+                state.Links.Add(new LinkDto($"{protocol}://{request.Host}/api/{version}/states", "state-collection", "GET"));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return state;
+        }
+
         public static LinkDto CreateLinkForCityWithinCollection(HttpRequest request, CityWithoutPointsOfInterestDto city)
         {
             string protocol = (request.IsHttps) ? "https" : "http";

@@ -40,7 +40,7 @@ namespace CityInfoAPI.Web.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [HttpPost("Authenticate", Name = "Authenticate")]
-        public ActionResult<RequestForTokenResponse> Authenticate([FromBody] AuthenticationUserRequest userRequest)
+        public ActionResult<RequestForTokenResponseDto> Authenticate([FromBody] AuthenticationUserRequest userRequest)
         {
             // 1) validate the user
             var user = ValidateUserCredentials(userRequest.UserName, userRequest.Password);
@@ -75,7 +75,7 @@ namespace CityInfoAPI.Web.Controllers
                                                     signingCredentials);
 
             var tokenToReturn = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-            var response = new RequestForTokenResponse()
+            var response = new RequestForTokenResponseDto()
             {
                 Token = tokenToReturn,
                 Success = true
