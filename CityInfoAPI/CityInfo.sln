@@ -24,6 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sql-Scripts", "Sql-Scripts"
 		Docs\Sql-Scripts\create-points-of-interest-tbl.sql = Docs\Sql-Scripts\create-points-of-interest-tbl.sql
 		Docs\Sql-Scripts\insert-initial-data-cities.sql = Docs\Sql-Scripts\insert-initial-data-cities.sql
 		Docs\Sql-Scripts\insert-initial-data-points-of-interest.sql = Docs\Sql-Scripts\insert-initial-data-points-of-interest.sql
+		Docs\Sql-Scripts\insert-initial-data-states.sql = Docs\Sql-Scripts\insert-initial-data-states.sql
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CityInfoAPI.Service", "CityInfoAPI.Service\CityInfoAPI.Service.csproj", "{5F1A21DB-2EEF-4223-BB97-25101F64C92F}"

@@ -1,6 +1,7 @@
-﻿using Asp.Versioning;
+﻿// Ignore Spelling: Accessor
+
+using Asp.Versioning;
 using AutoMapper;
-using CityInfoAPI.Data.Entities;
 using CityInfoAPI.Dtos.Models;
 using CityInfoAPI.Service;
 using CityInfoAPI.Web.Controllers.RequestHelpers;
@@ -60,7 +61,7 @@ namespace CityInfoAPI.Controllers
         /// <summary>Gets all Cities</summary>
         /// <returns>collection of CityDto</returns>
         /// <example>{baseUrl}/api/cities</example>
-        /// <response code="200">returns city by id</response>
+        /// <response code="200">returns cities</response>
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("", Name = "GetCities")]
@@ -131,6 +132,7 @@ namespace CityInfoAPI.Controllers
                 foreach (var city in results)
                 {
                     city.Links.Add(UriLinkHelper.CreateLinkForCityWithinCollection(HttpContext.Request, city));
+                    city.State?.Links.Add(UriLinkHelper.CreateLinkForStateWithinCollection(HttpContext.Request, city.State));
                 }
 
                 return Ok(results);
@@ -154,7 +156,7 @@ namespace CityInfoAPI.Controllers
         [HttpOptions("{cityGuid}", Name = "GetCityByCityIdOptions")]
         public ActionResult GetCityByCityIdOptions([FromRoute] Guid cityGuid)
         {
-            Response.Headers.Add("Allow", "GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD");
+            Response.Headers.Append("Allow", "GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD");
             return Ok();
         }
 

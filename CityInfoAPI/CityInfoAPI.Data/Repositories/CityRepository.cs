@@ -21,7 +21,7 @@ namespace CityInfoAPI.Data.Repositories
         {
             try
             {
-                return await _dbContext.Cities.ToListAsync();
+                return await _dbContext.Cities.AsNoTracking().ToListAsync();
             }
             catch (Exception ex)
             {
@@ -58,6 +58,8 @@ namespace CityInfoAPI.Data.Repositories
                 var results = await cities.OrderBy(c => c.Name)
                                             .Skip(pageSize * (pageNumber - 1))
                                             .Take(pageSize)
+                                            .Include(c => c.State)
+                                            .AsNoTracking()
                                             .ToListAsync();
                 return results;
             }
@@ -76,11 +78,15 @@ namespace CityInfoAPI.Data.Repositories
                 {
                     return await _dbContext.Cities
                                             .Include(c => c.PointsOfInterest)
+                                            .Include(c => c.State)
                                             .Where(c => c.CityGuid == cityGuid)
+                                            .AsNoTracking()
                                             .FirstOrDefaultAsync();
                 }
                 return await _dbContext.Cities
+                                            .Include(c => c.State)
                                             .Where(c => c.CityGuid == cityGuid)
+                                            .AsNoTracking()
                                             .FirstOrDefaultAsync();
             }
             catch (Exception ex)

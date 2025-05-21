@@ -37,6 +37,7 @@ namespace CityInfoAPI.Controllers
         /// <param name="service"></param>
         /// <param name="cityService"></param>
         /// <param name="mapper"></param>
+        /// <param name="configuration"></param>
         /// <exception cref="ArgumentNullException"></exception>
         public PointsOfInterestController(ILogger<PointsOfInterestController> logger, IMailService mailService, IMapper mapper,
                                             IPointsOfInterestService service, ICityService cityService, IConfiguration configuration)

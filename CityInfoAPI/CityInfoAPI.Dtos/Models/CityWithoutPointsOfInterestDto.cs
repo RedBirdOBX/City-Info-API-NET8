@@ -21,6 +21,11 @@
         public string? Description { get; set; }
 
         /// <summary>
+        /// state of city
+        /// </summary>
+        public StateDto? State { get; set; }
+
+        /// <summary>
         /// created on date
         /// </summary>
         public DateTime CreatedOn { get; set; } = DateTime.Now;

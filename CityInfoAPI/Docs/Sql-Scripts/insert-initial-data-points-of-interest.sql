@@ -1,5 +1,3 @@
---TRUNCATE TABLE [dbo].[PointsOfInterest]
-
 BEGIN TRANSACTION;
 
 	INSERT INTO [dbo].[PointsOfInterest]
