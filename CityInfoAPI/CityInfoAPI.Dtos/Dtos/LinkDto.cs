@@ -1,8 +1,6 @@
-﻿// Ignore Spelling: Href
+﻿using System.Runtime.Serialization;
 
-using System.Runtime.Serialization;
-
-namespace CityInfoAPI.Dtos.Models
+namespace CityInfoAPI.Dtos
 {
     /// <summary>
     /// link type to be included in responses

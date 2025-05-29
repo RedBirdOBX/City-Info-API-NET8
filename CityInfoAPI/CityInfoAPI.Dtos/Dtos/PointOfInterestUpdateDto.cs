@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CityInfoAPI.Dtos.Models
+namespace CityInfoAPI.Dtos
 {
     /// <summary>
     /// object for updating a point of interest

@@ -1,6 +1,6 @@
 ﻿using Asp.Versioning;
-using CityInfoAPI.Dtos.Models;
-using CityInfoAPI.Web.Controllers.RequestHelpers.Models;
+using CityInfoAPI.Dtos;
+using CityInfoAPI.Dtos.RequestModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

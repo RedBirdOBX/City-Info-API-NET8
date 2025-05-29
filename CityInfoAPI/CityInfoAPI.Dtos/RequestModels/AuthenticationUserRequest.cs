@@ -1,4 +1,4 @@
-﻿namespace CityInfoAPI.Web.Controllers.RequestHelpers.Models
+﻿namespace CityInfoAPI.Dtos.RequestModels
 {
     /// <summary>
     /// obj for mapping a user requesting to get token

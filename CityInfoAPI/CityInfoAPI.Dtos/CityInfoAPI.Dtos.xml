@@ -4,132 +4,102 @@
         <name>CityInfoAPI.Dtos</name>
     </assembly>
     <members>
-        <member name="T:CityInfoAPI.Dtos.Models.CityCreateDto">
+        <member name="T:CityInfoAPI.Dtos.CityCreateDto">
             <summary>
             object for creating a city
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityCreateDto.CityGuid">
+        <member name="P:CityInfoAPI.Dtos.CityCreateDto.CityGuid">
             <summary>
             unique identifier for the city
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityCreateDto.Name">
+        <member name="P:CityInfoAPI.Dtos.CityCreateDto.Name">
             <summary>
             name of city
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityCreateDto.Description">
+        <member name="P:CityInfoAPI.Dtos.CityCreateDto.Description">
             <summary>
             description of city
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityCreateDto.CreatedOn">
+        <member name="P:CityInfoAPI.Dtos.CityCreateDto.CreatedOn">
             <summary>
             created on date for the city
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityCreateDto.PointsOfInterest">
+        <member name="P:CityInfoAPI.Dtos.CityCreateDto.PointsOfInterest">
             <summary>
             points of interest to be created with city
             </summary>
         </member>
-        <member name="T:CityInfoAPI.Dtos.Models.CityDto">
+        <member name="T:CityInfoAPI.Dtos.CityDto">
             <summary>
             city object
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityDto.CityGuid">
+        <member name="P:CityInfoAPI.Dtos.CityDto.CityGuid">
             <summary>
             unique identifier for the city
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityDto.Name">
+        <member name="P:CityInfoAPI.Dtos.CityDto.Name">
             <summary>
             name of city
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityDto.Description">
+        <member name="P:CityInfoAPI.Dtos.CityDto.Description">
             <summary>
             description of city
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityDto.CreatedOn">
+        <member name="P:CityInfoAPI.Dtos.CityDto.CreatedOn">
             <summary>
             created on date for city
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityDto.NumberOfPointsOfInterest">
+        <member name="P:CityInfoAPI.Dtos.CityDto.NumberOfPointsOfInterest">
             <summary>
             count of points of interest for city
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityDto.State">
+        <member name="P:CityInfoAPI.Dtos.CityDto.State">
             <summary>
             state
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityDto.PointsOfInterest">
+        <member name="P:CityInfoAPI.Dtos.CityDto.PointsOfInterest">
             <summary>
             points of interest for city
             </summary>
         </member>
-        <member name="T:CityInfoAPI.Dtos.Models.CityUpdateDto">
+        <member name="T:CityInfoAPI.Dtos.CityUpdateDto">
             <summary>
             onject for updating a city
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityUpdateDto.Name">
+        <member name="P:CityInfoAPI.Dtos.CityUpdateDto.Name">
             <summary>
             name of city
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityUpdateDto.Description">
+        <member name="P:CityInfoAPI.Dtos.CityUpdateDto.Description">
             <summary>
             description of city
             </summary>
         </member>
-        <member name="T:CityInfoAPI.Dtos.Models.CityWithoutPointsOfInterestDto">
-            <summary>
-            City object without points of interest
-            </summary>
-        </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityWithoutPointsOfInterestDto.CityGuid">
-            <summary>
-             unique identifier for city
-            </summary>
-        </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityWithoutPointsOfInterestDto.Name">
-            <summary>
-             name of city
-            </summary>
-        </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityWithoutPointsOfInterestDto.Description">
-            <summary>
-            description of city
-            </summary>
-        </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityWithoutPointsOfInterestDto.State">
-            <summary>
-            state of city
-            </summary>
-        </member>
-        <member name="P:CityInfoAPI.Dtos.Models.CityWithoutPointsOfInterestDto.CreatedOn">
-            <summary>
-            created on date
-            </summary>
-        </member>
-        <member name="T:CityInfoAPI.Dtos.Models.LinkDto">
+        <member name="T:CityInfoAPI.Dtos.LinkDto">
             <summary>
             link type to be included in responses
             </summary>
         </member>
-        <member name="M:CityInfoAPI.Dtos.Models.LinkDto.#ctor">
+        <member name="M:CityInfoAPI.Dtos.LinkDto.#ctor">
             <summary>
             default constructor
             </summary>
         </member>
-        <member name="M:CityInfoAPI.Dtos.Models.LinkDto.#ctor(System.String,System.String,System.String)">
+        <member name="M:CityInfoAPI.Dtos.LinkDto.#ctor(System.String,System.String,System.String)">
             <summary>
             constructor
             </summary>
@@ -137,137 +107,137 @@
             <param name="rel">responsibility of uri</param>
             <param name="method">type of request</param>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.LinkDto.Href">
+        <member name="P:CityInfoAPI.Dtos.LinkDto.Href">
             <summary>
             the uri of the resource
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.LinkDto.Rel">
+        <member name="P:CityInfoAPI.Dtos.LinkDto.Rel">
             <summary>
             the responsibility of the uri
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.LinkDto.Method">
+        <member name="P:CityInfoAPI.Dtos.LinkDto.Method">
             <summary>
             the type of request to be made
             </summary>
         </member>
-        <member name="T:CityInfoAPI.Dtos.Models.LinkedResourcesDto">
+        <member name="T:CityInfoAPI.Dtos.LinkedResourcesDto">
             <summary>
             links to add to response objs
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.LinkedResourcesDto.Links">
+        <member name="P:CityInfoAPI.Dtos.LinkedResourcesDto.Links">
             <summary>
             links to be added to resource dtos
             </summary>
         </member>
-        <member name="M:CityInfoAPI.Dtos.Models.LinkedResourcesDto.#ctor">
+        <member name="M:CityInfoAPI.Dtos.LinkedResourcesDto.#ctor">
             <summary>
              constructor
             </summary>
         </member>
-        <member name="T:CityInfoAPI.Dtos.Models.PointOfInterestCreateDto">
+        <member name="T:CityInfoAPI.Dtos.PointOfInterestCreateDto">
             <summary>
             object for creating a point of interest
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.PointOfInterestCreateDto.PointGuid">
+        <member name="P:CityInfoAPI.Dtos.PointOfInterestCreateDto.PointGuid">
             <summary>
             unique identifier for the point of interest
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.PointOfInterestCreateDto.CityGuid">
+        <member name="P:CityInfoAPI.Dtos.PointOfInterestCreateDto.CityGuid">
             <summary>
             unique identifier for the city
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.PointOfInterestCreateDto.Name">
+        <member name="P:CityInfoAPI.Dtos.PointOfInterestCreateDto.Name">
             <summary>
             name of the point of interest
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.PointOfInterestCreateDto.Description">
+        <member name="P:CityInfoAPI.Dtos.PointOfInterestCreateDto.Description">
             <summary>
             description of the point of interest
             </summary>
         </member>
-        <member name="T:CityInfoAPI.Dtos.Models.PointOfInterestDto">
+        <member name="T:CityInfoAPI.Dtos.PointOfInterestDto">
             <summary>
             point of interest object
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.PointOfInterestDto.PointGuid">
+        <member name="P:CityInfoAPI.Dtos.PointOfInterestDto.PointGuid">
             <summary>
             unique identifier for point of interest
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.PointOfInterestDto.CityGuid">
+        <member name="P:CityInfoAPI.Dtos.PointOfInterestDto.CityGuid">
             <summary>
             unique identifier for city
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.PointOfInterestDto.Name">
+        <member name="P:CityInfoAPI.Dtos.PointOfInterestDto.Name">
             <summary>
             name of point of interest
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.PointOfInterestDto.Description">
+        <member name="P:CityInfoAPI.Dtos.PointOfInterestDto.Description">
             <summary>
             description of point of interest
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.PointOfInterestDto.CreatedOn">
+        <member name="P:CityInfoAPI.Dtos.PointOfInterestDto.CreatedOn">
             <summary>
             created on date for point of interest
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.PointOfInterestDto.City">
+        <member name="P:CityInfoAPI.Dtos.PointOfInterestDto.City">
             <summary>
             city object
             </summary>
         </member>
-        <member name="T:CityInfoAPI.Dtos.Models.PointOfInterestUpdateDto">
+        <member name="T:CityInfoAPI.Dtos.PointOfInterestUpdateDto">
             <summary>
             object for updating a point of interest
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.PointOfInterestUpdateDto.Name">
+        <member name="P:CityInfoAPI.Dtos.PointOfInterestUpdateDto.Name">
             <summary>
             name of point of interest
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.PointOfInterestUpdateDto.Description">
+        <member name="P:CityInfoAPI.Dtos.PointOfInterestUpdateDto.Description">
             <summary>
             description of point of interest
             </summary>
         </member>
-        <member name="T:CityInfoAPI.Dtos.Models.RequestForTokenResponseDto">
+        <member name="T:CityInfoAPI.Dtos.RequestForTokenResponseDto">
             <summary>
             holds response for request for token
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.RequestForTokenResponseDto.Success">
+        <member name="P:CityInfoAPI.Dtos.RequestForTokenResponseDto.Success">
             <summary>
             success flag
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.RequestForTokenResponseDto.Token">
+        <member name="P:CityInfoAPI.Dtos.RequestForTokenResponseDto.Token">
             <summary>
             token string
             </summary>
         </member>
-        <member name="T:CityInfoAPI.Dtos.Models.StateDto">
+        <member name="T:CityInfoAPI.Dtos.StateDto">
             <summary>
             state object
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.StateDto.StateGuid">
+        <member name="P:CityInfoAPI.Dtos.StateDto.StateGuid">
             <summary>
             unique identifier for the state
             </summary>
         </member>
-        <member name="P:CityInfoAPI.Dtos.Models.StateDto.StateCode">
+        <member name="P:CityInfoAPI.Dtos.StateDto.StateCode">
             <summary>
             state abbreviation
             </summary>
@@ -315,6 +285,91 @@
         <member name="P:CityInfoAPI.Dtos.PaginationMetaDataDto.NextPageUrl">
             <summary>
             url for next page
+            </summary>
+        </member>
+        <member name="T:CityInfoAPI.Dtos.RequestModels.AuthenticationUserRequest">
+            <summary>
+            obj for mapping a user requesting to get token
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.RequestModels.AuthenticationUserRequest.UserName">
+            <summary>
+            username
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.RequestModels.AuthenticationUserRequest.Password">
+            <summary>
+            password
+            </summary>
+        </member>
+        <member name="T:CityInfoAPI.Dtos.RequestModels.CityInfoUser">
+            <summary>
+            approved user of api w/ token.  details below create token.
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.RequestModels.CityInfoUser.UserId">
+            <summary>
+            user id
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.RequestModels.CityInfoUser.UserName">
+            <summary>
+            username
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.RequestModels.CityInfoUser.FirstName">
+            <summary>
+            first name
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.RequestModels.CityInfoUser.LastName">
+            <summary>
+            last name
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.RequestModels.CityInfoUser.City">
+            <summary>
+            city
+            </summary>
+        </member>
+        <member name="M:CityInfoAPI.Dtos.RequestModels.CityInfoUser.#ctor(System.Int32,System.String,System.String,System.String,System.String)">
+            <summary>
+            constructor
+            </summary>
+            <param name="userId"></param>
+            <param name="userName"></param>
+            <param name="firstName"></param>
+            <param name="lastName"></param>
+            <param name="city"></param>
+        </member>
+        <member name="T:CityInfoAPI.Dtos.RequestModels.CityRequestParameters">
+            <summary>
+            obj used to filer / search / page results of cities
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.RequestModels.CityRequestParameters.IncludePointsOfInterest">
+            <summary>
+            flag to include points of interest in results
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.RequestModels.CityRequestParameters.Name">
+            <summary>
+            name filter
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.RequestModels.CityRequestParameters.Search">
+            <summary>
+            search string
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.RequestModels.CityRequestParameters.PageNumber">
+            <summary>
+            requested page number
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.RequestModels.CityRequestParameters.PageSize">
+            <summary>
+            requested page size
             </summary>
         </member>
     </members>

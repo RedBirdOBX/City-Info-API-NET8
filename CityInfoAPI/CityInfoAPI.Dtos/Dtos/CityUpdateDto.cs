@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CityInfoAPI.Dtos.Models
+namespace CityInfoAPI.Dtos
 {
     /// <summary>
     /// onject for updating a city

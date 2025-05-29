@@ -1,4 +1,4 @@
-﻿using CityInfoAPI.Dtos.Models;
+﻿using CityInfoAPI.Dtos;
 
 namespace CityInfoAPI.Service
 {

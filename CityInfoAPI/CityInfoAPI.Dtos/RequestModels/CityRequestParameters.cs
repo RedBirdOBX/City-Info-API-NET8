@@ -1,4 +1,4 @@
-﻿namespace CityInfoAPI.Web.Controllers.RequestHelpers.Models
+﻿namespace CityInfoAPI.Dtos.RequestModels
 {
     /// <summary>
     /// obj used to filer / search / page results of cities

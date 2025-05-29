@@ -1,6 +1,6 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
-using CityInfoAPI.Dtos.Models;
+using CityInfoAPI.Dtos;
 using CityInfoAPI.Service;
 using CityInfoAPI.Web.Controllers.ResponseHelpers;
 using Microsoft.AspNetCore.Authorization;

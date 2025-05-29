@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CityInfoAPI.Data.Entities;
-using CityInfoAPI.Dtos.Models;
+using CityInfoAPI.Dtos;
 
 namespace CityInfoAPI.Web.Profiles
 {
@@ -10,13 +10,11 @@ namespace CityInfoAPI.Web.Profiles
         public CityProfile()
         {
             // source, destination
-            CreateMap<City, CityWithoutPointsOfInterestDto>();
             CreateMap<City, CityDto>();
             CreateMap<City, CityCreateDto>();
             CreateMap<CityCreateDto, City>();
             CreateMap<CityUpdateDto, City>();
             CreateMap<City, CityUpdateDto>();
-            CreateMap<CityDto, CityWithoutPointsOfInterestDto>();
             CreateMap<CityUpdateDto, CityDto>();
             CreateMap<CityDto, CityUpdateDto>();
         }

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using CityInfoAPI.Data.Entities;
 using CityInfoAPI.Data.Repositories;
-using CityInfoAPI.Dtos.Models;
+using CityInfoAPI.Dtos;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 

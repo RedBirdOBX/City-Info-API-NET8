@@ -1,5 +1,5 @@
 ﻿using CityInfoAPI.Dtos;
-using CityInfoAPI.Web.Controllers.RequestHelpers.Models;
+using CityInfoAPI.Dtos.RequestModels;
 using CityInfoAPI.Web.Controllers.ResponseHelpers;
 
 namespace CityInfoAPI.Service;

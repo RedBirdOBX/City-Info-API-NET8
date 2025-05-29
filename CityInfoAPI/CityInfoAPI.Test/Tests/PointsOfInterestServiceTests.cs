@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using CityInfoAPI.Data;
 using CityInfoAPI.Data.Repositories;
-using CityInfoAPI.Dtos.Models;
+using CityInfoAPI.Dtos;
 using CityInfoAPI.Service;
 using Microsoft.Extensions.Logging;
 using Moq;

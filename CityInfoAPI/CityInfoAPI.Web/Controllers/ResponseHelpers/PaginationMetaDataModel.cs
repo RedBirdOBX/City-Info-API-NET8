@@ -3,7 +3,7 @@
     /// <summary>
     /// obj used to provide metadata in response header
     /// </summary>
-    public class PaginationMetaData
+    public class PaginationMetaDataModel
     {
         /// <summary>
         /// total items in the collection
@@ -31,7 +31,7 @@
         /// <param name="totalItemCount"></param>
         /// <param name="pageSize"></param>
         /// <param name="currentPage"></param>
-        public PaginationMetaData(int totalItemCount, int pageSize, int currentPage)
+        public PaginationMetaDataModel(int totalItemCount, int pageSize, int currentPage)
         {
             TotalItemCount = totalItemCount;
             PageSize = pageSize;

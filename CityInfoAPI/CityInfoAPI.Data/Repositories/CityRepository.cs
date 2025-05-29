@@ -1,8 +1,9 @@
 ﻿using CityInfoAPI.Data.DbContents;
 using CityInfoAPI.Data.Entities;
+using CityInfoAPI.Dtos.RequestModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
+
 
 namespace CityInfoAPI.Data.Repositories
 {
@@ -17,20 +18,36 @@ namespace CityInfoAPI.Data.Repositories
             _logger = logger ?? throw new ArgumentNullException();
         }
 
-        public async Task<IEnumerable<City>> GetCitiesUnsortedAsync()
+        public async Task<int> CountCitiesAsync(CityRequestParameters requestParams)
         {
             try
             {
-                return await _dbContext.Cities.AsNoTracking().ToListAsync();
+                var cities = _dbContext.Cities as IQueryable<City>;
+                int count = 0;
+
+                // constructing the query...
+                if (!string.IsNullOrEmpty(requestParams?.Name))
+                {
+                    cities = cities.Where(c => c.Name.ToLower() == requestParams.Name.ToLower());
+                }
+
+                if (!string.IsNullOrEmpty(requestParams?.Search))
+                {
+                    requestParams.Search = requestParams.Search.Trim().ToLower();
+                    cities = cities.Where(c => c.Name.Contains(requestParams.Search) || (c.Description != null && c.Description.ToLower().Contains(requestParams.Search)));
+                }
+
+                count = await cities.CountAsync();
+                return count;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"An error occurred while getting cities. {ex}");
+                _logger.LogError($"An error occurred while counting cities. {ex}");
                 throw;
             }
         }
 
-        public async Task<IEnumerable<City>> GetCitiesAsync(string? name, string? search, int pageNumber, int pageSize)
+        public async Task<IEnumerable<City>> GetCitiesAsync(CityRequestParameters requestParams)
         {
             try
             {
@@ -40,24 +57,27 @@ namespace CityInfoAPI.Data.Repositories
                 // the query variable is iterated over.
                 var cities = _dbContext.Cities as IQueryable<City>;
 
-                // constructing the query,,,
-                if (!name.IsNullOrEmpty())
+                // constructing the query...
+                if (!string.IsNullOrEmpty(requestParams?.Name))
                 {
-                    name = name.Trim().ToLower();
-                    cities = cities.Where(c => c.Name.ToLower() == name);
+                    cities = cities.Where(c => c.Name.ToLower() == requestParams.Name.ToLower());
                 }
 
-                if (!search.IsNullOrEmpty())
+                if (!string.IsNullOrEmpty(requestParams?.Search))
                 {
-                    search = search.Trim().ToLower();
-                    cities = cities.Where(c => c.Name.ToLower()
-                                    .Contains(search) || (c.Description != null && c.Description.ToLower().Contains(search)));
+                    requestParams.Search = requestParams.Search.Trim().ToLower();
+                    cities = cities.Where(c => c.Name.Contains(requestParams.Search) || (c.Description != null && c.Description.ToLower().Contains(requestParams.Search)));
+                }
+
+                if (requestParams.IncludePointsOfInterest)
+                {
+                    cities = cities.Include(c => c.PointsOfInterest);
                 }
 
                 // query is sent
                 var results = await cities.OrderBy(c => c.Name)
-                                            .Skip(pageSize * (pageNumber - 1))
-                                            .Take(pageSize)
+                                            .Skip(requestParams.PageSize * (requestParams.PageNumber - 1))
+                                            .Take(requestParams.PageSize)
                                             .Include(c => c.State)
                                             .AsNoTracking()
                                             .ToListAsync();
