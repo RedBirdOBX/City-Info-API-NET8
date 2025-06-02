@@ -403,7 +403,7 @@ https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index
 |				| Added [ProducesDefaultResponseType] attributes to Controller actions.														|			 |
 | 1.4.0			| Added parent object (City) to child objects (Points of Interest).															| 05.16.2025 |
 | 1.5.0			| Added States resource. Each city is related to a State.																	| 05.21.2025 |
-| 1.6.0			|																															|			 |
+| 1.6.0			| Removed need for CityWithoutPointsOfInterestDto. Not needed. 																| 06.02.2025 |
 
 
 
