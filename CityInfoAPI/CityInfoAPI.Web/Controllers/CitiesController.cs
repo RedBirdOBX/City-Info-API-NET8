@@ -1,11 +1,9 @@
-﻿// Ignore Spelling: Accessor
-
-using Asp.Versioning;
+﻿using Asp.Versioning;
 using AutoMapper;
-using CityInfoAPI.Dtos.Models;
+using CityInfoAPI.Dtos;
+using CityInfoAPI.Dtos.RequestModels;
 using CityInfoAPI.Service;
-using CityInfoAPI.Web.Controllers.RequestHelpers;
-using CityInfoAPI.Web.Controllers.RequestHelpers.Models;
+using CityInfoAPI.Web.Controllers.Constants;
 using CityInfoAPI.Web.Controllers.ResponseHelpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
@@ -30,7 +28,6 @@ namespace CityInfoAPI.Controllers
     {
         private readonly ILogger<CitiesController> _logger;
         private readonly ICityService _service;
-        private readonly IPointsOfInterestService _pointsService;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private IHttpContextAccessor _httpContextAccessor;
@@ -42,36 +39,34 @@ namespace CityInfoAPI.Controllers
         /// <param name="logger"></param>
         /// <param name="mapper"></param>
         /// <param name="service"></param>
-        /// <param name="pointsService"></param>
         /// <param name="configuration"></param>
         /// <param name="httpContextAccessor"></param>
         /// <param name="linkGenerator"></param>
-        public CitiesController(ILogger<CitiesController> logger, IMapper mapper, ICityService service,
-                                IPointsOfInterestService pointsService, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator)
+        public CitiesController(ILogger<CitiesController> logger, IMapper mapper, ICityService service,IConfiguration configuration, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _service = service ?? throw new ArgumentNullException(nameof(service));
-            _pointsService = pointsService ?? throw new ArgumentNullException(nameof(pointsService));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(service));
+            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
             _linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
         }
 
         /// <summary>Gets all Cities</summary>
         /// <returns>collection of CityDto</returns>
-        /// <example>{baseUrl}/api/cities</example>
+        /// <example>{baseUrl}/api/cities?pageNumber=1&pageSize=100&includePointsOfInterest=true&name=foo&search=bar</example>
         /// <response code="200">returns cities</response>
         [ProducesDefaultResponseType]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet("", Name = "GetCities")]
         [HttpHead("", Name = "GetCities")]
-        public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery] CityRequestParameters requestParams)
+        public async Task<ActionResult<IEnumerable<CityDto>>> GetCities([FromQuery] CityRequestParameters requestParams)
         {
             try
             {
                 // record the request
-                var url = Url.Link("GetCities", new { requestParams.IncludePointsOfInterest, requestParams.Name, requestParams.Search, requestParams.PageNumber, requestParams.PageSize });
+                // Url.Link will build the url with non-null values
+                var url = Url.Link("GetCities", requestParams);
                 _logger.LogInformation($"Getting cities URL: {url}");
 
                 // META DATA. building meta data. correct page size if needed
@@ -81,40 +76,7 @@ namespace CityInfoAPI.Controllers
                 }
 
                 // how many total pages do we have?
-                int citiesCount = 0;
-
-                // did they use a name filter? count all possible results
-                if (!string.IsNullOrEmpty(requestParams.Name))
-                {
-                    var allCities = await _service.GetAllCitiesAsync();
-                    var filteredCities = allCities.Where(c => c.Name.ToLower().Contains(requestParams.Name.ToLower()));
-                    citiesCount = filteredCities.Count();
-
-                    // bad filter was used
-                    if (citiesCount == 0)
-                    {
-                        return Ok($"No cities found with the name containing {requestParams.Name}.");
-                    }
-                }
-                else if (!string.IsNullOrEmpty(requestParams.Search))
-                {
-                    var allCities = await _service.GetAllCitiesAsync();
-                    var searchedCities = allCities.Where(c => (c.Name.ToLower().Contains(requestParams.Search.ToLower())) || c.Description.ToLower().Contains(requestParams.Search.ToLower()));
-
-                    citiesCount = searchedCities.Count();
-
-                    // bad filter was used
-                    if (citiesCount == 0)
-                    {
-                        return Ok($"No cities found with the name or description containing '{requestParams.Search}'.");
-                    }
-                }
-                else
-                {
-                    // count all
-                    citiesCount = (await _service.GetAllCitiesAsync()).Count();
-                }
-
+                int citiesCount = await _service.CountCitiesAsync(requestParams);
                 int totalPages = (int)Math.Ceiling(citiesCount / (double)requestParams.PageSize);
 
                 if (requestParams.PageNumber > totalPages)
@@ -126,7 +88,7 @@ namespace CityInfoAPI.Controllers
                 Response.Headers.Append("X-CityParameters", JsonConvert.SerializeObject(metaData));
                 // end of META DATA
 
-                var results = await _service.GetCitiesAsync(requestParams.Name ?? string.Empty, requestParams.Search ?? string.Empty, requestParams.PageNumber, requestParams.PageSize);
+                var results = await _service.GetCitiesAsync(requestParams);
 
                 // add helper links
                 foreach (var city in results)
@@ -172,7 +134,7 @@ namespace CityInfoAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpGet("{cityGuid}", Name = "GetCityByCityId")]
         [HttpHead("{cityGuid}", Name = "GetCityByCityId")]
-        public async Task<ActionResult<CityWithoutPointsOfInterestDto>> GetCityByCityId([FromRoute] Guid cityGuid, [FromQuery] bool includePointsOfInterest = true)
+        public async Task<ActionResult<CityDto>> GetCityByCityId([FromRoute] Guid cityGuid, [FromQuery] bool includePointsOfInterest = true)
         {
             try
             {
@@ -186,9 +148,9 @@ namespace CityInfoAPI.Controllers
                     return NotFound();
                 }
 
+                var city = await _service.GetCityAsync(cityGuid, includePointsOfInterest);
                 if (includePointsOfInterest)
                 {
-                    var city = await _service.GetCityAsync(cityGuid, includePointsOfInterest);
                     city = UriLinkHelper.CreateLinksForCityWithPointsOfInterest(HttpContext.Request, city ?? new CityDto(), RequestConstants.MAX_PAGE_SIZE);
 
                     // if points of interest were included
@@ -201,8 +163,7 @@ namespace CityInfoAPI.Controllers
                 }
                 else
                 {
-                    var city = await _service.GetCityWithoutPointsOfInterestAsync(cityGuid, includePointsOfInterest);
-                    city = UriLinkHelper.CreateLinksForCity(HttpContext.Request, city ?? new CityWithoutPointsOfInterestDto(), RequestConstants.MAX_PAGE_SIZE);
+                    city = UriLinkHelper.CreateLinksForCity(HttpContext.Request, city ?? new CityDto(), RequestConstants.MAX_PAGE_SIZE);
                     return Ok(city);
                 }
             }

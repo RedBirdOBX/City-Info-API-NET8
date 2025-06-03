@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using CityInfoAPI.Data.Entities;
 using CityInfoAPI.Data.Repositories;
-using CityInfoAPI.Dtos.Models;
+using CityInfoAPI.Dtos;
+using CityInfoAPI.Dtos.RequestModels;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+
 
 namespace CityInfoAPI.Service
 {
@@ -20,32 +22,31 @@ namespace CityInfoAPI.Service
             _logger = logger;
         }
 
-        public async Task<IEnumerable<CityWithoutPointsOfInterestDto>> GetCitiesAsync(string name, string search, int pageNumber, int pageSize)
+        public async Task<int> CountCitiesAsync(CityRequestParameters requestParams)
         {
             try
             {
-                var cities = await _repo.GetCitiesAsync(name, search, pageNumber, pageSize);
-                var results = _mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cities);
+                int count = await _repo.CountCitiesAsync(requestParams);
+                return count;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occurred while counting cities. {ex}");
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<CityDto>> GetCitiesAsync(CityRequestParameters requestParams)
+        {
+            try
+            {
+                var cities = await _repo.GetCitiesAsync(requestParams);
+                var results = _mapper.Map<IEnumerable<CityDto>>(cities);
                 return results;
             }
             catch (Exception ex)
             {
                 _logger.LogError($"An error occurred while getting cities. {ex}");
-                throw;
-            }
-        }
-
-        public async Task<IEnumerable<CityWithoutPointsOfInterestDto>> GetAllCitiesAsync()
-        {
-            try
-            {
-                var cities = await _repo.GetCitiesUnsortedAsync();
-                var results = _mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cities);
-                return results;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"An error occurred while getting all cities. {ex}");
                 throw;
             }
         }
@@ -74,21 +75,6 @@ namespace CityInfoAPI.Service
             catch (Exception ex)
             {
                 _logger.LogError($"An error occurred while fetching city. {ex}");
-                throw;
-            }
-        }
-
-        public async Task<CityWithoutPointsOfInterestDto?> GetCityWithoutPointsOfInterestAsync(Guid cityGuid, bool includePointsOfInterest)
-        {
-            try
-            {
-                var city = await _repo.GetCityAsync(cityGuid, includePointsOfInterest);
-                var results = _mapper.Map<CityWithoutPointsOfInterestDto>(city);
-                return results;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"An error occurred while fetching city without points of interest. {ex}");
                 throw;
             }
         }

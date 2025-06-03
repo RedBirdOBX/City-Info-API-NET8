@@ -1,18 +1,18 @@
-﻿using CityInfoAPI.Dtos.Models;
+﻿using CityInfoAPI.Dtos;
+using CityInfoAPI.Dtos.RequestModels;
+
 
 namespace CityInfoAPI.Service
 {
     public interface ICityService
     {
-        Task<IEnumerable<CityWithoutPointsOfInterestDto>> GetCitiesAsync(string name, string search, int pageNumber, int pageSize);
+        Task<int> CountCitiesAsync(CityRequestParameters requestParams);
 
-        Task<IEnumerable<CityWithoutPointsOfInterestDto>> GetAllCitiesAsync();
+        Task<IEnumerable<CityDto>> GetCitiesAsync(CityRequestParameters requestParams);
 
         Task<bool> CityExistsAsync(Guid cityGuid);
 
         Task<CityDto?> GetCityAsync(Guid cityGuid, bool includePointsOfInterest);
-
-        Task<CityWithoutPointsOfInterestDto?> GetCityWithoutPointsOfInterestAsync(Guid cityGuid, bool includePointsOfInterest);
 
         Task<CityDto?> CreateCityAsync(CityCreateDto request);
 

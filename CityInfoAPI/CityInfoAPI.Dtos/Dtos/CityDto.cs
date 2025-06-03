@@ -1,4 +1,4 @@
-﻿namespace CityInfoAPI.Dtos.Models
+﻿namespace CityInfoAPI.Dtos
 {
     /// <summary>
     /// city object

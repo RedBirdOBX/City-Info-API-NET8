@@ -1,4 +1,4 @@
-﻿namespace CityInfoAPI.Web.Controllers.RequestHelpers.Models
+﻿namespace CityInfoAPI.Dtos.RequestModels
 {
     /// <summary>
     /// approved user of api w/ token.  details below create token.

@@ -1,4 +1,5 @@
-﻿using CityInfoAPI.Web.Controllers.RequestHelpers.Models;
+﻿using CityInfoAPI.Dtos.RequestModels;
+
 
 namespace CityInfoAPI.Test.Tests
 {

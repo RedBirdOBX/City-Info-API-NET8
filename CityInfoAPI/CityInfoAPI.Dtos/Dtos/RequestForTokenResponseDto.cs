@@ -1,4 +1,4 @@
-﻿namespace CityInfoAPI.Dtos.Models
+﻿namespace CityInfoAPI.Dtos
 {
     /// <summary>
     /// holds response for request for token

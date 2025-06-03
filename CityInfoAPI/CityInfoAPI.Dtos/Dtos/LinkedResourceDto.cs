@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace CityInfoAPI.Dtos.Models
+namespace CityInfoAPI.Dtos
 {
     /// <summary>
     /// links to add to response objs

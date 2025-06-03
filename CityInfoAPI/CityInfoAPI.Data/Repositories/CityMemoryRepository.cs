@@ -1,6 +1,6 @@
 ﻿using CityInfoAPI.Data.Entities;
+using CityInfoAPI.Dtos.RequestModels;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 
 namespace CityInfoAPI.Data.Repositories
@@ -18,13 +18,56 @@ namespace CityInfoAPI.Data.Repositories
             PointsOfInterest = new CityInfoTestEntityData().PointsOfInterest;
         }
 
-        public async Task<IEnumerable<City>> GetCitiesUnsortedAsync()
+        public async Task<int> CountCitiesAsync(CityRequestParameters requestParams)
+        {
+            try
+            {
+                var cities = Cities as IQueryable<City>;
+                int count = 0;
+
+                // constructing the query...
+                if (!string.IsNullOrEmpty(requestParams?.Name))
+                {
+                    requestParams.Name = requestParams.Name.Trim().ToLower();
+                    cities = cities.Where(c => c.Name.Equals(requestParams.Name, StringComparison.CurrentCultureIgnoreCase));
+                }
+
+                if (!string.IsNullOrEmpty(requestParams?.Search))
+                {
+                    requestParams.Search = requestParams.Search.Trim().ToLower();
+                    cities = cities.Where(c => c.Name.Contains(requestParams.Search) || (c.Description != null && c.Description.ToLower().Contains(requestParams.Search)));
+                }
+
+                count = await cities.CountAsync();
+                return count;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<City>> GetCitiesUnsortedAsync(bool includePointsOfInterest)
         {
             var results = Cities.OrderBy(c => c.Name).ToList();
+            if (includePointsOfInterest)
+            {
+                foreach (var city in results)
+                {
+                    city.PointsOfInterest = PointsOfInterest.Where(poi => poi.CityGuid == city.CityGuid).ToList();
+                }
+            }
+            else
+            {
+                foreach (var city in results)
+                {
+                    city.PointsOfInterest.Clear();
+                }
+            }
             return results;
         }
 
-        public async Task<IEnumerable<City>> GetCitiesAsync(string? name, string? search, int pageNumber, int pageSize)
+        public async Task<IEnumerable<City>> GetCitiesAsync(CityRequestParameters requestParams)
         {
             try
             {
@@ -35,23 +78,28 @@ namespace CityInfoAPI.Data.Repositories
                 var cities = Cities as IQueryable<City>;
 
                 // constructing the query...
-                if (!name.IsNullOrEmpty())
+                if (!string.IsNullOrEmpty(requestParams?.Name))
                 {
-                    name = name.Trim().ToLower();
-                    cities = cities.Where(c => c.Name.ToLower() == name);
+                    cities = cities.Where(c => c.Name.ToLower() == requestParams.Name.ToLower());
                 }
 
-                if (!search.IsNullOrEmpty())
+                if (!string.IsNullOrEmpty(requestParams?.Search))
                 {
-                    search = search.Trim().ToLower();
-                    cities = cities.Where(c => c.Name.ToLower()
-                                    .Contains(search) || c.Description != null && c.Description.ToLower().Contains(search));
+                    requestParams.Search = requestParams.Search.Trim().ToLower();
+                    cities = cities.Where(c => c.Name.Contains(requestParams.Search) || (c.Description != null && c.Description.ToLower().Contains(requestParams.Search)));
+                }
+
+                if (requestParams.IncludePointsOfInterest)
+                {
+                    cities = cities.Include(c => c.PointsOfInterest);
                 }
 
                 // query is sent
                 var results = await cities.OrderBy(c => c.Name)
-                                            .Skip(pageSize * (pageNumber - 1))
-                                            .Take(pageSize)
+                                            .Skip(requestParams.PageSize * (requestParams.PageNumber - 1))
+                                            .Take(requestParams.PageSize)
+                                            .Include(c => c.State)
+                                            .AsNoTracking()
                                             .ToListAsync();
                 return results;
             }

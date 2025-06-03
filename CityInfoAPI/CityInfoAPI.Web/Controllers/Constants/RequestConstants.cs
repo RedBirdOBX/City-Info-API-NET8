@@ -1,4 +1,4 @@
-﻿namespace CityInfoAPI.Web.Controllers.RequestHelpers
+﻿namespace CityInfoAPI.Web.Controllers.Constants
 {
     #pragma warning disable CS1591
     public static class RequestConstants

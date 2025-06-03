@@ -1,12 +1,14 @@
 ﻿using CityInfoAPI.Data.Entities;
+using CityInfoAPI.Dtos.RequestModels;
+
 
 namespace CityInfoAPI.Data.Repositories
 {
     public interface ICityRepository
     {
-        Task<IEnumerable<City>> GetCitiesUnsortedAsync();
+        Task<int> CountCitiesAsync(CityRequestParameters requestParams);
 
-        Task<IEnumerable<City>> GetCitiesAsync(string? name, string? search, int pageNumber, int pageSize);
+        Task<IEnumerable<City>> GetCitiesAsync(CityRequestParameters requestParams);
 
         Task<City?> GetCityAsync(Guid cityId, bool includePointsOfInterest);
 

@@ -1,4 +1,5 @@
-﻿using CityInfoAPI.Dtos.Models;
+﻿using CityInfoAPI.Dtos;
+
 
 namespace CityInfoAPI.Web.Controllers.ResponseHelpers
 {
@@ -45,7 +46,7 @@ namespace CityInfoAPI.Web.Controllers.ResponseHelpers
             return state;
         }
 
-        public static LinkDto CreateLinkForCityWithinCollection(HttpRequest request, CityWithoutPointsOfInterestDto city)
+        public static LinkDto CreateLinkForCityWithinCollection(HttpRequest request, CityDto city)
         {
             string protocol = (request.IsHttps) ? "https" : "http";
             string version = "v1.0";    // we should probably look this up
@@ -89,7 +90,7 @@ namespace CityInfoAPI.Web.Controllers.ResponseHelpers
             return city;
         }
 
-        public static CityWithoutPointsOfInterestDto CreateLinksForCity(HttpRequest request, CityWithoutPointsOfInterestDto city, int pageSize)
+        public static CityDto CreateLinksForCity(HttpRequest request, CityDto city, int pageSize)
         {
             // NOTE: If we ever exceed 100 cities, we would need to calculate which page to send the user to in the collection.
             string protocol = (request.IsHttps) ? "https" : "http";

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CityInfoAPI.Data.Repositories;
-using CityInfoAPI.Dtos.Models;
+using CityInfoAPI.Dtos;
 using Microsoft.Extensions.Logging;
 
 namespace CityInfoAPI.Service

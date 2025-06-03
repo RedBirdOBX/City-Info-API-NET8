@@ -1,9 +1,9 @@
 using AutoMapper;
 using CityInfoAPI.Data;
 using CityInfoAPI.Data.Repositories;
-using CityInfoAPI.Dtos.Models;
+using CityInfoAPI.Dtos;
 using CityInfoAPI.Service;
-using CityInfoAPI.Web.Controllers.RequestHelpers.Models;
+using CityInfoAPI.Dtos.RequestModels;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -26,63 +26,52 @@ namespace CityInfoAPI.Test.Tests
         }
 
         [Fact]
-        [Trait("Category","City Service Tests")]
-        public async Task GetCitiesAsync_RequestingCities_ReturnsListOfCityWithoutPointOfInterestDtos()
+        [Trait("Category", "City Service Tests")]
+        public async Task GetCitiesAsync_RequestingCities_ReturnsListOfCityDtosWithNoPointsOfInterest()
         {
             // arrange. build moq'd repo response
+            var requestParams = new CityRequestParameters();
             var cities = new CityInfoTestEntityData().Cities;
-            _repo.Setup(x => x.GetCitiesAsync(string.Empty, string.Empty, 1, 100)).ReturnsAsync(cities);
+            _repo.Setup(x => x.GetCitiesAsync(requestParams)).ReturnsAsync(cities);
 
             // act
-            var cityDtos = await _cityService.GetCitiesAsync(string.Empty, string.Empty, 1, 100);
+            var cityDtos = await _cityService.GetCitiesAsync(requestParams);
 
             // assert
             Assert.True(cityDtos.Count() > 0, "GetCitiesAsync did not return any Cities.");
+            Assert.All(cityDtos, c => Assert.True(!c.PointsOfInterest.Any(), "CityDto contains PointsOfInterests when it should not."));;
         }
 
         [Fact]
-        [Trait("Category","City Service Tests")]
-        public async Task GetCities_RequestingCities_ReturnsListOfTypeCityWithoutPointOfInterestDtos()
+        [Trait("Category", "City Service Tests")]
+        public async Task GetCitiesAsync_RequestingCities_ReturnsListOfCityDtosTypes()
         {
             // arrange. build moq'd response
+            var requestParams = new CityRequestParameters();
             var cities = new CityInfoTestEntityData().Cities;
-            _repo.Setup(x => x.GetCitiesAsync(string.Empty, string.Empty, 1, 100)).ReturnsAsync(cities);
+            _repo.Setup(x => x.GetCitiesAsync(requestParams)).ReturnsAsync(cities);
 
             // act
-            var cityDtos = await _cityService.GetCitiesAsync(string.Empty, string.Empty, 1, 100);
+            var cityDtos = await _cityService.GetCitiesAsync(requestParams);
 
             // assert
-            Assert.All(cityDtos, c => Assert.IsType<CityWithoutPointsOfInterestDto>(c));
+            Assert.All(cityDtos, c => Assert.IsType<CityDto>(c));
         }
 
         [Fact]
-        [Trait("Category","City Service Tests")]
+        [Trait("Category", "City Service Tests")]
         public async Task GetAllCities_RequestingCities_ReturnsListOfCityWithoutPointOfInterestDtos()
         {
             // arrange. build moq'd response
+            var requestParams = new CityRequestParameters();
             var cities = new CityInfoTestEntityData().Cities;
-            _repo.Setup(x => x.GetCitiesUnsortedAsync()).ReturnsAsync(cities);
+            _repo.Setup(x => x.GetCitiesAsync(requestParams)).ReturnsAsync(cities);
 
             // act
-            var cityDtos = await _cityService.GetAllCitiesAsync();
+            var cityDtos = await _cityService.GetCitiesAsync(requestParams);
 
             // assert
             Assert.True(cityDtos.Count() > 0, "GetCitiesAsync did not return any Cities.");
-        }
-
-        [Fact]
-        [Trait("Category","City Service Tests")]
-        public async Task GetAllCities_RequestingCities_ReturnsListOfTypeCityWithoutPointOfInterestDtos()
-        {
-            // arrange. build moq'd response
-            var cities = new CityInfoTestEntityData().Cities;
-            _repo.Setup(x => x.GetCitiesUnsortedAsync()).ReturnsAsync(cities);
-
-            // act
-            var cityDtos = await _cityService.GetAllCitiesAsync();
-
-            // assert
-            Assert.All(cityDtos, c => Assert.IsType<CityWithoutPointsOfInterestDto>(c));
         }
 
         [Fact]
@@ -114,59 +103,73 @@ namespace CityInfoAPI.Test.Tests
         }
 
         [Fact]
-        [Trait("Category","City Service Tests")]
+        [Trait("Category", "City Service Tests")]
         public async Task GetCitiesAsync_PagingWorksProperty_ProperNumberOfResultsAreSkipped()
         {
             // arrange
-            var page = 2;
-            var pageSize = 5;
-            var nameFilter = string.Empty;
-            var searchString = string.Empty;
+            var requestParams = new CityRequestParameters
+            {
+                PageNumber = 2,
+                PageSize = 5,
+                Name = string.Empty,
+                Search = string.Empty,
+                IncludePointsOfInterest = false
+            };
 
             // should skip first 5
-            var cities = new CityInfoTestEntityData().Cities.Skip((page - 1) * pageSize).Take(pageSize);
-            _repo.Setup(x => x.GetCitiesAsync(nameFilter, searchString, page, pageSize)).ReturnsAsync(cities);
+            var cities = new CityInfoTestEntityData().Cities.Skip((requestParams.PageNumber - 1) * requestParams.PageSize).Take(requestParams.PageSize);
+            _repo.Setup(x => x.GetCitiesAsync(requestParams)).ReturnsAsync(cities);
 
             // act
-            var response = await _cityService.GetCitiesAsync(nameFilter, searchString, page, pageSize);
+            var response = await _cityService.GetCitiesAsync(requestParams);
 
             // assert - should return 5
             Assert.True(response.Count() == 5);
         }
 
         [Fact]
-        [Trait("Category","City Service Tests")]
+        [Trait("Category", "City Service Tests")]
         public async Task GetCitiesAsync_NameSearch_ProperlyFindsCitiesMatchingSearchCriteria()
         {
             // arrange
-            var requestParams = new CityRequestParameters()
+            var requestParams = new CityRequestParameters
             {
-                Search = "the"
+                PageNumber = 1,
+                PageSize = 10,
+                Name = string.Empty,
+                Search = "the",
+                IncludePointsOfInterest = false
             };
+
             var cities = new CityInfoTestEntityData().Cities.Where(c => c.Name.Contains(requestParams.Search) || c.Description.Contains(requestParams.Search)).Take(requestParams.PageSize);
-            _repo.Setup(x => x.GetCitiesAsync(string.Empty, requestParams.Search, requestParams.PageNumber, requestParams.PageSize)).ReturnsAsync(cities);
+            _repo.Setup(x => x.GetCitiesAsync(requestParams)).ReturnsAsync(cities);
 
             // act
-            var response = await _cityService.GetCitiesAsync(string.Empty, requestParams.Search, requestParams.PageNumber, requestParams.PageSize);
+            var response = await _cityService.GetCitiesAsync(requestParams);
 
             // assert - should return 4
             Assert.True(response.Count() == 4);
         }
 
         [Fact]
-        [Trait("Category","City Service Tests")]
+        [Trait("Category", "City Service Tests")]
         public async Task GetCitiesAsync_NameFilter_ProperlyFindsCitiesMatchingName()
         {
             // arrange
-            var requestParams = new CityRequestParameters()
+            var requestParams = new CityRequestParameters
             {
-                Name = "Richmond (in memory)"
+                PageNumber = 1,
+                PageSize = 10,
+                Name = "Richmond (in memory)",
+                Search = string.Empty,
+                IncludePointsOfInterest = false
             };
+
             var cities = new CityInfoTestEntityData().Cities.Where(c => c.Name.ToLower().Equals(requestParams.Name.ToLower()));
-            _repo.Setup(x => x.GetCitiesAsync(requestParams.Name.ToLower(), string.Empty, requestParams.PageNumber, requestParams.PageSize)).ReturnsAsync(cities);
+            _repo.Setup(x => x.GetCitiesAsync(requestParams)).ReturnsAsync(cities);
 
             // act
-            var response = await _cityService.GetCitiesAsync(requestParams.Name.ToLower(), string.Empty, requestParams.PageNumber, requestParams.PageSize);
+            var response = await _cityService.GetCitiesAsync(requestParams);
 
             // assert - should return
             Assert.True(response.Count() == 1);
