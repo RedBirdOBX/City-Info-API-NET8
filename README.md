@@ -1,6 +1,6 @@
 # City Info Demo API (.NET 8.0 version)
 ---
-*Version 1.5.0*
+*Version 1.6.0*
 
 ## Summary
 Welcome to the City Info Demo API - .NET 8 Version. Original version was in .NET 2.1 written in 2019. 
@@ -403,9 +403,9 @@ https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index
 |				| Added [ProducesDefaultResponseType] attributes to Controller actions.														|			 |
 | 1.4.0			| Added parent object (City) to child objects (Points of Interest).															| 05.16.2025 |
 | 1.5.0			| Added States resource. Each city is related to a State.																	| 05.21.2025 |
-| 1.6.0			| Removed need for CityWithoutPointsOfInterestDto. Not needed. 																| 06.02.2025 |
-
-
-
-
+| 1.6.0			| Removed need for CityWithoutPointsOfInterestDto. Not needed. 																| 06.03.2025 |
+|				| Implemented global use of CityRequestParameters obj. | |
+|				| Implemented CountCities resource. | |
+|				| Better organized Models and Dtos. | |
+|				| Added db connectivity test to health check. | |
 
