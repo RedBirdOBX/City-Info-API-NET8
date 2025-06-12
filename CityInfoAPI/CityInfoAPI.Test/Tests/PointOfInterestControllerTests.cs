@@ -1,8 +1,7 @@
-﻿namespace CityInfoAPI.Test.Tests
+﻿namespace CityInfoAPI.Test.Tests;
+
+public class PointOfInterestControllerTests
 {
-    public class PointOfInterestControllerTests
-    {
-        // are we blocked from POI POST requests?
-        // validate we cannot create > 20 pois
-    }
+    // are we blocked from POI POST requests?
+    // validate we cannot create > 20 pois
 }

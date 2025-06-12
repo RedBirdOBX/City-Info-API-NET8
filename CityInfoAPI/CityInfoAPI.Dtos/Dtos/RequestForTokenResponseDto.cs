@@ -1,18 +1,17 @@
-﻿namespace CityInfoAPI.Dtos
+﻿namespace CityInfoAPI.Dtos;
+
+/// <summary>
+/// holds response for request for token
+/// </summary>
+public class RequestForTokenResponseDto
 {
     /// <summary>
-    /// holds response for request for token
+    /// success flag
     /// </summary>
-    public class RequestForTokenResponseDto
-    {
-        /// <summary>
-        /// success flag
-        /// </summary>
-        public bool Success { get; set; }
+    public bool Success { get; set; }
 
-        /// <summary>
-        /// token string
-        /// </summary>
-        public string? Token { get; set; }
-    }
+    /// <summary>
+    /// token string
+    /// </summary>
+    public string? Token { get; set; }
 }

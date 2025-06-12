@@ -2,16 +2,16 @@
 using CityInfoAPI.Data.Entities;
 using CityInfoAPI.Dtos;
 
-namespace CityInfoAPI.Web.Profiles
+namespace CityInfoAPI.Web.Profiles;
+
+#pragma warning disable CS1591
+public class StateProfile : Profile
 {
-    #pragma warning disable CS1591
-    public class StateProfile : Profile
+    public StateProfile()
     {
-        public StateProfile()
-        {
-            // source, destination
-            CreateMap<State, StateDto>();
-        }
+        // source, destination
+        CreateMap<State, StateDto>();
     }
-    #pragma warning restore CS1591
 }
+#pragma warning restore CS1591
+

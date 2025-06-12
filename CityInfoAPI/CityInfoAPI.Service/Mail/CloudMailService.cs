@@ -1,36 +1,35 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace CityInfoAPI.Service
+namespace CityInfoAPI.Service;
+
+/// <summary>
+/// Emulated mail service; cloud implementation.
+/// </summary>
+public class CloudMailService : IMailService
 {
+    private string _mailTo = string.Empty;
+    private string _mailFrom = string.Empty;
+
     /// <summary>
-    /// Emulated mail service; cloud implementation.
+    /// constructor
     /// </summary>
-    public class CloudMailService : IMailService
+    /// <param name="configuration"></param>
+    public CloudMailService(IConfiguration configuration)
     {
-        private string _mailTo = string.Empty;
-        private string _mailFrom = string.Empty;
+        _mailTo = configuration["MailSettings:mailToAddress"] ?? string.Empty;
+        _mailFrom = configuration["MailSettings:mailFromAddress"]  ?? string.Empty;
+    }
 
-        /// <summary>
-        /// constructor
-        /// </summary>
-        /// <param name="configuration"></param>
-        public CloudMailService(IConfiguration configuration)
-        {
-            _mailTo = configuration["MailSettings:mailToAddress"] ?? string.Empty;
-            _mailFrom = configuration["MailSettings:mailFromAddress"]  ?? string.Empty;
-        }
-
-        /// <summary>
-        /// send mail message
-        /// </summary>
-        /// <param name="subject"></param>
-        /// <param name="message"></param>
-        public void Send(string subject, string message)
-        {
-            // fake method to emulate sending mail
-            Console.WriteLine($"    *Mail from {_mailFrom} to {_mailTo}, with CloudMailService.");
-            Console.WriteLine($"    *Subject: {subject}");
-            Console.WriteLine($"    *Message: {message}");
-        }
+    /// <summary>
+    /// send mail message
+    /// </summary>
+    /// <param name="subject"></param>
+    /// <param name="message"></param>
+    public void Send(string subject, string message)
+    {
+        // fake method to emulate sending mail
+        Console.WriteLine($"    *Mail from {_mailFrom} to {_mailTo}, with CloudMailService.");
+        Console.WriteLine($"    *Subject: {subject}");
+        Console.WriteLine($"    *Message: {message}");
     }
 }

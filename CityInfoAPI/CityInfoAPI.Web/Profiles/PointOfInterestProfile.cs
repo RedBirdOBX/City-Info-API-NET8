@@ -3,21 +3,21 @@ using CityInfoAPI.Data.Entities;
 using CityInfoAPI.Dtos;
 
 
-namespace CityInfoAPI.Web.Profiles
+namespace CityInfoAPI.Web.Profiles;
+
+#pragma warning disable CS1591
+public class PointOfInterestProfile : Profile
 {
-    #pragma warning disable CS1591
-    public class PointOfInterestProfile : Profile
+    public PointOfInterestProfile()
     {
-        public PointOfInterestProfile()
-        {
-            // source, destination
-            CreateMap<PointOfInterest, PointOfInterestDto>();
-            CreateMap<PointOfInterest, PointOfInterestUpdateDto>();
-            CreateMap<PointOfInterestDto, PointOfInterestUpdateDto>();
-            CreateMap<PointOfInterestCreateDto, PointOfInterest>();
-            CreateMap<PointOfInterestUpdateDto, PointOfInterest>();
-            CreateMap<PointOfInterestUpdateDto, PointOfInterestDto>();
-        }
+        // source, destination
+        CreateMap<PointOfInterest, PointOfInterestDto>();
+        CreateMap<PointOfInterest, PointOfInterestUpdateDto>();
+        CreateMap<PointOfInterestDto, PointOfInterestUpdateDto>();
+        CreateMap<PointOfInterestCreateDto, PointOfInterest>();
+        CreateMap<PointOfInterestUpdateDto, PointOfInterest>();
+        CreateMap<PointOfInterestUpdateDto, PointOfInterestDto>();
     }
-    #pragma warning restore CS1591
 }
+#pragma warning restore CS1591
+

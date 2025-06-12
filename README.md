@@ -1,6 +1,6 @@
 # City Info Demo API (.NET 8.0 version)
 ---
-*Version 1.6.0*
+*Version 1.7.0*
 
 ## Summary
 Welcome to the City Info Demo API - .NET 8 Version. Original version was in .NET 2.1 written in 2019. 
@@ -29,6 +29,7 @@ API was built with knowledge from the following tutorials:
 - Serilog 8.0  
 - Asp.Versioning.Mvc 8.1
 - Microsoft.AspNetCore.Authentication.JwtBearer 8.0
+- System.Linq.Dynamic.Core 
 
 ## To Do
 
@@ -39,7 +40,9 @@ API was built with knowledge from the following tutorials:
 ### Enhancements
 --- 
  
-- Improve Sorting w/ Linq NuGet package.  See vid. Chapter 8. https://app.pluralsight.com/ilx/video-courses/1b57d9e1-fb13-4f6c-9a6d-850dc8e5a78f/3ee9a2b9-1f04-4b93-94cd-fa44860c7b56/3fbbefbb-a060-4429-bb6c-f7d9fc960975  
+- Improve Sorting w/ Linq NuGet package.  See vid. Chapter 8. https://app.pluralsight.com/ilx/video-courses/1b57d9e1-fb13-4f6c-9a6d-850dc8e5a78f/3ee9a2b9-1f04-4b93-94cd-fa44860c7b56/fde36638-3499-4020-93fa-bceaea80a039 
+
+
 - Repos are inconsistently named.
 - Entity Guids?  StateId vs StateGuid.... etc
 - Add Custom Validation Annotations (like duplicate name check). 
@@ -408,4 +411,4 @@ https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index
 |				| Implemented CountCities resource. | |
 |				| Better organized Models and Dtos. | |
 |				| Added db connectivity test to health check. | |
-
+| 1.6.0			| Sorting....								|  |
