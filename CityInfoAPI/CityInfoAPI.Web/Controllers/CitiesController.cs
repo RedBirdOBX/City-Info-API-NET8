@@ -1,5 +1,7 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
+using CityInfoAPI.Data.Entities;
+using CityInfoAPI.Data.PropertyMapping;
 using CityInfoAPI.Dtos;
 using CityInfoAPI.Dtos.RequestModels;
 using CityInfoAPI.Service;
@@ -30,6 +32,7 @@ public class CitiesController : ControllerBase
     private readonly ICityService _service;
     private readonly IConfiguration _configuration;
     private readonly IMapper _mapper;
+    private readonly IPropertyMappingProcessor _propProcessor;
     private IHttpContextAccessor _httpContextAccessor;
     private LinkGenerator _linkGenerator;
 
@@ -42,7 +45,8 @@ public class CitiesController : ControllerBase
     /// <param name="configuration"></param>
     /// <param name="httpContextAccessor"></param>
     /// <param name="linkGenerator"></param>
-    public CitiesController(ILogger<CitiesController> logger, IMapper mapper, ICityService service,IConfiguration configuration, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator)
+    public CitiesController(ILogger<CitiesController> logger, IMapper mapper, ICityService service,IConfiguration configuration, 
+                            IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IPropertyMappingProcessor propProcessor)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -50,6 +54,7 @@ public class CitiesController : ControllerBase
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         _linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
+        _propProcessor = propProcessor ?? throw new ArgumentNullException(nameof(propProcessor));
     }
 
     /// <summary>Gets all Cities</summary>
@@ -64,6 +69,14 @@ public class CitiesController : ControllerBase
     {
         try
         {
+            // check the orderby param in querystring
+            if (!_propProcessor.ValidMappingExistsFor<CityDto, City>(requestParams.OrderBy)) 
+            {
+                _logger.LogWarning($"Invalid orderby parameter: {requestParams.OrderBy}");
+                return BadRequest($"Invalid OrderBy parameter: {requestParams.OrderBy}");
+            }
+
+
             // record the request
             // Url.Link will build the url with non-null values
             var url = Url.Link("GetCities", requestParams);

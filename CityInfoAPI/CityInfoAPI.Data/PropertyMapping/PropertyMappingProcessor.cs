@@ -3,9 +3,6 @@ using CityInfoAPI.Dtos;
 
 namespace CityInfoAPI.Data.PropertyMapping;
 
-// https://app.pluralsight.com/ilx/video-courses/1b57d9e1-fb13-4f6c-9a6d-850dc8e5a78f/3ee9a2b9-1f04-4b93-94cd-fa44860c7b56/3fbbefbb-a060-4429-bb6c-f7d9fc960975
-
-
 /// <summary>
 /// Goal is to create a reusable service which allows our repositories to sort by
 /// and given column name (Name, Description, etc.). Since DTO don't always map directly
@@ -77,5 +74,35 @@ public class PropertyMappingProcessor : IPropertyMappingProcessor
         {
             throw new Exception($"Cannot find property mapping for {typeof(TSource)} to {typeof(TDestination)}");
         }
+    }
+
+    public bool ValidMappingExistsFor<TSource, TDestination>(string fields)
+    {
+        var propertyMapping = GetPropertyMapping<TSource, TDestination>();
+
+        if (string.IsNullOrWhiteSpace(fields))
+        {
+            // no fields specified, so valid
+            return true; 
+        }
+
+        var fieldsAfterSplit = fields.Split(',');
+
+        foreach (var field in fieldsAfterSplit)
+        {
+            var trimmedField = field.Trim();
+
+            var indexOfFirstSpace = trimmedField.IndexOf(" ");
+            var propertyName = indexOfFirstSpace == -1 
+                                ? trimmedField 
+                                : trimmedField.Remove(indexOfFirstSpace);
+
+            // find the matching property
+            if (!propertyMapping.ContainsKey(propertyName)) 
+            { 
+                return false;
+            }
+        }
+        return true;
     }
 }
