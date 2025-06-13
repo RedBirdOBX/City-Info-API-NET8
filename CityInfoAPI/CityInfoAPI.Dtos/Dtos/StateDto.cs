@@ -1,18 +1,17 @@
-﻿namespace CityInfoAPI.Dtos
+﻿namespace CityInfoAPI.Dtos;
+
+/// <summary>
+/// state object
+/// </summary>
+public class StateDto : LinkedResourcesDto
 {
     /// <summary>
-    /// state object
+    /// unique identifier for the state
     /// </summary>
-    public class StateDto : LinkedResourcesDto
-    {
-        /// <summary>
-        /// unique identifier for the state
-        /// </summary>
-        public Guid StateGuid { get; set; } = new Guid();
+    public Guid StateGuid { get; set; } = new Guid();
 
-        /// <summary>
-        /// state abbreviation
-        /// </summary>
-        public string StateCode { get; set; } = string.Empty;
-    }
+    /// <summary>
+    /// state abbreviation
+    /// </summary>
+    public string StateCode { get; set; } = string.Empty;
 }

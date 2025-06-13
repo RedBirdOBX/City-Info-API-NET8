@@ -25,6 +25,11 @@
         public int TotalCount { get; set; }
 
         /// <summary>
+        /// order by params
+        /// </summary>
+        public string OrderBy { get; set; } = string.Empty;
+
+        /// <summary>
         /// bool - has prev page
         /// </summary>
         public bool HasPreviousPage { get; set; }

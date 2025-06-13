@@ -1,18 +1,17 @@
-﻿namespace CityInfoAPI.Dtos.RequestModels
+﻿namespace CityInfoAPI.Dtos.RequestModels;
+
+/// <summary>
+/// obj for mapping a user requesting to get token
+/// </summary>
+public class AuthenticationUserRequest
 {
     /// <summary>
-    /// obj for mapping a user requesting to get token
+    /// username
     /// </summary>
-    public class AuthenticationUserRequest
-    {
-        /// <summary>
-        /// username
-        /// </summary>
-        public string UserName { get; set; } = string.Empty;
+    public string UserName { get; set; } = string.Empty;
 
-        /// <summary>
-        /// password
-        /// </summary>
-        public string Password { get; set; } = string.Empty;
-    }
+    /// <summary>
+    /// password
+    /// </summary>
+    public string Password { get; set; } = string.Empty;
 }

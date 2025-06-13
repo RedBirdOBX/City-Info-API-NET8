@@ -27,6 +27,7 @@ public static class MetaDataUtility
                 TotalPages = totalPages,
                 PageSize = requestParams.PageSize,
                 TotalCount = citiesCount,
+                OrderBy = requestParams.OrderBy ?? string.Empty,
                 HasNextPage = hasNextPage,
                 HasPreviousPage = hasPrevPage,
                 NextPageUrl = nextUrl,
@@ -53,6 +54,7 @@ public static class MetaDataUtility
                                                             controller: "Cities",
                                                             values: new
                                                             {
+                                                                orderBy = requestParams.OrderBy,
                                                                 pageNumber = requestParams.PageNumber + 1,
                                                                 pageSize = requestParams.PageSize,
                                                                 nameFilter = requestParams.Name,
@@ -64,6 +66,7 @@ public static class MetaDataUtility
                                                             controller: "Cities",
                                                             values: new
                                                             {
+                                                                orderBy = requestParams.OrderBy,
                                                                 pageNumber = requestParams.PageNumber - 1,
                                                                 pageSize = requestParams.PageSize,
                                                                 nameFilter = requestParams.Name,
@@ -74,6 +77,7 @@ public static class MetaDataUtility
                                                             controller: "Cities",
                                                             values: new
                                                             {
+                                                                orderBy = requestParams.OrderBy,
                                                                 pageNumber = requestParams.PageNumber,
                                                                 pageSize = requestParams.PageSize,
                                                                 nameFilter = requestParams.Name,

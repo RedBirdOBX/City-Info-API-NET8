@@ -267,6 +267,11 @@
             total count of records
             </summary>
         </member>
+        <member name="P:CityInfoAPI.Dtos.PaginationMetaDataDto.OrderBy">
+            <summary>
+            order by params
+            </summary>
+        </member>
         <member name="P:CityInfoAPI.Dtos.PaginationMetaDataDto.HasPreviousPage">
             <summary>
             bool - has prev page
@@ -370,6 +375,11 @@
         <member name="P:CityInfoAPI.Dtos.RequestModels.CityRequestParameters.PageSize">
             <summary>
             requested page size
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.RequestModels.CityRequestParameters.OrderBy">
+            <summary>
+            order by property
             </summary>
         </member>
     </members>

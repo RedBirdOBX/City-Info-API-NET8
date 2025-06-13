@@ -172,6 +172,126 @@
 					"response": []
 				},
 				{
+					"name": "Cities Order By",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Bearer",
+								"value": "xxxx",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities?orderby=name",
+							"host": [
+								"{{CitiesInfoNET8BaseUrl}}"
+							],
+							"path": [
+								"v{{version}}",
+								"cities"
+							],
+							"query": [
+								{
+									"key": "Accept",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "orderby",
+									"value": "name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cities Order By with Paging",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Bearer",
+								"value": "xxxx",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities?pageSize=2&pageNumber=2&orderby=name,description",
+							"host": [
+								"{{CitiesInfoNET8BaseUrl}}"
+							],
+							"path": [
+								"v{{version}}",
+								"cities"
+							],
+							"query": [
+								{
+									"key": "Accept",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "2"
+								},
+								{
+									"key": "pageNumber",
+									"value": "2"
+								},
+								{
+									"key": "orderby",
+									"value": "name,description"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Cities with Paging",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
@@ -356,7 +476,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities?search=city&pageNumber=1&pageSize=25",
+							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities?search=city&pageNumber=1&pageSize=25&includePointsOfInterest=false",
 							"host": [
 								"{{CitiesInfoNET8BaseUrl}}"
 							],
@@ -374,13 +494,17 @@
 									"value": "1"
 								},
 								{
+									"key": "pageSize",
+									"value": "25"
+								},
+								{
 									"key": "Accept",
 									"value": null,
 									"disabled": true
 								},
 								{
-									"key": "pageSize",
-									"value": "25"
+									"key": "includePointsOfInterest",
+									"value": "false"
 								}
 							]
 						}
@@ -410,7 +534,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities/{{cityGuid}}",
+							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities/{{cityGuid}}?includePointsOfInterest=false",
 							"host": [
 								"{{CitiesInfoNET8BaseUrl}}"
 							],
@@ -422,8 +546,7 @@
 							"query": [
 								{
 									"key": "includePointsOfInterest",
-									"value": "true",
-									"disabled": true
+									"value": "false"
 								}
 							]
 						}

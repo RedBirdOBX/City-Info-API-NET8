@@ -1,38 +1,37 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CityInfoAPI.Dtos
+namespace CityInfoAPI.Dtos;
+
+/// <summary>
+/// object for creating a city
+/// </summary>
+public class CityCreateDto
 {
     /// <summary>
-    /// object for creating a city
+    /// unique identifier for the city
     /// </summary>
-    public class CityCreateDto
-    {
-        /// <summary>
-        /// unique identifier for the city
-        /// </summary>
-        public Guid CityGuid { get; set; } = Guid.NewGuid();
+    public Guid CityGuid { get; set; } = Guid.NewGuid();
 
-        /// <summary>
-        /// name of city
-        /// </summary>
-        [Required(ErrorMessage = $"{nameof(Name)} is required.")]
-        [MaxLength(ErrorMessage = $"Max length for {nameof(Name)} is 50 chars.")]
-        public string Name { get; set; } = string.Empty;
+    /// <summary>
+    /// name of city
+    /// </summary>
+    [Required(ErrorMessage = $"{nameof(Name)} is required.")]
+    [MaxLength(ErrorMessage = $"Max length for {nameof(Name)} is 50 chars.")]
+    public string Name { get; set; } = string.Empty;
 
-        /// <summary>
-        /// description of city
-        /// </summary>
-        [MaxLength(ErrorMessage = $"Max length for {nameof(Description)} is 500 chars.")]
-        public string? Description { get; set; }
+    /// <summary>
+    /// description of city
+    /// </summary>
+    [MaxLength(ErrorMessage = $"Max length for {nameof(Description)} is 500 chars.")]
+    public string? Description { get; set; }
 
-        /// <summary>
-        /// created on date for the city
-        /// </summary>
-        public DateTime CreatedOn { get; set; } = DateTime.Now;
+    /// <summary>
+    /// created on date for the city
+    /// </summary>
+    public DateTime CreatedOn { get; set; } = DateTime.Now;
 
-        /// <summary>
-        /// points of interest to be created with city
-        /// </summary>
-        public List<PointOfInterestCreateDto> PointsOfInterest { get; set; } = new List<PointOfInterestCreateDto>();
-    }
+    /// <summary>
+    /// points of interest to be created with city
+    /// </summary>
+    public List<PointOfInterestCreateDto> PointsOfInterest { get; set; } = new List<PointOfInterestCreateDto>();
 }

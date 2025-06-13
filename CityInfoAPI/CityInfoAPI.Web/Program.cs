@@ -3,6 +3,7 @@ using Asp.Versioning.ApiExplorer;
 using CityInfoAPI.Data.DbContents;
 using CityInfoAPI.Data.Repositories;
 using CityInfoAPI.Service;
+using CityInfoAPI.Data.PropertyMapping;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
@@ -105,7 +106,7 @@ builder.Services.AddScoped<IStateService, StateService>();
 builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<IPointsOfInterestService, PointsOfInterestService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
+builder.Services.AddTransient<IPropertyMappingProcessor, PropertyMappingProcessor>();
 
 
 // AutoMapper.  Scan for profiles.

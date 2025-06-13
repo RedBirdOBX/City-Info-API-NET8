@@ -1,13 +1,12 @@
 ﻿using CityInfoAPI.Dtos;
 
-namespace CityInfoAPI.Service
+namespace CityInfoAPI.Service;
+
+public interface IStateService
 {
-    public interface IStateService
-    {
-        Task<IEnumerable<StateDto>> GetStatesAsync();
+    Task<IEnumerable<StateDto>> GetStatesAsync();
 
-        Task<StateDto?> GetStateAsync(string stateCode);
+    Task<StateDto?> GetStateAsync(string stateCode);
 
-        Task<bool> StateExistsAsync(string stateCode);
-    }
+    Task<bool> StateExistsAsync(string stateCode);
 }
