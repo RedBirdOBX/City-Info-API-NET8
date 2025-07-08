@@ -242,6 +242,11 @@
             state abbreviation
             </summary>
         </member>
+        <member name="P:CityInfoAPI.Dtos.StateDto.Name">
+            <summary>
+            state name
+            </summary>
+        </member>
         <member name="T:CityInfoAPI.Dtos.PaginationMetaDataDto">
             <summary>
             Obj used for meta data in response headers

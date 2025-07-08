@@ -1,6 +1,6 @@
 # City Info Demo API (.NET 8.0 version)
 ---
-*Version 1.7.0*
+*Version 1.8.0*
 
 ## Summary
 Welcome to the City Info Demo API - .NET 8 Version. Original version was in .NET 2.1 written in 2019. 
@@ -42,7 +42,7 @@ API was built with knowledge from the following tutorials:
  
 - Improve Sorting w/ Linq NuGet package.  See vid. Chapter 8. https://app.pluralsight.com/ilx/video-courses/1b57d9e1-fb13-4f6c-9a6d-850dc8e5a78f/3ee9a2b9-1f04-4b93-94cd-fa44860c7b56/fde36638-3499-4020-93fa-bceaea80a039 
 
-
+- Root controller with HATEOS links
 - Repos are inconsistently named.
 - Entity Guids?  StateId vs StateGuid.... etc
 - Add Custom Validation Annotations (like duplicate name check). 
@@ -64,6 +64,7 @@ API was built with knowledge from the following tutorials:
 - Abstract classes: https://app.pluralsight.com/ilx/video-courses/clips/d5f818ac-9cec-4d19-a442-4123ea483ba3
 Virtual vs abstract. Watch video.  https://app.pluralsight.com/ilx/video-courses/1b57d9e1-fb13-4f6c-9a6d-850dc8e5a78f/f618cfb7-a70d-4f26-9e67-0a7bdfe22dd4/f0a7d9c7-d3eb-4f22-ba57-05a962dd4f52  Also see orig City Info API
 - Improve on pagination:  https://app.pluralsight.com/ilx/video-courses/1b57d9e1-fb13-4f6c-9a6d-850dc8e5a78f/a9261365-6296-41ce-ae0e-6b42958f77d0/b29f6bf8-36e5-4250-9912-dff3f1c5910c 
+- [Produces("application/json", "application/xml")]
 
 ---
 
@@ -413,4 +414,9 @@ https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index
 |			|				|Added db connectivity test to health check.|
 | 1.7.0		| 06.13.2025	|Implemented Property Mapping Processor which allows for for sorting on any property on the City.| 
 
+
+| 1.8.0 | -- | For demonstration purposes and as an exercise, added caching to the States endpoint. |
+
+
+https://app.pluralsight.com/ilx/video-courses/1b57d9e1-fb13-4f6c-9a6d-850dc8e5a78f/c979b9f5-6461-4147-84c6-dfb47b4accb3/02d36300-b5e3-40a9-a9a0-daa840c13808
 

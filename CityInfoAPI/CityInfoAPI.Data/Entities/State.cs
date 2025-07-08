@@ -15,5 +15,9 @@ public class State
 
     [Required(ErrorMessage = $"{nameof(StateCode)} is required.")]
     [MaxLength(2, ErrorMessage = $"{nameof(StateCode)} cannot exceed 2 characters.")]
-    public string StateCode { get; set; }
+    public string StateCode { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = $"{nameof(Name)} is required.")]
+    [MaxLength(50, ErrorMessage = $"{nameof(Name)} cannot exceed 50 characters.")]
+    public string Name { get; set; } = string.Empty;
 }
