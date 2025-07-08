@@ -15,7 +15,6 @@ namespace CityInfoAPI.Controllers;
 /// <response code="500">internal error</response>
 [Route("api/v{version:apiVersion}/states")]
 [ApiController]
-[Authorize]
 [ApiVersion(1.0)]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
 [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -42,6 +41,7 @@ public class StatesController : ControllerBase
     /// <response code="200">returns states</response>B
     [ProducesDefaultResponseType]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [Authorize]
     [HttpGet("", Name = "GetStates")]
     public async Task<ActionResult<IEnumerable<StateDto>>> GetStates()
     {
@@ -77,6 +77,8 @@ public class StatesController : ControllerBase
     [ProducesDefaultResponseType]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ResponseCache(CacheProfileName = "5MinuteCacheProfile")]
+    //[ResponseCache(Duration = 300)]
     [HttpGet("{stateCode}", Name = "GetStateByStateCode")]
     public async Task<ActionResult<StateDto>> GetStateByStateCode([FromRoute] string stateCode)
     {

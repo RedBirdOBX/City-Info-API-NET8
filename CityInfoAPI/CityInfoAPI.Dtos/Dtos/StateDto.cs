@@ -14,4 +14,9 @@ public class StateDto : LinkedResourcesDto
     /// state abbreviation
     /// </summary>
     public string StateCode { get; set; } = string.Empty;
+
+    /// <summary>
+    /// state name
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
 }

@@ -1,4 +1,4 @@
-/****** Object:  Table [dbo].[States]    Script Date: 5/19/2025 4:00:01 PM ******/
+/****** Object:  Table [dbo].[States]    Script Date: 6/25/2025 7:41:39 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -9,6 +9,7 @@ CREATE TABLE [dbo].[States](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[StateGuid] [uniqueidentifier] NOT NULL,
 	[StateCode] [char](2) NOT NULL,
+	[Name] [varchar](50) NOT NULL,
  CONSTRAINT [PK_States] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

@@ -1,10 +1,11 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using CityInfoAPI.Data.DbContents;
+using CityInfoAPI.Data.PropertyMapping;
 using CityInfoAPI.Data.Repositories;
 using CityInfoAPI.Service;
-using CityInfoAPI.Data.PropertyMapping;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -72,6 +73,17 @@ builder.Services.AddControllers(options =>
 {
     //  media types: don't blindly return json regardless of what they asked for.
     options.ReturnHttpNotAcceptable = true;
+
+    options.CacheProfiles.Add("5MinuteCacheProfile",
+                                new CacheProfile()
+                                {
+                                    Duration = 300, // 5 minutes
+                                    Location = ResponseCacheLocation.Any,
+
+                                    // cache by query string
+                                    // what does this do?
+                                    VaryByQueryKeys = new[] { "*" }
+                                });
 })
 
 // replaces default json input and output formatters with Json.NET
@@ -108,6 +120,8 @@ builder.Services.AddScoped<IPointsOfInterestService, PointsOfInterestService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<IPropertyMappingProcessor, PropertyMappingProcessor>();
 
+// add caching / cache store
+builder.Services.AddResponseCaching();
 
 // AutoMapper.  Scan for profiles.
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -216,9 +230,10 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 });
 
 
-
 //--APPLICATION--//
 var app = builder.Build();
+
+app.UseResponseCaching();
 
 // Configure the HTTP request pipeline. //
 if (!app.Environment.IsDevelopment())

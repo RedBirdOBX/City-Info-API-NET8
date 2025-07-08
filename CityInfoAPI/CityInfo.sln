@@ -22,6 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sql-Scripts", "Sql-Scripts"
 		Docs\Sql-Scripts\create-cities-tbl.sql = Docs\Sql-Scripts\create-cities-tbl.sql
 		Docs\Sql-Scripts\create-logs-tbl.sql = Docs\Sql-Scripts\create-logs-tbl.sql
 		Docs\Sql-Scripts\create-points-of-interest-tbl.sql = Docs\Sql-Scripts\create-points-of-interest-tbl.sql
+		Docs\Sql-Scripts\create-states-tbl.sql = Docs\Sql-Scripts\create-states-tbl.sql
 		Docs\Sql-Scripts\insert-initial-data-cities.sql = Docs\Sql-Scripts\insert-initial-data-cities.sql
 		Docs\Sql-Scripts\insert-initial-data-points-of-interest.sql = Docs\Sql-Scripts\insert-initial-data-points-of-interest.sql
 		Docs\Sql-Scripts\insert-initial-data-states.sql = Docs\Sql-Scripts\insert-initial-data-states.sql
