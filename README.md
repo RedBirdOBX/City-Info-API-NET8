@@ -413,10 +413,5 @@ https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index
 |			|				|Better organized Models and Dtos.|
 |			|				|Added db connectivity test to health check.|
 | 1.7.0		| 06.13.2025	|Implemented Property Mapping Processor which allows for for sorting on any property on the City.| 
-
-
-| 1.8.0 | -- | For demonstration purposes and as an exercise, added caching to the States endpoint. |
-
-
-https://app.pluralsight.com/ilx/video-courses/1b57d9e1-fb13-4f6c-9a6d-850dc8e5a78f/c979b9f5-6461-4147-84c6-dfb47b4accb3/02d36300-b5e3-40a9-a9a0-daa840c13808
+| 1.8.0 | 07.07.2025 | For demonstration purposes and as an exercise, added caching to the States endpoint. |
 
