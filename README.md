@@ -1,6 +1,6 @@
 # City Info Demo API (.NET 8.0 version)
 ---
-*Version 1.8.0*
+*Version 1.9.0*
 
 ## Summary
 Welcome to the City Info Demo API - .NET 8 Version. Original version was in .NET 2.1 written in 2019. 
@@ -33,7 +33,7 @@ API was built with knowledge from the following tutorials:
 
 ## To Do
 
-### Bugs
+### Known Issues
 
  - None at the moment.
 
@@ -41,16 +41,10 @@ API was built with knowledge from the following tutorials:
 --- 
  
 - Improve Sorting w/ Linq NuGet package.  See vid. Chapter 8. https://app.pluralsight.com/ilx/video-courses/1b57d9e1-fb13-4f6c-9a6d-850dc8e5a78f/3ee9a2b9-1f04-4b93-94cd-fa44860c7b56/fde36638-3499-4020-93fa-bceaea80a039 
-
-- Root controller with HATEOS links
-- Repos are inconsistently named.
-- Entity Guids?  StateId vs StateGuid.... etc
 - Add Custom Validation Annotations (like duplicate name check). 
-- Make version number configurable. Don't forget UriLinkHelper.
 - Allow for multiple Cities creation (endpoint).
 - Allow for multiple Points of Interest creation (endpoint).
 - use Azure KV for connection strings and other secrets.
-- Add caching.  
 - Use Docker.
 - Add true user authentication / token assign.
 - Build log table maintenance routine.
@@ -414,4 +408,5 @@ https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index
 |			|				|Added db connectivity test to health check.|
 | 1.7.0		| 06.13.2025	|Implemented Property Mapping Processor which allows for for sorting on any property on the City.| 
 | 1.8.0 | 07.07.2025 | For demonstration purposes and as an exercise, added caching to the States endpoint. |
-
+| 1.9.0 | 07.09.2025 | Added root controller with HATEOS links. |
+|  |  | Renamed CityRepository class for consistency. |

@@ -35,6 +35,7 @@ public class CitiesController : ControllerBase
     private readonly IPropertyMappingProcessor _propProcessor;
     private IHttpContextAccessor _httpContextAccessor;
     private LinkGenerator _linkGenerator;
+    private string _appVersion = "1.0";
 
     /// <summary>
     /// Constructor
@@ -45,7 +46,7 @@ public class CitiesController : ControllerBase
     /// <param name="configuration"></param>
     /// <param name="httpContextAccessor"></param>
     /// <param name="linkGenerator"></param>
-    public CitiesController(ILogger<CitiesController> logger, IMapper mapper, ICityService service,IConfiguration configuration, 
+    public CitiesController(ILogger<CitiesController> logger, IMapper mapper, ICityService service, IConfiguration configuration,
                             IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IPropertyMappingProcessor propProcessor)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -55,6 +56,7 @@ public class CitiesController : ControllerBase
         _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         _linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
         _propProcessor = propProcessor ?? throw new ArgumentNullException(nameof(propProcessor));
+        _appVersion = _configuration["AppVersion"] ?? string.Empty;
     }
 
     /// <summary>Gets all Cities</summary>
@@ -70,12 +72,11 @@ public class CitiesController : ControllerBase
         try
         {
             // check the orderby param in querystring
-            if (!_propProcessor.ValidMappingExistsFor<CityDto, City>(requestParams.OrderBy)) 
+            if (!_propProcessor.ValidMappingExistsFor<CityDto, City>(requestParams.OrderBy))
             {
                 _logger.LogWarning($"Invalid orderby parameter: {requestParams.OrderBy}");
                 return BadRequest($"Invalid OrderBy parameter: {requestParams.OrderBy}");
             }
-
 
             // record the request
             // Url.Link will build the url with non-null values
@@ -106,8 +107,8 @@ public class CitiesController : ControllerBase
             // add helper links
             foreach (var city in results)
             {
-                city.Links.Add(UriLinkHelper.CreateLinkForCityWithinCollection(HttpContext.Request, city));
-                city.State?.Links.Add(UriLinkHelper.CreateLinkForStateWithinCollection(HttpContext.Request, city.State));
+                city.Links.Add(UriLinkHelper.CreateLinkForCityWithinCollection(HttpContext.Request, city, _appVersion));
+                city.State?.Links.Add(UriLinkHelper.CreateLinkForStateWithinCollection(HttpContext.Request, city.State, _appVersion));
             }
 
             return Ok(results);
@@ -164,19 +165,19 @@ public class CitiesController : ControllerBase
             var city = await _service.GetCityAsync(cityGuid, includePointsOfInterest);
             if (includePointsOfInterest)
             {
-                city = UriLinkHelper.CreateLinksForCityWithPointsOfInterest(HttpContext.Request, city ?? new CityDto(), RequestConstants.MAX_PAGE_SIZE);
+                city = UriLinkHelper.CreateLinksForCityWithPointsOfInterest(HttpContext.Request, city ?? new CityDto(), RequestConstants.MAX_PAGE_SIZE, _appVersion);
 
                 // if points of interest were included
                 foreach (PointOfInterestDto poi in city.PointsOfInterest)
                 {
-                    poi.Links.Add(UriLinkHelper.CreateLinkForPointOfInterestWithinCollection(HttpContext.Request, poi));
+                    poi.Links.Add(UriLinkHelper.CreateLinkForPointOfInterestWithinCollection(HttpContext.Request, poi, _appVersion));
                 }
 
                 return Ok(city);
             }
             else
             {
-                city = UriLinkHelper.CreateLinksForCity(HttpContext.Request, city ?? new CityDto(), RequestConstants.MAX_PAGE_SIZE);
+                city = UriLinkHelper.CreateLinksForCity(HttpContext.Request, city ?? new CityDto(), RequestConstants.MAX_PAGE_SIZE, _appVersion);
                 return Ok(city);
             }
         }

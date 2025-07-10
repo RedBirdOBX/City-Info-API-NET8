@@ -9,10 +9,10 @@ namespace CityInfoAPI.Data.Repositories;
 public class PointsOfInterestRepository : IPointsOfInterestRepository
 {
     private readonly CityInfoDbContext _dbContext;
-    private readonly ICityRepository _cityRepo;
+    private readonly ICitiesRepository _cityRepo;
     private readonly ILogger<PointsOfInterestRepository> _logger;
 
-    public PointsOfInterestRepository(CityInfoDbContext dbContext, ICityRepository cityRepo, ILogger<PointsOfInterestRepository> logger)
+    public PointsOfInterestRepository(CityInfoDbContext dbContext, ICitiesRepository cityRepo, ILogger<PointsOfInterestRepository> logger)
     {
         _dbContext = dbContext ?? throw new ArgumentNullException();
         _cityRepo = cityRepo;

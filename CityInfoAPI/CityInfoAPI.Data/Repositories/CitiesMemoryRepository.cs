@@ -7,7 +7,7 @@ namespace CityInfoAPI.Data.Repositories;
 
 #pragma warning disable CS8618
 
-public class CityMemoryRepository : ICityRepository
+public class CityMemoryRepository : ICitiesRepository
 {
     public List<City> Cities { get; set; }
     public List<PointOfInterest> PointsOfInterest { get; set; }

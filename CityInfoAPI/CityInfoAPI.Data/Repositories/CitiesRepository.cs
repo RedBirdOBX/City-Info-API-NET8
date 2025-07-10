@@ -10,13 +10,13 @@ using Microsoft.Extensions.Logging;
 
 namespace CityInfoAPI.Data.Repositories;
 
-public class CityRepository : ICityRepository
+public class CitiesRepository : ICitiesRepository
 {
     private readonly CityInfoDbContext _dbContext;
     private readonly IPropertyMappingProcessor _propMapper;
-    private readonly ILogger<CityRepository> _logger;
+    private readonly ILogger<CitiesRepository> _logger;
 
-    public CityRepository(CityInfoDbContext dbContext, IPropertyMappingProcessor propMapper, ILogger<CityRepository> logger)
+    public CitiesRepository(CityInfoDbContext dbContext, IPropertyMappingProcessor propMapper, ILogger<CitiesRepository> logger)
     {
         _dbContext = dbContext ?? throw new ArgumentNullException();
         _propMapper = propMapper ?? throw new ArgumentNullException();

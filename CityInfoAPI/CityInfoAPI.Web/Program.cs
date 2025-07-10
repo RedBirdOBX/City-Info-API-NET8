@@ -112,7 +112,7 @@ builder.Services.AddTransient<IMailService, CloudMailService>();
 builder.Services.AddDbContext<CityInfoDbContext>(dbContextOptions => dbContextOptions.UseSqlServer(builder.Configuration["DbConnectionString"]));
 builder.Services.AddHealthChecks().AddDbContextCheck<CityInfoDbContext>();
 builder.Services.AddScoped<IStatesRepository, StatesRepository>();
-builder.Services.AddScoped<ICityRepository, CityRepository>();
+builder.Services.AddScoped<ICitiesRepository, CitiesRepository>();
 builder.Services.AddScoped<IPointsOfInterestRepository, PointsOfInterestRepository>();
 builder.Services.AddScoped<IStateService, StateService>();
 builder.Services.AddScoped<ICityService, CityService>();

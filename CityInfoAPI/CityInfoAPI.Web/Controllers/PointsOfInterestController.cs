@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.JsonPatch.Operations;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
+
 namespace CityInfoAPI.Controllers;
+
 
 /// <summary>
 /// points of interest controller
@@ -30,6 +32,7 @@ public class PointsOfInterestController : ControllerBase
     private readonly IPointsOfInterestService _service;
     private readonly ICityService _cityService;
     private readonly IConfiguration _configuration;
+    private string _appVersion = "1.0";
 
     /// <summary>constructor</summary>
     /// <param name="logger"></param>
@@ -48,6 +51,7 @@ public class PointsOfInterestController : ControllerBase
         _service = service ?? throw new ArgumentNullException(nameof(service));
         _cityService = cityService ?? throw new ArgumentNullException(nameof(service));
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        _appVersion = _configuration["AppVersion"] ?? string.Empty;
     }
 
     /// <summary>Gets all Points of Interest</summary>
@@ -69,7 +73,7 @@ public class PointsOfInterestController : ControllerBase
 
             foreach (var pointOfInterest in pointsOfInterest)
             {
-                pointOfInterest.Links.Add(UriLinkHelper.CreateLinkForPointOfInterestWithinCollection(HttpContext.Request, pointOfInterest));
+                pointOfInterest.Links.Add(UriLinkHelper.CreateLinkForPointOfInterestWithinCollection(HttpContext.Request, pointOfInterest, _appVersion));
             }
             return Ok(pointsOfInterest);
         }
@@ -108,7 +112,7 @@ public class PointsOfInterestController : ControllerBase
 
             foreach (var pointOfInterest in pointsOfInterest)
             {
-                pointOfInterest.Links.Add(UriLinkHelper.CreateLinkForPointOfInterestWithinCollection(HttpContext.Request, pointOfInterest));
+                pointOfInterest.Links.Add(UriLinkHelper.CreateLinkForPointOfInterestWithinCollection(HttpContext.Request, pointOfInterest, _appVersion));
             }
 
             return Ok(pointsOfInterest);
@@ -169,7 +173,7 @@ public class PointsOfInterestController : ControllerBase
                 return NotFound();
             }
 
-            pointOfInterest = UriLinkHelper.CreateLinksForPointOfInterest(HttpContext.Request, pointOfInterest);
+            pointOfInterest = UriLinkHelper.CreateLinksForPointOfInterest(HttpContext.Request, pointOfInterest, _appVersion);
 
             return Ok(pointOfInterest);
         }
