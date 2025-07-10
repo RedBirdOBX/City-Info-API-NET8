@@ -410,3 +410,4 @@ https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index
 | 1.8.0 | 07.07.2025 | For demonstration purposes and as an exercise, added caching to the States endpoint. |
 | 1.9.0 | 07.09.2025 | Added root controller with HATEOS links. |
 |  |  | Renamed CityRepository class for consistency. |
+|  |  | Made "version" configurable. |
