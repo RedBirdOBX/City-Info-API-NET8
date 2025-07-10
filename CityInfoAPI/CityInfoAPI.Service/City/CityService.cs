@@ -11,12 +11,12 @@ namespace CityInfoAPI.Service;
 
 public class CityService : ICityService
 {
-    private readonly ICityRepository _repo;
+    private readonly ICitiesRepository _repo;
     private readonly IMapper _mapper;
     private readonly ILogger<CityService> _logger;
 
 
-    public CityService(ICityRepository repo, IMapper mapper, ILogger<CityService> logger)
+    public CityService(ICitiesRepository repo, IMapper mapper, ILogger<CityService> logger)
     {
         _repo = repo;
         _mapper = mapper;

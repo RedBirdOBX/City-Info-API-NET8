@@ -65,6 +65,24 @@
             <response code="200">file created</response>
             <response code="400">bad request for file upload</response>
         </member>
+        <member name="T:CityInfoAPI.Web.Controllers.RootController">
+            <summary>
+            Root Controller
+            </summary>
+        </member>
+        <member name="M:CityInfoAPI.Web.Controllers.RootController.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            constructor
+            </summary>
+            <param name="configuration"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:CityInfoAPI.Web.Controllers.RootController.GetRoot">
+            <summary>
+            Root of Application
+            </summary>
+            <returns>IActionResult</returns>
+        </member>
         <member name="T:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaDataModel">
             <summary>
             obj used to provide metadata in response header
@@ -272,13 +290,14 @@
             <response code="401">unauthorized request</response>
             <response code="500">internal error</response>
         </member>
-        <member name="M:CityInfoAPI.Controllers.StatesController.#ctor(Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.StatesController},AutoMapper.IMapper,CityInfoAPI.Service.IStateService)">
+        <member name="M:CityInfoAPI.Controllers.StatesController.#ctor(Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Controllers.StatesController},AutoMapper.IMapper,CityInfoAPI.Service.IStateService,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Constructor
             </summary>
             <param name="logger"></param>
             <param name="mapper"></param>
             <param name="service"></param>
+            <param name="configuration"></param>
         </member>
         <member name="M:CityInfoAPI.Controllers.StatesController.GetStates">
             <summary>Gets all States</summary>

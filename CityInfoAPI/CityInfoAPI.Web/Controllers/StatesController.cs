@@ -22,6 +22,8 @@ public class StatesController : ControllerBase
 {
     private readonly ILogger<StatesController> _logger;
     private readonly IStateService _service;
+    private readonly IConfiguration _configuration;
+    private string _appVersion = "1.0";
 
     /// <summary>
     /// Constructor
@@ -29,10 +31,13 @@ public class StatesController : ControllerBase
     /// <param name="logger"></param>
     /// <param name="mapper"></param>
     /// <param name="service"></param>
-    public StatesController(ILogger<StatesController> logger, IMapper mapper, IStateService service)
+    /// <param name="configuration"></param>
+    public StatesController(ILogger<StatesController> logger, IMapper mapper, IStateService service, IConfiguration configuration)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _service = service ?? throw new ArgumentNullException(nameof(service));
+        _configuration = configuration ?? throw new ArgumentNullException(nameof(_configuration));
+        _appVersion = _configuration["AppVersion"] ?? string.Empty;
     }
 
     /// <summary>Gets all States</summary>
@@ -56,7 +61,7 @@ public class StatesController : ControllerBase
             // add helper links
             foreach (var state in states)
             {
-                state.Links.Add(UriLinkHelper.CreateLinkForStateWithinCollection(HttpContext.Request, state));
+                state.Links.Add(UriLinkHelper.CreateLinkForStateWithinCollection(HttpContext.Request, state, _appVersion));
             }
 
             return Ok(states);
@@ -100,7 +105,7 @@ public class StatesController : ControllerBase
             }
 
             var state = await _service.GetStateAsync(stateCode);
-            state = UriLinkHelper.CreateLinksForState(HttpContext.Request, state ?? new StateDto());
+            state = UriLinkHelper.CreateLinksForState(HttpContext.Request, state ?? new StateDto(), _appVersion);
             return Ok(state);
         }
         catch (Exception ex)

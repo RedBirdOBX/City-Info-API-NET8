@@ -4,7 +4,7 @@ using CityInfoAPI.Dtos.RequestModels;
 
 namespace CityInfoAPI.Data.Repositories;
 
-public interface ICityRepository
+public interface ICitiesRepository
 {
     Task<int> CountCitiesAsync(CityRequestParameters requestParams);
 
