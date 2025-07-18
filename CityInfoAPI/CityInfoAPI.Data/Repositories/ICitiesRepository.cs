@@ -10,6 +10,8 @@ public interface ICitiesRepository
 
     Task<IEnumerable<City>> GetCitiesAsync(CityRequestParameters requestParams);
 
+    Task<IEnumerable<dynamic>> GetCitiesWithRequestedFields(string requested);
+
     Task<City?> GetCityAsync(Guid cityId, bool includePointsOfInterest);
 
     Task<int> GetCitiesCountAsync();

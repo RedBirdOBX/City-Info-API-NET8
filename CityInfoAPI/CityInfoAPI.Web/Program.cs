@@ -129,6 +129,8 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // swagger, swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
+//builder.Services.AddAuthentication(); ??
+
 // token - configure how we will validate the token
 builder.Services.AddAuthentication("Bearer")
         .AddJwtBearer("Bearer", options =>
