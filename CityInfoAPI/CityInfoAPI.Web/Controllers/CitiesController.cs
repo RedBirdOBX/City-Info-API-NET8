@@ -120,6 +120,34 @@ public class CitiesController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Gets cities with requested fields based on the provided comma-separated field names.
+    /// </summary>
+    /// <param name="requested"></param>
+    /// <returns>dynamic version of cities</returns>
+    /// <example>{baseUrl}/api/cities/fields?requested=name,description</example>
+    /// <response code="200">returns cities</response>
+    [HttpGet("fields", Name = "GetCitiesWithRequestFields")]
+    public async Task<ActionResult<IEnumerable<dynamic>>> GetCitiesWithRequestFields(string requested)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(requested))
+            {
+                _logger.LogWarning("Fields parameter is null or empty.");
+                return BadRequest("Fields parameter cannot be null or empty.");
+            }
+
+            var results = await _service.GetCitiesWithRequestedFields(requested);
+            return Ok(results);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"An error occurred while getting cities with requested fields. {ex}");
+            return StatusCode(500, "An error occurred while getting cities with requested fields.");
+        }
+    }
+
     /// <summary>mostly for demo purposes. returns options available for city by id requests</summary>
     /// <param name="cityGuid"></param>
     /// <returns>CityDto</returns>

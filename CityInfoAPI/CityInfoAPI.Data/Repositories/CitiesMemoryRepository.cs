@@ -109,6 +109,20 @@ public class CityMemoryRepository : ICitiesRepository
         }
     }
 
+    public async Task<IEnumerable<dynamic>> GetCitiesWithRequestedFields(string requested)
+    {
+        try
+        {
+            var cities = Cities as IQueryable<City>;
+            var results = cities.OrderBy(c => c.Name).ToList();
+            return results;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
     public async Task<City?> GetCityAsync(Guid cityGuid, bool includePointsOfInterest)
     {
         try

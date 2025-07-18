@@ -10,6 +10,8 @@ public interface ICityService
 
     Task<IEnumerable<CityDto>> GetCitiesAsync(CityRequestParameters requestParams);
 
+    Task<IEnumerable<dynamic>> GetCitiesWithRequestedFields(string requested);
+
     Task<bool> CityExistsAsync(Guid cityGuid);
 
     Task<CityDto?> GetCityAsync(Guid cityGuid, bool includePointsOfInterest);

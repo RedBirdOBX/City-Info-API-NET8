@@ -140,6 +140,15 @@
             <param name="linkGenerator"></param>
         </member>
         <!-- Badly formed XML comment ignored for member "M:CityInfoAPI.Controllers.CitiesController.GetCities(CityInfoAPI.Dtos.RequestModels.CityRequestParameters)" -->
+        <member name="M:CityInfoAPI.Controllers.CitiesController.GetCitiesWithRequestFields(System.String)">
+            <summary>
+            Gets cities with requested fields based on the provided comma-separated field names.
+            </summary>
+            <param name="requested"></param>
+            <returns>dynamic version of cities</returns>
+            <example>{baseUrl}/api/cities/fields?requested=name,description</example>
+            <response code="200">returns cities</response>
+        </member>
         <member name="M:CityInfoAPI.Controllers.CitiesController.GetCityByCityIdOptions(System.Guid)">
             <summary>mostly for demo purposes. returns options available for city by id requests</summary>
             <param name="cityGuid"></param>

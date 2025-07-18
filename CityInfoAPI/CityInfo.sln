@@ -50,6 +50,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Imgs", "Imgs", "{4DE88F82-B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityInfoAPI.Test", "CityInfoAPI.Test\CityInfoAPI.Test.csproj", "{F9C8B25D-8959-4904-9D0B-8E2B3918771A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\Notes\ToDo.md = Docs\Notes\ToDo.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +89,7 @@ Global
 		{530724D6-85F3-4BAD-BCF4-966751CEF182} = {26EDF3EA-95D6-474D-9FC3-C9A1EAF14B38}
 		{9A4A01D1-0A93-41CB-9C55-E65CEA8B0D2B} = {26EDF3EA-95D6-474D-9FC3-C9A1EAF14B38}
 		{4DE88F82-B59E-43FB-BA30-E5877C750054} = {26EDF3EA-95D6-474D-9FC3-C9A1EAF14B38}
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {26EDF3EA-95D6-474D-9FC3-C9A1EAF14B38}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B7EB108E-F67C-47B1-9502-43ECFE0F3950}

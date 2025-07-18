@@ -1,6 +1,6 @@
 # City Info Demo API (.NET 8.0 version)
 ---
-*Version 1.9.0*
+*Version 1.10.0*
 
 ## Summary
 Welcome to the City Info Demo API - .NET 8 Version. Original version was in .NET 2.1 written in 2019. 
@@ -31,36 +31,6 @@ API was built with knowledge from the following tutorials:
 - Microsoft.AspNetCore.Authentication.JwtBearer 8.0
 - System.Linq.Dynamic.Core 
 
-## To Do
-
-### Known Issues
-
- - None at the moment.
-
-### Enhancements
---- 
- 
-- Improve Sorting w/ Linq NuGet package.  See vid. Chapter 8. https://app.pluralsight.com/ilx/video-courses/1b57d9e1-fb13-4f6c-9a6d-850dc8e5a78f/3ee9a2b9-1f04-4b93-94cd-fa44860c7b56/fde36638-3499-4020-93fa-bceaea80a039 
-- Add Custom Validation Annotations (like duplicate name check). 
-- Allow for multiple Cities creation (endpoint).
-- Allow for multiple Points of Interest creation (endpoint).
-- use Azure KV for connection strings and other secrets.
-- Use Docker.
-- Add true user authentication / token assign.
-- Build log table maintenance routine.
-- Add Application Insights
-- Learn how to add svc registrations as a method extension (see EmployeeManagement demo API and Authors & Courses API by Kevin Dockx)
-- Factory Pattern / Svc.
-- Add db connection to Health check and Uptime Robot.
-- Unit Tests with CICD / Build Server / Azure.  https://app.pluralsight.com/ilx/video-courses/d1a07995-8bbd-4124-a48f-b1f7f672091e/cded68ee-4744-48a4-ab47-8f8c47c03158/47dd3c95-b1b2-460a-bb59-ee177cfca9f1
-- ICollection vs IEnumerable vs IQueryable
-- Expand on ProblemDetails implementation: https://app.pluralsight.com/ilx/video-courses/1b57d9e1-fb13-4f6c-9a6d-850dc8e5a78f/f618cfb7-a70d-4f26-9e67-0a7bdfe22dd4/ba1f72e2-558e-4c7d-9fa2-9bd607d19fab (download final product)
-- Abstract classes: https://app.pluralsight.com/ilx/video-courses/clips/d5f818ac-9cec-4d19-a442-4123ea483ba3
-Virtual vs abstract. Watch video.  https://app.pluralsight.com/ilx/video-courses/1b57d9e1-fb13-4f6c-9a6d-850dc8e5a78f/f618cfb7-a70d-4f26-9e67-0a7bdfe22dd4/f0a7d9c7-d3eb-4f22-ba57-05a962dd4f52  Also see orig City Info API
-- Improve on pagination:  https://app.pluralsight.com/ilx/video-courses/1b57d9e1-fb13-4f6c-9a6d-850dc8e5a78f/a9261365-6296-41ce-ae0e-6b42958f77d0/b29f6bf8-36e5-4250-9912-dff3f1c5910c 
-- [Produces("application/json", "application/xml")]
-
----
 
 ## Chapters
 - [How To Test and Run Locally](#test)
@@ -126,13 +96,14 @@ This resource will return a collection of all Cities. It implements paging and o
 
 **Optional Parameters**
 
-| Parameter  | Default | Min Value | Max Value |
-| ---------  |---------| --------- | ----------|
-| includePointsOfInterest | true      | n/a         | n/a       |
-| pageNumber | 1       | 1         | n/a       |
-| pageSize   | 100      | 1         | 100        |
-| search   | ""      | N/A         | N/A        |
-| Name (filter)   | ""      | N/A         | N/A        |
+| Parameter					| Default	| Min Value		| Max Value |
+| ---------					|---------	| ---------		| ----------|
+| includePointsOfInterest	| true      | n/a			| n/a       |
+| pageNumber				| 1			| 1				| n/a       |
+| pageSize					| 100		| 1				| 100       |
+| search					| ""		| N/A			| N/A       |
+| Name (filter)				| ""		| N/A			| N/A       |
+| orderby					| 			| N/A			| N/A       |
 
 **Examples**   
 `{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities?pageNumber=2&pageSize=10`
@@ -143,17 +114,21 @@ This resource will return a collection of all Cities. It implements paging and o
 
 `{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities?search=city`
 
+`{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities?orderby=createdon,updatedon,name desc`
 
 **Custom Response Header:**   
 The Response Header will provide the consumer helpful information in a custom item known as `X-CityParameters`.  It returns links to the next page (if applicable), previous page (if applicable), the name filter (if used), and total city count.    
 
 ![Custom Response Header](CityInfoAPI/Docs/Imgs/custom-response-header.png?raw=true)
 
+#### Get Cities with Custom Fields
+`GET` `{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities/fields?requested=name,description`  
+Here, you can specify which fields you want to be returned in the response. This is useful if you want to limit the amount of data returned for each City. You can specify multiple fields by separating them with a comma.
+
 #### Get City By Id  
 `GET` `{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities/{{cityGuid}}?includePointsOfInterest={{showPoints}}`   
 
 Here, you can request a specific City and also provide an optional query string parameter to explicitly request the Points Of Interest along with the City data. If false, the points of interest collection will be intentionally empty (to lighten payload).  Otherwise, they will be included by default. 
-
 
 #### Create a City
 `POST` `{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities`
@@ -411,3 +386,4 @@ https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index
 | 1.9.0 | 07.09.2025 | Added root controller with HATEOS links. |
 |  |  | Renamed CityRepository class for consistency. |
 |  |  | Made "version" configurable. |
+| 1.10.0 | 07.18.2025 | Selectable columns featured added. |

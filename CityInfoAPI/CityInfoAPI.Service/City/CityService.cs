@@ -5,6 +5,7 @@ using CityInfoAPI.Dtos;
 using CityInfoAPI.Dtos.RequestModels;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Reflection;
 
 
 namespace CityInfoAPI.Service;
@@ -44,6 +45,48 @@ public class CityService : ICityService
             var cities = await _repo.GetCitiesAsync(requestParams);
             var results = _mapper.Map<IEnumerable<CityDto>>(cities);
             return results;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"An error occurred while getting cities. {ex}");
+            throw;
+        }
+    }
+
+    public async Task<IEnumerable<dynamic>> GetCitiesWithRequestedFields(string requested)
+    {
+        try
+        {
+            var city = new City();
+            bool fieldsAreValid = false;
+            var fieldsList = requested.Split(",").ToList();
+
+            foreach (var field in fieldsList)
+            {
+                foreach (PropertyInfo prop in typeof(City).GetProperties())
+                {
+                    var propName = prop.Name;
+
+                    if (propName.Equals(field.Trim(), StringComparison.OrdinalIgnoreCase))
+                    {
+                        fieldsAreValid = true;
+                        break;
+                    }
+                    else
+                    {
+                        fieldsAreValid = false;
+                    }
+                }
+            }
+
+            if (!fieldsAreValid)
+            {
+                _logger.LogError($"Invalid fields requested: {requested}");
+                throw new ArgumentException("Invalid fields requested.");
+            }
+
+            var cities = await _repo.GetCitiesWithRequestedFields(requested);
+            return cities;
         }
         catch (Exception ex)
         {

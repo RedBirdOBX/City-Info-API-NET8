@@ -74,6 +74,21 @@
             points of interest for city
             </summary>
         </member>
+        <member name="T:CityInfoAPI.Dtos.CityTempDto">
+            <summary>
+            city object
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.CityTempDto.Name">
+            <summary>
+            name of city
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Dtos.CityTempDto.Description">
+            <summary>
+            description of city
+            </summary>
+        </member>
         <member name="T:CityInfoAPI.Dtos.CityUpdateDto">
             <summary>
             onject for updating a city

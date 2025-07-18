@@ -6,6 +6,7 @@ using CityInfoAPI.Dtos;
 using CityInfoAPI.Dtos.RequestModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Linq.Dynamic.Core;
 
 
 namespace CityInfoAPI.Data.Repositories;
@@ -89,7 +90,7 @@ public class CitiesRepository : ICitiesRepository
             }
 
             // query is sent
-            var results = await cities .Skip(requestParams.PageSize * (requestParams.PageNumber - 1))
+            var results = await cities.Skip(requestParams.PageSize * (requestParams.PageNumber - 1))
                                         .Take(requestParams.PageSize)
                                         .Include(c => c.State)
                                         .AsNoTracking()
@@ -100,6 +101,20 @@ public class CitiesRepository : ICitiesRepository
         catch (Exception ex)
         {
             _logger.LogError($"An error occurred while getting search / filter cities. {ex}");
+            throw;
+        }
+    }
+
+    public async Task<IEnumerable<dynamic>> GetCitiesWithRequestedFields(string requested)
+    {
+        try
+        {
+            var results = await _dbContext.Cities.Select("new {" + requested + "}").ToDynamicListAsync();
+            return results;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"An error occurred while getting cities with requested fields. {ex}");
             throw;
         }
     }
