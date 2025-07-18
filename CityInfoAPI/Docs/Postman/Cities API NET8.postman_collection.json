@@ -70,14 +70,7 @@
 					},
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [
@@ -172,6 +165,63 @@
 					"response": []
 				},
 				{
+					"name": "Cities with Requested Fields",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Bearer",
+								"value": "xxxx",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities/fields?requested=Name,description,cityguid",
+							"host": [
+								"{{CitiesInfoNET8BaseUrl}}"
+							],
+							"path": [
+								"v{{version}}",
+								"cities",
+								"fields"
+							],
+							"query": [
+								{
+									"key": "Accept",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "requested",
+									"value": "Name,description,cityguid"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Cities Order By",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
@@ -204,7 +254,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities?orderby=name",
+							"raw": "{{CitiesInfoNET8BaseUrl}}/v{{version}}/cities?orderby=createdon,name desc",
 							"host": [
 								"{{CitiesInfoNET8BaseUrl}}"
 							],
@@ -220,7 +270,7 @@
 								},
 								{
 									"key": "orderby",
-									"value": "name"
+									"value": "createdon,name desc"
 								}
 							]
 						}
@@ -1495,6 +1545,38 @@
 					],
 					"path": [
 						"health"
+					],
+					"query": [
+						{
+							"key": "Accept",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Root",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{CitiesInfoNET8BaseUrl}}",
+					"host": [
+						"{{CitiesInfoNET8BaseUrl}}"
 					],
 					"query": [
 						{
