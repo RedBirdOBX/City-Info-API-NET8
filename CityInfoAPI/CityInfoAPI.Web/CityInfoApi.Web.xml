@@ -4,6 +4,24 @@
         <name>CityInfoAPI.Web</name>
     </assembly>
     <members>
+        <member name="T:CityInfoAPI.Controllers.Filters.CheckForExistingCityNameFilter">
+            <summary>
+            ActionFilter to ensure a city with the same name does not already exist.
+            </summary>
+        </member>
+        <member name="M:CityInfoAPI.Controllers.Filters.CheckForExistingCityNameFilter.#ctor(CityInfoAPI.Service.ICityService)">
+            <summary>
+            constructor
+            </summary>
+            <param name="service"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:CityInfoAPI.Controllers.Filters.CheckForExistingCityNameFilter.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            execution of action filter.
+            </summary>
+            <param name="context"></param>
+        </member>
         <member name="T:CityInfoAPI.Controllers.CitiesController">
             <summary>
             Cities controller
