@@ -16,6 +16,7 @@ public class CityCreateDto
     /// name of city
     /// </summary>
     [Required(ErrorMessage = $"{nameof(Name)} is required.")]
+    [MinLength(3, ErrorMessage = $"Minimum length for {nameof(Name)} is 3 chars.")]
     [MaxLength(ErrorMessage = $"Max length for {nameof(Name)} is 50 chars.")]
     public string Name { get; set; } = string.Empty;
 

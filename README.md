@@ -1,6 +1,6 @@
 # City Info Demo API (.NET 8.0 version)
 ---
-*Version 1.10.0*
+*Version 1.11.0*
 
 ## Summary
 Welcome to the City Info Demo API - .NET 8 Version. Original version was in .NET 2.1 written in 2019. 
@@ -387,3 +387,4 @@ https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index
 |  |  | Renamed CityRepository class for consistency. |
 |  |  | Made "version" configurable. |
 | 1.10.0 | 07.18.2025 | Selectable columns featured added. |
+| 1.11.0 | 08.25.2025 | Implemented use of ActionFilter on CreateCityAsync. Prevents city with matching and same state name from being created.|
