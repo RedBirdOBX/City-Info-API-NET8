@@ -7,13 +7,7 @@
 
 ### Enhancements
 --- 
- 
-- Add Custom Validation Annotations (like duplicate name check).  
-    - WIP. Path starts with Create City
-
-
-
-- Allow for multiple Cities creation (endpoint).
+ - Allow for multiple Cities creation (endpoint).
 - Allow for multiple Points of Interest creation (endpoint).
 - use Azure KV for connection strings and other secrets.
 - Use Docker.
