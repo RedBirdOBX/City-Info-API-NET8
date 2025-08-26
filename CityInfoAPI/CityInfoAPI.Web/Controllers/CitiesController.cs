@@ -226,7 +226,7 @@ public class CitiesController : ControllerBase
     [ProducesDefaultResponseType]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    [ServiceFilter(typeof(ValidateCityNameDoesNotExistFilter))]
+    [ServiceFilter(typeof(CheckForExistingCityNameFilter))]
     [HttpPost("", Name = "CreateCity")]
     public async Task<ActionResult<CityDto>> CreateCity([FromBody] CityCreateDto request)
     {

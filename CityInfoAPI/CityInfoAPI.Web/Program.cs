@@ -120,7 +120,7 @@ builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<IPointsOfInterestService, PointsOfInterestService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<IPropertyMappingProcessor, PropertyMappingProcessor>();
-builder.Services.AddScoped<ValidateCityNameDoesNotExistFilter>();
+builder.Services.AddScoped<CheckForExistingCityNameFilter>();
 
 
 // add caching / cache store

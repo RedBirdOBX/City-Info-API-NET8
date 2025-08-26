@@ -10,7 +10,7 @@ namespace CityInfoAPI.Controllers.Filters;
 /// <summary>
 /// ActionFilter to ensure a city with the same name does not already exist.
 /// </summary>
-public class ValidateCityNameDoesNotExistFilter : ActionFilterAttribute
+public class CheckForExistingCityNameFilter : ActionFilterAttribute
 {
 
     private readonly ICityService _service;
@@ -20,7 +20,7 @@ public class ValidateCityNameDoesNotExistFilter : ActionFilterAttribute
     /// </summary>
     /// <param name="service"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public ValidateCityNameDoesNotExistFilter(ICityService service)
+    public CheckForExistingCityNameFilter(ICityService service)
     {
         _service = service ?? throw new ArgumentNullException(nameof(_service));
     }
@@ -38,7 +38,6 @@ public class ValidateCityNameDoesNotExistFilter : ActionFilterAttribute
                 Name = dto.Name
             };
 
-            // TO DO: Check state as well....
             var matchingCity = _service.GetCitiesAsync(requestParams).Result;
             if (matchingCity.Any())
             {
