@@ -4,123 +4,6 @@
         <name>CityInfoAPI.Web</name>
     </assembly>
     <members>
-        <member name="T:CityInfoAPI.Web.Controllers.AuthenticationController">
-            <summary>
-            authentication controller
-            </summary>
-            <response code="500">internal error</response>
-        </member>
-        <member name="M:CityInfoAPI.Web.Controllers.AuthenticationController.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
-            <summary>
-            constructor
-            </summary>
-            <param name="configuration"></param>
-            <exception cref="T:System.ArgumentNullException"></exception>
-        </member>
-        <member name="M:CityInfoAPI.Web.Controllers.AuthenticationController.Authenticate(CityInfoAPI.Dtos.RequestModels.AuthenticationUserRequest)">
-            <summary>
-            provides user token
-            </summary>
-            <param name="userRequest"></param>
-            <returns>token</returns>
-            <response code="200">returns token</response>
-            <response code="401">unauthorized</response>
-        </member>
-        <member name="M:CityInfoAPI.Web.Controllers.AuthenticationController.ValidateUserCredentials(System.String,System.String)">
-            <summary>
-            This typically might include a call to a database or a service to
-            validate the user credentials.
-            </summary>
-            <param name="username"></param>
-            <param name="password"></param>
-            <returns></returns>
-            <exception cref="T:System.NotImplementedException"></exception>
-        </member>
-        <member name="T:CityInfoAPI.Web.Controllers.FilesController">
-            <summary>
-            files controller
-            </summary>
-            <response code="401">unauthorized request</response>
-            <response code="500">internal error</response>
-        </member>
-        <member name="M:CityInfoAPI.Web.Controllers.FilesController.#ctor(Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider,Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Web.Controllers.FilesController})">
-            <summary>constructor</summary>
-            <param name="fileExtensionContentTypeProvider"></param>
-            <param name="logger"></param>
-            <exception cref="T:System.ArgumentNullException"></exception>
-        </member>
-        <member name="M:CityInfoAPI.Web.Controllers.FilesController.GetFile(System.String)">
-            <summary>retrieves file by id</summary>
-            <param name="fileId"></param>
-            <returns>file found by id</returns>
-            <example>{baseUrl}/api/files/{fileId}</example>
-            <response code="200">returns file</response>
-            <response code="404">file not found</response>
-        </member>
-        <member name="M:CityInfoAPI.Web.Controllers.FilesController.CreateFile(Microsoft.AspNetCore.Http.IFormFile)">
-            <summary>create a pdf file</summary>
-            <param name="file"></param>
-            <returns>OK - 200</returns>
-            <example>{baseUrl}/api/files</example>
-            <response code="200">file created</response>
-            <response code="400">bad request for file upload</response>
-        </member>
-        <member name="T:CityInfoAPI.Web.Controllers.RootController">
-            <summary>
-            Root Controller
-            </summary>
-        </member>
-        <member name="M:CityInfoAPI.Web.Controllers.RootController.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
-            <summary>
-            constructor
-            </summary>
-            <param name="configuration"></param>
-            <exception cref="T:System.ArgumentNullException"></exception>
-        </member>
-        <member name="M:CityInfoAPI.Web.Controllers.RootController.GetRoot">
-            <summary>
-            Root of Application
-            </summary>
-            <returns>IActionResult</returns>
-        </member>
-        <member name="T:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaDataModel">
-            <summary>
-            obj used to provide metadata in response header
-            </summary>
-        </member>
-        <member name="P:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaDataModel.TotalItemCount">
-            <summary>
-            total items in the collection
-            </summary>
-        </member>
-        <member name="P:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaDataModel.TotalPageCount">
-            <summary>
-            total page count
-            </summary>
-        </member>
-        <member name="P:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaDataModel.PageSize">
-            <summary>
-            page size
-            </summary>
-        </member>
-        <member name="P:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaDataModel.CurrentPage">
-            <summary>
-            current page number
-            </summary>
-        </member>
-        <member name="M:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaDataModel.#ctor(System.Int32,System.Int32,System.Int32)">
-            <summary>
-            constructor
-            </summary>
-            <param name="totalItemCount"></param>
-            <param name="pageSize"></param>
-            <param name="currentPage"></param>
-        </member>
-        <member name="T:CityInfoAPI.Web.Controllers.ResponseHelpers.UriLinkHelper">
-            <summary>
-            Used for building links in GET responses.
-            </summary>
-        </member>
         <member name="T:CityInfoAPI.Controllers.CitiesController">
             <summary>
             Cities controller
@@ -321,6 +204,123 @@
             <example>{baseUrl}/api/states/{stateAbbrev}</example>
             <response code="200">returns state by state code</response>
             <response code="400">bad request for getting state by state code</response>
+        </member>
+        <member name="T:CityInfoAPI.Web.Controllers.AuthenticationController">
+            <summary>
+            authentication controller
+            </summary>
+            <response code="500">internal error</response>
+        </member>
+        <member name="M:CityInfoAPI.Web.Controllers.AuthenticationController.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            constructor
+            </summary>
+            <param name="configuration"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:CityInfoAPI.Web.Controllers.AuthenticationController.Authenticate(CityInfoAPI.Dtos.RequestModels.AuthenticationUserRequest)">
+            <summary>
+            provides user token
+            </summary>
+            <param name="userRequest"></param>
+            <returns>token</returns>
+            <response code="200">returns token</response>
+            <response code="401">unauthorized</response>
+        </member>
+        <member name="M:CityInfoAPI.Web.Controllers.AuthenticationController.ValidateUserCredentials(System.String,System.String)">
+            <summary>
+            This typically might include a call to a database or a service to
+            validate the user credentials.
+            </summary>
+            <param name="username"></param>
+            <param name="password"></param>
+            <returns></returns>
+            <exception cref="T:System.NotImplementedException"></exception>
+        </member>
+        <member name="T:CityInfoAPI.Web.Controllers.FilesController">
+            <summary>
+            files controller
+            </summary>
+            <response code="401">unauthorized request</response>
+            <response code="500">internal error</response>
+        </member>
+        <member name="M:CityInfoAPI.Web.Controllers.FilesController.#ctor(Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider,Microsoft.Extensions.Logging.ILogger{CityInfoAPI.Web.Controllers.FilesController})">
+            <summary>constructor</summary>
+            <param name="fileExtensionContentTypeProvider"></param>
+            <param name="logger"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:CityInfoAPI.Web.Controllers.FilesController.GetFile(System.String)">
+            <summary>retrieves file by id</summary>
+            <param name="fileId"></param>
+            <returns>file found by id</returns>
+            <example>{baseUrl}/api/files/{fileId}</example>
+            <response code="200">returns file</response>
+            <response code="404">file not found</response>
+        </member>
+        <member name="M:CityInfoAPI.Web.Controllers.FilesController.CreateFile(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>create a pdf file</summary>
+            <param name="file"></param>
+            <returns>OK - 200</returns>
+            <example>{baseUrl}/api/files</example>
+            <response code="200">file created</response>
+            <response code="400">bad request for file upload</response>
+        </member>
+        <member name="T:CityInfoAPI.Web.Controllers.RootController">
+            <summary>
+            Root Controller
+            </summary>
+        </member>
+        <member name="M:CityInfoAPI.Web.Controllers.RootController.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            constructor
+            </summary>
+            <param name="configuration"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:CityInfoAPI.Web.Controllers.RootController.GetRoot">
+            <summary>
+            Root of Application
+            </summary>
+            <returns>IActionResult</returns>
+        </member>
+        <member name="T:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaDataModel">
+            <summary>
+            obj used to provide metadata in response header
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaDataModel.TotalItemCount">
+            <summary>
+            total items in the collection
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaDataModel.TotalPageCount">
+            <summary>
+            total page count
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaDataModel.PageSize">
+            <summary>
+            page size
+            </summary>
+        </member>
+        <member name="P:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaDataModel.CurrentPage">
+            <summary>
+            current page number
+            </summary>
+        </member>
+        <member name="M:CityInfoAPI.Web.Controllers.ResponseHelpers.PaginationMetaDataModel.#ctor(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            constructor
+            </summary>
+            <param name="totalItemCount"></param>
+            <param name="pageSize"></param>
+            <param name="currentPage"></param>
+        </member>
+        <member name="T:CityInfoAPI.Web.Controllers.ResponseHelpers.UriLinkHelper">
+            <summary>
+            Used for building links in GET responses.
+            </summary>
         </member>
     </members>
 </doc>

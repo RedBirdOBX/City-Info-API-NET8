@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
+using CityInfoAPI.Controllers.Filters;
 using CityInfoAPI.Data.DbContents;
 using CityInfoAPI.Data.PropertyMapping;
 using CityInfoAPI.Data.Repositories;
@@ -119,6 +120,8 @@ builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<IPointsOfInterestService, PointsOfInterestService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<IPropertyMappingProcessor, PropertyMappingProcessor>();
+builder.Services.AddScoped<ValidateCityNameDoesNotExistFilter>();
+
 
 // add caching / cache store
 builder.Services.AddResponseCaching();
