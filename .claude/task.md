@@ -9,7 +9,7 @@ Working rule: one task at a time, ask before making any change.
 - [x] 1. **Baseline**: run `dotnet build` and `dotnet test` on net8 and record the result. SDK 10.0.401 is already installed, so no install is needed.
   - Result: build succeeded, 0 warnings, 0 errors. Tests: 18 passed, 0 failed, 0 skipped.
 - [x] 2. **Retarget projects**: set `TargetFramework` to `net10.0` in the 5 csproj files (Data, Dtos, Service, Web, Test).
-- [ ] 3. **Update packages** to net10-compatible versions:
+- [x] 3. **Update packages** (applied; build succeeds on net10, 0 errors. Only package warning left is AutoMapper NU1903, intentionally deferred) to net10-compatible versions:
   - Microsoft.* (EF Core, EF SqlServer, JwtBearer, JsonPatch, Mvc.NewtonsoftJson, HealthChecks.EntityFrameworkCore) to 10.0.x
   - Asp.Versioning.Mvc and .ApiExplorer
   - Serilog.AspNetCore and sinks
