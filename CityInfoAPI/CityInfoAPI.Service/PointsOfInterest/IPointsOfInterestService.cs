@@ -4,7 +4,7 @@ namespace CityInfoAPI.Service;
 
 public interface IPointsOfInterestService
 {
-    Task<IEnumerable<PointOfInterestDto>> GetPointsOfInterestAsync(string name, string search);
+    Task<IEnumerable<PointOfInterestDto>> GetPointsOfInterestAsync(string? name, string? search);
 
     Task<IEnumerable<PointOfInterestDto>> GetPointsOfInterestForCityAsync(Guid cityGuid);
 

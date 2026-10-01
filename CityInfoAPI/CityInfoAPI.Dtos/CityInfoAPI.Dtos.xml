@@ -69,6 +69,11 @@
             state
             </summary>
         </member>
+        <member name="P:CityInfoAPI.Dtos.CityDto.CityCode">
+            <summary>
+            city code (not populated yet, always empty)
+            </summary>
+        </member>
         <member name="P:CityInfoAPI.Dtos.CityDto.PointsOfInterest">
             <summary>
             points of interest for city

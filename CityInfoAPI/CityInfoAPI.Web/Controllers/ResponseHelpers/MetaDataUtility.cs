@@ -46,10 +46,13 @@ public static class MetaDataUtility
     {
         try
         {
+            var httpContext = httpContextAccessor.HttpContext
+                              ?? throw new ArgumentNullException(nameof(httpContextAccessor), "There is no current HttpContext to build resource URIs from.");
+
             switch (type)
             {
                 case ResourceUriType.NextPage:
-                    return linkGenerator.GetUriByAction(httpContextAccessor.HttpContext,
+                    return linkGenerator.GetUriByAction(httpContext,
                                                             action: "GetCities",
                                                             controller: "Cities",
                                                             values: new
@@ -61,7 +64,7 @@ public static class MetaDataUtility
                                                             });
 
                 case ResourceUriType.PreviousPage:
-                    return linkGenerator.GetUriByAction(httpContextAccessor.HttpContext,
+                    return linkGenerator.GetUriByAction(httpContext,
                                                             action: "GetCities",
                                                             controller: "Cities",
                                                             values: new
@@ -72,7 +75,7 @@ public static class MetaDataUtility
                                                                 nameFilter = requestParams.Name,
                                                             });
                 default:
-                    return linkGenerator.GetUriByAction(httpContextAccessor.HttpContext,
+                    return linkGenerator.GetUriByAction(httpContext,
                                                             action: "GetCities",
                                                             controller: "Cities",
                                                             values: new

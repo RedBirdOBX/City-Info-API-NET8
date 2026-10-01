@@ -32,17 +32,17 @@ public class LinkDto
     /// the uri of the resource
     /// </summary>
     [DataMemberAttribute]
-    public string Href { get; set; }
+    public string Href { get; set; } = string.Empty;
 
     /// <summary>
     /// the responsibility of the uri
     /// </summary>
     [DataMemberAttribute]
-    public string Rel { get; set; }
+    public string Rel { get; set; } = string.Empty;
 
     /// <summary>
     /// the type of request to be made
     /// </summary>
     [DataMemberAttribute]
-    public string Method { get; set; }
+    public string Method { get; set; } = string.Empty;
 }

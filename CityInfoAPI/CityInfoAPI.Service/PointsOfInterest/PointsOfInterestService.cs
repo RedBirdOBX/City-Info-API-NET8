@@ -20,7 +20,7 @@ public class PointsOfInterestService : IPointsOfInterestService
         _logger = logger;
     }
 
-    public async Task<IEnumerable<PointOfInterestDto>> GetPointsOfInterestAsync(string name, string search)
+    public async Task<IEnumerable<PointOfInterestDto>> GetPointsOfInterestAsync(string? name, string? search)
     {
         try
         {

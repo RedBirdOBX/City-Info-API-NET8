@@ -2,7 +2,6 @@
 using CityInfoAPI.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 
 namespace CityInfoAPI.Data.Repositories;
 
@@ -53,13 +52,13 @@ public class PointsOfInterestRepository : IPointsOfInterestRepository
             var pointsOfInterest = _dbContext.PointsOfInterest as IQueryable<PointOfInterest>;
 
             // constructing the query,,,
-            if (!name.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(name))
             {
                 name = name.Trim().ToLower();
                 pointsOfInterest = pointsOfInterest.Where(p => p.Name.ToLower() == name);
             }
 
-            if (!search.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(search))
             {
                 search = search.Trim().ToLower();
                 pointsOfInterest = pointsOfInterest.Where(p => p.Name.ToLower()
@@ -133,14 +132,12 @@ public class PointsOfInterestRepository : IPointsOfInterestRepository
     {
         try
         {
-            var city = await _cityRepo.GetCityAsync(newPointOfInterest.CityGuid, false);
+            var city = await _cityRepo.GetCityAsync(newPointOfInterest.CityGuid, false)
+                       ?? throw new InvalidOperationException($"City {newPointOfInterest.CityGuid} was not found, so a point of interest could not be created for it.");
 
             // we need to add the city id to create relationship
             newPointOfInterest.CityId = city.Id;
-            if (city != null)
-            {
-                city.PointsOfInterest.Add(newPointOfInterest);
-            }
+            city.PointsOfInterest.Add(newPointOfInterest);
 
             return newPointOfInterest;
         }
@@ -168,7 +165,8 @@ public class PointsOfInterestRepository : IPointsOfInterestRepository
     {
         try
         {
-            var pointOfInterest = await GetPointOfInterestAsync(pointGuid);
+            var pointOfInterest = await GetPointOfInterestAsync(pointGuid)
+                                  ?? throw new InvalidOperationException($"Point of interest {pointGuid} was not found, so it could not be deleted.");
             _dbContext.PointsOfInterest.Remove(pointOfInterest);
         }
         catch (Exception ex)

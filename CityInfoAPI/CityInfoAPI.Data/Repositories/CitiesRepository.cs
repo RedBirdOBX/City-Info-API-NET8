@@ -64,12 +64,12 @@ public class CitiesRepository : ICitiesRepository
             var cities = _dbContext.Cities as IQueryable<City>;
 
             // constructing the query...
-            if (!string.IsNullOrEmpty(requestParams?.Name))
+            if (!string.IsNullOrEmpty(requestParams.Name))
             {
                 cities = cities.Where(c => c.Name.ToLower() == requestParams.Name.ToLower());
             }
 
-            if (!string.IsNullOrEmpty(requestParams?.Search))
+            if (!string.IsNullOrEmpty(requestParams.Search))
             {
                 requestParams.Search = requestParams.Search.Trim().ToLower();
                 cities = cities.Where(c => c.Name.Contains(requestParams.Search) || (c.Description != null && c.Description.ToLower().Contains(requestParams.Search)));
@@ -176,6 +176,11 @@ public class CitiesRepository : ICitiesRepository
     {
         try
         {
+            if (name is null)
+            {
+                return false;
+            }
+
             return await _dbContext.Cities.AnyAsync(c => c.CityGuid == cityGuid && c.Name.ToLower() == name.ToLower());
         }
         catch (Exception ex)
@@ -202,7 +207,8 @@ public class CitiesRepository : ICitiesRepository
     {
         try
         {
-            var city = await GetCityAsync(cityGuid, false);
+            var city = await GetCityAsync(cityGuid, false)
+                       ?? throw new InvalidOperationException($"City {cityGuid} was not found, so it could not be deleted.");
             _dbContext.Cities.Remove(city);
         }
         catch (Exception ex)
