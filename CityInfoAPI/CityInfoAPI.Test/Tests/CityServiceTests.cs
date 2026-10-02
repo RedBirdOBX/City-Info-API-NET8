@@ -141,7 +141,7 @@ public class CityServiceTests
             IncludePointsOfInterest = false
         };
 
-        var cities = new CityInfoTestEntityData().Cities.Where(c => c.Name.Contains(requestParams.Search) || c.Description.Contains(requestParams.Search)).Take(requestParams.PageSize);
+        var cities = new CityInfoTestEntityData().Cities.Where(c => c.Name.Contains(requestParams.Search) || (c.Description != null && c.Description.Contains(requestParams.Search))).Take(requestParams.PageSize);
         _repo.Setup(x => x.GetCitiesAsync(requestParams)).ReturnsAsync(cities);
 
         // act

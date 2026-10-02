@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
+using Scalar.AspNetCore;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
@@ -23,31 +24,7 @@ builder.Host.UseSerilog();
 
 //--LOGGING--//
 var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-if (environment == Environments.Development)
-{
-    Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Information()
-                    .WriteTo.MSSqlServer
-                    (
-                        connectionString: builder.Configuration["DbConnectionString"],
-                        sinkOptions: new MSSqlServerSinkOptions
-                        {
-                            TableName = "Logs",
-                            SchemaName = "dbo",
-                            AutoCreateSqlTable = true
-                        },
-                        restrictedToMinimumLevel: LogEventLevel.Information,
-                        formatProvider: null,
-                        columnOptions: null,
-                        logEventFormatter: null
-                    )
-                    .WriteTo.Console()
-                    .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
-                    .CreateLogger();
-}
-else
-{
-    Log.Logger = new LoggerConfiguration()
+var loggerConfiguration = new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .WriteTo.MSSqlServer
                 (
@@ -62,9 +39,17 @@ else
                     formatProvider: null,
                     columnOptions: null,
                     logEventFormatter: null
-                )
-                .CreateLogger();
+                );
+
+// console and file sinks in development only
+if (environment == Environments.Development)
+{
+    loggerConfiguration
+        .WriteTo.Console()
+        .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day);
 }
+
+Log.Logger = loggerConfiguration.CreateLogger();
 
 
 
@@ -102,7 +87,7 @@ builder.Services.AddProblemDetails(options =>
 {
     options.CustomizeProblemDetails = (context) =>
     {
-        context.ProblemDetails.Extensions.Add("MachineName", Environment.MachineName);
+        context.ProblemDetails.Extensions["MachineName"] = Environment.MachineName;
     };
 });
 
@@ -129,9 +114,6 @@ builder.Services.AddResponseCaching();
 // AutoMapper.  Scan for profiles.
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-// swagger, swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-
 //builder.Services.AddAuthentication(); ??
 
 // token - configure how we will validate the token
@@ -148,7 +130,9 @@ builder.Services.AddAuthentication("Bearer")
 
                 // this is the same logic as we used creating the signature in the auth controller,
                 // therefore we know it matches.
-                IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(builder.Configuration["Authentication:SecretForKey"]))
+                IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(
+                    builder.Configuration["Authentication:SecretForKey"]
+                    ?? throw new InvalidOperationException("Configuration value 'Authentication:SecretForKey' is missing.")))
             };
         });
 
@@ -177,56 +161,33 @@ builder.Services.AddApiVersioning(setUpAction =>
     setUpAction.SubstituteApiVersionInUrl = true;
 });
 
-
-var apiVersionDescriptionProvider = builder.Services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
-builder.Services.AddSwaggerGen(setUpAction =>
+// built-in OpenAPI (core AddOpenApi, so the XML comment generator can intercept it): one document per API version, viewed through Scalar
+builder.Services.AddOpenApi("v1", options =>
 {
-    foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+    // adding the security definition for the UI to use, and requiring it on every operation
+    options.AddDocumentTransformer((document, _, _) =>
     {
-        setUpAction.SwaggerDoc($"{description.GroupName}",
-                                new()
-                                {
-                                    Title = "CityInfo API",
-                                    Version = description.ApiVersion.ToString(),
-                                    Description = "Through this API you can access cities and points of interest."
-                                });
-    }
-
-    // since multiple projects will have xml documentation, we will need to loop thru all the files and include
-    // all of the xml docs....not just the CityInfoAPI.Web.Xml.
-    // **for some reason, these files are not picked up on Azure.**
-    DirectoryInfo baseDirectoryInfo = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
-    foreach (var fileInfo in baseDirectoryInfo.EnumerateFiles("CityInfoAPI*.xml"))
-    {
-        setUpAction.IncludeXmlComments(fileInfo.FullName);
-    };
-
-    // adding the security definition for the swagger UI to use
-    setUpAction.AddSecurityDefinition("CityInfoAPIBearerAuth", new()
-    {
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        Description = "Input a valid token to access this API."
-    });
-
-    // automatically send the bearer token in the authorization header in the swagger UI.
-    setUpAction.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
+        document.Info.Title = "CityInfo API";
+        document.Info.Version = "1.0";
+        document.Info.Description = "Through this API you can access cities and points of interest.";
+        document.Components ??= new OpenApiComponents();
+        document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+        document.Components.SecuritySchemes["CityInfoAPIBearerAuth"] = new OpenApiSecurityScheme
         {
-            new OpenApiSecurityScheme
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer",
+            Description = "Input a valid token to access this API."
+        };
+        document.Security =
+        [
+            new OpenApiSecurityRequirement
             {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "CityInfoAPIBearerAuth"
-                }
-            },
-            new List<string>()
-        }
+                [new OpenApiSecuritySchemeReference("CityInfoAPIBearerAuth", document)] = []
+            }
+        ];
+        return Task.CompletedTask;
     });
 });
-
-builder.Services.AddHealthChecks();
 
 // add header forwarding
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
@@ -241,42 +202,22 @@ var app = builder.Build();
 app.UseResponseCaching();
 
 // Configure the HTTP request pipeline. //
-if (!app.Environment.IsDevelopment())
-{
-    //app.UseExceptionHandler(appBuilder =>
-    //{
-    //    appBuilder.Run(async context =>
-    //    {
-    //        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-    //        await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
-    //    });
-    //});
+// for now, since this is a demo, let's expose the errors and the API reference in every environment.
+app.UseDeveloperExceptionPage();
 
-    // for now, since this is a demo, let's expose the errors and swagger in production.
-    app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI(setUpAction =>
-    {
-        var descriptions = app.DescribeApiVersions();
-        foreach (var description in descriptions)
-        {
-            setUpAction.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
-        }
-    });
-}
-else
+// give bodiless 401/403/404/406 etc. a ProblemDetails body (uses the AddProblemDetails registration above)
+app.UseStatusCodePages();
+
+app.MapOpenApi();
+app.MapScalarApiReference(options =>
 {
-    app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI(setUpAction =>
+    var descriptions = app.DescribeApiVersions();
+    for (var i = 0; i < descriptions.Count; i++)
     {
-        var descriptions = app.DescribeApiVersions();
-        foreach (var description in descriptions)
-        {
-            setUpAction.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
-        }
-    });
-}
+        var description = descriptions[i];
+        options.AddDocument(description.GroupName, description.GroupName.ToUpperInvariant(), isDefault: i == descriptions.Count - 1);
+    }
+});
 
 app.UseForwardedHeaders();
 
@@ -290,7 +231,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // MapControllers will add endpoints to controller actions by using attributes
-app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+app.MapControllers();
 
 app.MapHealthChecks("/api/health");
 

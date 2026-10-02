@@ -47,6 +47,7 @@ public class CitiesController : ControllerBase
     /// <param name="configuration"></param>
     /// <param name="httpContextAccessor"></param>
     /// <param name="linkGenerator"></param>
+    /// <param name="propProcessor"></param>
     public CitiesController(ILogger<CitiesController> logger, IMapper mapper, ICityService service, IConfiguration configuration,
                             IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IPropertyMappingProcessor propProcessor)
     {
@@ -62,7 +63,7 @@ public class CitiesController : ControllerBase
 
     /// <summary>Gets all Cities</summary>
     /// <returns>collection of CityDto</returns>
-    /// <example>{baseUrl}/api/cities?pageNumber=1&pageSize=100&includePointsOfInterest=true&name=foo&search=bar</example>
+    /// <example>{baseUrl}/api/cities?pageNumber=1&amp;pageSize=100&amp;includePointsOfInterest=true&amp;name=foo&amp;search=bar</example>
     /// <response code="200">returns cities</response>
     [ProducesDefaultResponseType]
     [ProducesResponseType(StatusCodes.Status200OK)]

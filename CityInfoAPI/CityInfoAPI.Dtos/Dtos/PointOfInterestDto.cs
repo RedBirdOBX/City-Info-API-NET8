@@ -33,5 +33,5 @@ public class PointOfInterestDto : LinkedResourcesDto
     /// <summary>
     /// city object
     /// </summary>
-    public CityDto City { get; set; }
+    public CityDto? City { get; set; }
 }

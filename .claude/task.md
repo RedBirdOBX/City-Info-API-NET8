@@ -1,0 +1,82 @@
+# Upgrade to .NET 10: Tasks
+
+Plan: `.claude/plan.md`
+Requirements: `.claude/upgrade-to-net-10-requirements.md`
+
+Decisions: replace Swagger UI with **Scalar**; keep **AutoMapper 12.0.1** for now.
+Working rule: one task at a time, ask before making any change.
+
+- [x] 1. **Baseline**: run `dotnet build` and `dotnet test` on net8 and record the result. SDK 10.0.401 is already installed, so no install is needed.
+  - Result: build succeeded, 0 warnings, 0 errors. Tests: 18 passed, 0 failed, 0 skipped.
+- [x] 2. **Retarget projects**: set `TargetFramework` to `net10.0` in the 5 csproj files (Data, Dtos, Service, Web, Test).
+- [x] 3. **Update packages** (applied; build succeeds on net10, 0 errors. Only package warning left is AutoMapper NU1903, intentionally deferred) to net10-compatible versions:
+  - Microsoft.* (EF Core, EF SqlServer, JwtBearer, JsonPatch, Mvc.NewtonsoftJson, HealthChecks.EntityFrameworkCore) to 10.0.x
+  - Asp.Versioning.Mvc and .ApiExplorer
+  - Serilog.AspNetCore and sinks
+  - System.Linq.Dynamic.Core
+  - Test packages (Test.Sdk, xunit, runner, coverlet, Moq)
+  - Leave AutoMapper.Extensions.Microsoft.DependencyInjection at 12.0.1
+  - Check `dotnet list package --outdated` and `--vulnerable`
+- [x] 4. **Fix build breaks** from the retarget (Microsoft.OpenApi v2 types, obsolete APIs) until the solution builds clean.
+  - Result: solution builds with 0 errors (remaining warnings are nullable/XML-doc, plus AutoMapper NU1903, deferred).
+- [x] 5. **Replace Swashbuckle with built-in OpenAPI + Scalar** in `Program.cs` (done and verified at runtime):
+  - [x] Remove `Swashbuckle.AspNetCore`; add `Microsoft.AspNetCore.OpenApi` and `Scalar.AspNetCore`
+  - [x] `AddOpenApi()` per API version, `MapOpenApi()`, `MapScalarApiReference()`
+    - Uses the core `builder.Services.AddOpenApi("v1", ...)`, NOT the Asp.Versioning `.AddOpenApi()` chain: the XML comment source generator only intercepts the core call. The document name is hard-coded, so a future v2 needs its own `AddOpenApi("v2", ...)`.
+  - [x] Port the bearer security scheme via a document transformer (also sets title, description, version "1.0")
+  - [x] Verify XML doc comments still surface; drop the manual `EnumerateFiles` loop
+    - Verified: all 25 operations have summaries; DTO property descriptions present (referenced-project XML is picked up automatically). Fixed raw `&` in the `GetCities` `<example>` (invalid XML dropped that comment).
+  - [x] Remove the `BuildServiceProvider()` call
+  - [x] `launchSettings.json` `launchUrl` is `scalar` in all profiles
+  - [x] Update README swagger links (intro URL, Platform bullet, "OpenAPI and Documentation" section; anchor id `#swagger` kept so old links still work). Production links point at `/scalar/v1` and won't work until the app is redeployed. Other README items (platform versions, release entry) stay in Task 9.
+  - Runtime check: `/openapi/v1.json` 200, `/scalar/v1` 200, `/api/health` Healthy. Token round trip against an authenticated endpoint not yet tested (covered by Task 8).
+  - Note: `launchSettings.json` `https` profile contains a plaintext Azure SQL password; check whether committed and consider rotating / user-secrets.
+- [x] 6. **.NET 10 best-practice cleanup** (confirm each item first; all items done, see notes):
+  - [x] `UseEndpoints` to `MapControllers()` (`Program.cs`; verified: `/api/v1/cities|states|pointsofinterest` 401, `/api`, `/openapi/v1.json`, `/scalar/v1`, `/api/health` 200). Explicit `UseRouting()` left in place.
+  - [x] Remove the duplicate `AddHealthChecks()` (removed the bare call; kept `AddHealthChecks().AddDbContextCheck<CityInfoDbContext>()`; verified `/api/health` 200 Healthy). The duplicated dev/non-dev Swagger branches were already collapsed in Task 5.
+  - [x] Collapse the duplicated Serilog config (one `LoggerConfiguration` with the shared MSSqlServer sink; Console + File added only in Development). Verified: builds, file sink writes new entries. User to confirm console output and new rows in `dbo.Logs`. Left alone: env var check vs `builder.Environment.IsDevelopment()`; `Serilog.Sinks.ApplicationInsights` package looks unused (not checked project-wide).
+  - [x] Nullable warnings (non-incremental build: 43 -> 25; 0 errors, 18/18 tests pass). Only the skipped `CitiesMemoryRepository` ones remain.
+    - [x] Fixed: `LinkDto` initializers, `PointOfInterestDto.City` now `CityDto?`, `IPointsOfInterestService.GetPointsOfInterestAsync(string?, string?)`, `MetaDataUtility` httpContext guard, `Program.cs` `SecretForKey` clear exception, `CitiesRepository` / `PointsOfInterestRepository` (null guards; delete/create now throw `InvalidOperationException` with a clear message when the item is missing; fixed a latent null-reference in `CreatePointOfInterestAsync`).
+    - [x] `CityServiceTests.cs:144`: added `c.Description != null &&` null check (same test expectation, 4 results).
+    - Skipped by decision: `CitiesMemoryRepository.cs` (class `CityMemoryRepository`) is kept as is and ignored, ~11 warnings remain. It is unused, and `Cities as IQueryable<City>` is always null, so its query methods would throw if called.
+    - [x] XML-doc warnings fixed (build now 22 warnings, 0 errors, 18/18 tests): CS1591 `CityDto.CityCode` got a summary ("not populated yet, always empty"); CS1573 added `propProcessor` param tag on the `CitiesController` ctor; CS1587 `FilesController` doc comment sat on commented-out code, so it became a plain `//` comment.
+    - Not nullable, still open: CS0168 (unused `ex` in the memory repo, so skipped), NU1903 AutoMapper (deferred, Task 10).
+    - [x] AV0029 / AV0030 (Asp.Versioning analyzer prefers `AddApiVersioning().AddOpenApi()` + `MapOpenApi().WithDocumentPerVersion()`): decision = keep the core `AddOpenApi("v1", ...)` (it is the only form the XML comment generator intercepts, so DTO descriptions work) and suppress both via `<NoWarn>` in `CityInfoAPI.Web.csproj` with an explanatory comment. A pragma in `Program.cs` can't reach the generated file, hence the csproj. Build now 19 warnings, 0 errors, 18/18 tests. **Adding a v2 later needs `AddOpenApi("v2", ...)` plus a matching `options.AddDocument(...)` entry in the Scalar setup.**
+  - [x] Review exception handling, ProblemDetails, Newtonsoft and XML formatter setup
+    - [x] Exception handling reviewed. Findings: every action has `try/catch` returning `StatusCode(500, "<plain string>")` (about 30 sites), repo/service/controller each log + rethrow (same failure logged 3 times), 500s are not ProblemDetails (so the `MachineName` extension never shows on them), developer exception page on in every environment (by design).
+    - [x] A: fixed copy-paste message in `PointsOfInterestController.BlockPostToExistingPointOfInterest` ("creating city" -> "creating point of interest").
+    - [x] D: `CheckForExistingCityNameFilter` is now async (`OnActionExecutionAsync`, `await` instead of `.Result`; short-circuits with the 409 and otherwise `await next()`). Builds clean, 18/18 tests; runtime behavior of the 409 path not yet exercised (needs a token, covered by Task 8).
+    - [ ] Deferred (out of scope unless asked): B global `UseExceptionHandler`/`IExceptionHandler` returning ProblemDetails and removing the per-action try/catch; C return `Problem(...)` from the existing 500 sites.
+    - [x] ProblemDetails setup reviewed (measured against the running app). Applied A, B, C:
+      - A: `Extensions["MachineName"] = ...` instead of `Extensions.Add(...)` (Add throws if the key already exists).
+      - B: `app.UseStatusCodePages()` after `UseDeveloperExceptionPage()`; verified `/nope` 404 and `/api/v1/cities` (no token) 401 now return `application/problem+json` with `traceId` + `MachineName`. 406 for an unsupported `Accept` stays bodiless on purpose (ProblemDetails can't be written for `Accept: application/foo`).
+      - C: `CheckForExistingCityNameFilter` now gets `ProblemDetailsFactory` injected and builds the 409 through `CreateValidationProblemDetails(...)`, so it carries `traceId`/`MachineName` and the correct 409 `type` (it was hard-coded to the 400 `type`, rfc7231 6.5.1). 409 path NOT yet exercised at runtime (needs a token; Task 8).
+      - Not done (D): `MachineName` exposes the host name on public error responses; consider dropping it or gating to Development.
+    - [x] Newtonsoft and XML formatter setup reviewed (measured on `GET /api`: `Accept` json / `*/*` / none -> JSON, `application/xml` and `text/xml` -> XML, `text/html` -> 406). Setup kept as is: Newtonsoft with `ReferenceLoopHandling.Ignore` (DTO graph can loop), XML DataContract formatters, `ReturnHttpNotAcceptable`.
+      - [x] A: Dtos and Service now reference plain `Newtonsoft.Json` 13.0.4 instead of `Microsoft.AspNetCore.Mvc.NewtonsoftJson` (they only use `JsonProperty` / `JsonConvert`); only Web keeps the MVC package and calls `AddNewtonsoftJson`. Builds clean (19 warnings, 0 errors), 18/18 tests. Resolved `Newtonsoft.Json` is now 13.0.4 across the solution.
+      - Unverified: XML output of `GetCitiesWithRequestedFields` (`IEnumerable<dynamic>`) probably fails (needs a token; Task 8). JSON is fine.
+      - Follow-up (Task 10): System.Text.Json migration; .NET 10 has `Microsoft.AspNetCore.JsonPatch.SystemTextJson` for the patch endpoints, and `[JsonProperty("_links")]` in `LinkedResourceDto` is Newtonsoft-specific.
+- [x] 7. **Tests**: run `dotnet test`, fix failures, compare to the task 1 baseline.
+  - Result (net10, after all Task 5/6 changes, clean build): 0 errors, 19 warnings, tests 18 passed / 0 failed / 0 skipped. Matches the Task 1 baseline (18 passed).
+- [x] 8. **Manual verification** (read-only checks done; write tests skipped by decision, see below): run the API locally, get a token, exercise endpoints in Scalar, check `/openapi/v1.json` and `/api/health`.
+  - [x] Done (read-only, via curl against the live Azure SQL DB): `POST /authentication/Authenticate` returns a token (any credentials accepted, demo by design); `/cities` (paging, `orderBy`, `search`), `/states`, `/states/VA`, `/pointsofinterest` 200 JSON; `X-CityParameters` header and next-page URL correct (16 cities, 8 pages of 2); `api-supported-versions: 1.0`; zero GUID 404 and non-GUID 400 as ProblemDetails; bad token 401; `/openapi/v1.json`, `/scalar/v1`, `/api` and `/api/health` 200.
+  - [ ] SKIPPED by decision (these write to the Azure DB; the 409 filter path and write endpoints are therefore unverified at runtime after the Task 5/6 changes): duplicate-name `POST /cities` expecting 409 ProblemDetails (checks the async filter + ProblemDetailsFactory change; a bug there could create a duplicate city); `PUT` / `PATCH` / `DELETE` on a throwaway city and point of interest; cities POST of a new city (201).
+  - [ ] Not yet exercised in Scalar UI itself (only the `/scalar/v1` page load was checked).
+  - **KNOWN ISSUE (decision: record only, no fix for now): XML output returns an empty 500 for some endpoints.** With `Accept: application/xml`: `/cities?includePointsOfInterest=false` and `/states` return 200 XML, but `/cities?includePointsOfInterest=true`, `/pointsofinterest` and `/cities/fields?requested=...` return 500. The same requests are fine as JSON.
+    - Cause 1 (cities, points of interest): the object graph has a cycle (`CityDto.PointsOfInterest` -> `PointOfInterestDto.City` -> `CityDto`); log: "Object graph for type List<PointOfInterestDto> contains cycles and cannot be serialized if references are not tracked". JSON copes via Newtonsoft `ReferenceLoopHandling.Ignore`; the XML DataContract serializer has no equivalent.
+    - Cause 2 (`/cities/fields`): returns `IEnumerable<dynamic>` built by dynamic LINQ, which the XML serializer can't handle (500 confirmed; exact exception not examined).
+    - Cause 3 (error path): when an error happens while the client asked for XML, the developer exception page / status code pages try to write `ProblemDetails` as XML and fail ("Xml type 'List of xdt:untypedAtomic' does not support a conversion from Clr type 'JsonElement' to Clr type 'String'"), so the client gets an empty 500.
+    - Believed pre-existing (same DTO shapes and formatter registration as net8; not confirmed against the net8 build). Possible fixes if revisited: stop populating `PointOfInterestDto.City` when nested in a city or ignore it for XML (`[IgnoreDataMember]`, check JSON shape impact); or drop the XML formatters.
+- [~] 9. **Docs and deployment**: update README (versions, OpenAPI/Scalar links, release entry), update `CLAUDE.md`, confirm Azure App Service supports .NET 10.
+  - [x] README: title/summary now ".NET 10", version 1.12.0 (2.0.0 was only an experiment, decided against), Platform list updated to the real package versions, release entry 1.12.0 (10.01.2026) added. The XML known issue is deliberately NOT in the README (kept in `task.md` and `CLAUDE.md`).
+  - [x] `.claude/CLAUDE.md`: net10 target, Scalar URL, one-document OpenAPI setup + AV0029/AV0030 `NoWarn` rationale + v2 instructions, Program.cs bullet (no more `AddSwaggerGen`), XML known issue. "No CI workflow" left as is (`.github/workflows` exists but is empty).
+  - [ ] Azure App Service: manual step, cannot be verified from the repo (no publish profile or workflow). .NET 10 went GA 11 Nov 2025 and App Service rolls the runtime stack out gradually (Preview tag until all regions validate); .NET 8 loses platform patching 10 Nov 2026. Before deploying: set the app's runtime stack to .NET 10 (LTS) in the Azure portal (confirm it is not Preview in the app's region, East US) and make sure Production config has `DbConnectionString` and `Authentication:Issuer/Audience/SecretForKey`.
+- [ ] 10. **Follow-ups (out of scope)**: AutoMapper advisory/licensing; System.Text.Json migration.
+  - Fix the XML-output 500s (known issue under Task 8): break the `CityDto` <-> `PointOfInterestDto.City` cycle for XML, handle the dynamic `/cities/fields` result, and make the error path able to write ProblemDetails as XML. Or drop the XML formatters.
+  - Check whether `Serilog.Sinks.ApplicationInsights` is used anywhere (looks unused) and remove it if not.
+  - Decide whether to read the environment via `builder.Environment.IsDevelopment()` instead of the raw `ASPNETCORE_ENVIRONMENT` variable in the Serilog setup.
+  - Decide whether `MachineName` should stay in public ProblemDetails responses (host name disclosure); drop or gate to Development.
+  - Optional: global `UseExceptionHandler` / `IExceptionHandler` returning ProblemDetails and removing the per-action `try/catch` (about 30 sites; triple logging today).
+  - The Azure SQL password sits in plaintext in the local `launchSettings.json` (`https` profile). That file is gitignored and untracked, so it is not in the repo, but consider rotating the password and moving it to user-secrets or an env var anyway.
+  - Decide on `CitiesMemoryRepository` (unused, query methods always null-fail; kept on purpose for now, about 11 warnings).
+  - Run the skipped write tests (duplicate-name 409, POST/PUT/PATCH/DELETE) against a safe database.

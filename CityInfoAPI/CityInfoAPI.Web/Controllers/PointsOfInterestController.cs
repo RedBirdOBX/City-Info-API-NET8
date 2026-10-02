@@ -269,8 +269,8 @@ public class PointsOfInterestController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError($"An error occurred while creating city. {ex}");
-            return StatusCode(500, "An error occurred while creating city.");
+            _logger.LogError($"An error occurred while creating point of interest. {ex}");
+            return StatusCode(500, "An error occurred while creating point of interest.");
         }
     }
 
