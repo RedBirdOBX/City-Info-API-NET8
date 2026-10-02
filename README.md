@@ -1,9 +1,9 @@
-# City Info Demo API (.NET 8.0 version)
+# City Info Demo API (.NET 10.0 version)
 ---
-*Version 1.11.0*
+*Version 1.12.0*
 
 ## Summary
-Welcome to the City Info Demo API - .NET 8 Version. Original version was in .NET 2.1 written in 2019. 
+Welcome to the City Info Demo API - .NET 10 Version. Original version was in .NET 2.1 written in 2019. 
 
 Imagine that you were developing a travel site and one of the requirements was you needed to be 
 able to ask for a complete listing of cities; ask for any given city by it's ID and, if specifically asked for, 
@@ -14,7 +14,7 @@ This demo RESTful API does just that. It allows consumers to make request for US
 
 API can be found at: 
 - https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/  
-- https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index.html
+- https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/scalar/v1
 
 API was built with knowledge from the following tutorials:
 - https://app.pluralsight.com/ilx/video-courses/clips/7e1ef85b-2480-452d-ab67-1eb4e65fad1e
@@ -22,14 +22,15 @@ API was built with knowledge from the following tutorials:
 
 
 ## Platform 
-- ASP.NET 8  
-- Entity Framework Core 8.0
-- Swashbuckle / Swagger
+- ASP.NET Core 10  
+- Entity Framework Core 10.0
+- ASP.NET Core OpenAPI / Scalar
 - AutoMapper 12.0
-- Serilog 8.0  
-- Asp.Versioning.Mvc 8.1
-- Microsoft.AspNetCore.Authentication.JwtBearer 8.0
-- System.Linq.Dynamic.Core 
+- Newtonsoft.Json 13.0
+- Serilog.AspNetCore 10.0  
+- Asp.Versioning.Mvc 10.2
+- Microsoft.AspNetCore.Authentication.JwtBearer 10.0
+- System.Linq.Dynamic.Core 1.7
 
 
 ## Chapters
@@ -41,7 +42,7 @@ API was built with knowledge from the following tutorials:
 - [Architecture](#architecture)
 - [Versions](#versions)
 - [HATEOS](#hateos)
-- [Swagger and Documentation](#swagger)
+- [OpenAPI and Documentation](#openapi)
 - [Releases](#releases)
 
 <a href="" id="test" name="test"></a>
@@ -343,22 +344,24 @@ Adhering to the HATEOS principles of good RESTful design, all `GET` requests inc
 ![media links](CityInfoAPI/Docs/Imgs/media-links.png)
   
 
-<a href="" id="swagger" name="swagger"></a>
-## Swagger and Documentation
+<a href="" id="openapi" name="openapi"></a>
+## OpenAPI and Documentation
 
-This API is fully documented under the OpenAPI 3 standards (https://www.openapis.org/).  It is uses Swashbuckle which includes the Swagger/API Explorer, Swagger UI, and Swagger CodeGen SDKs.
+This API is fully documented under the OpenAPI standard (https://www.openapis.org/).  It uses the built-in ASP.NET Core OpenAPI support (`Microsoft.AspNetCore.OpenApi`) to generate the OpenAPI document, and Scalar (`Scalar.AspNetCore`) as the interactive API reference UI.
 
 
-The Controllers and types in which they return are fully documented and notated per Open API 3 standards.  Doing this allow the API Explorer to "explore" this application and create specification documents ("swagger docs").
+The Controllers and types in which they return are fully documented with XML comments.  These comments are included in the generated OpenAPI document.
 
-You can see all of this documentation via the Swagger UI interface.
+You can see all of this documentation via the Scalar interface, or get the raw OpenAPI document at `/openapi/v1.json`.
 
 **Local**  
-[https://localhost:7024/swagger/index.html](https://localhost:7024/swagger/index.html)
+[https://localhost:7024/scalar/v1](https://localhost:7024/scalar/v1)  
+[https://localhost:7024/openapi/v1.json](https://localhost:7024/openapi/v1.json)
 
 
 **Production**  
-https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index.html
+https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/scalar/v1  
+https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/openapi/v1.json
 
 
 <a href="" id="releases" name="releases"></a>
@@ -388,3 +391,7 @@ https://city-info-api-gvdwhraddbdyafgn.eastus-01.azurewebsites.net/swagger/index
 |  |  | Made "version" configurable. |
 | 1.10.0 | 07.18.2025 | Selectable columns featured added. |
 | 1.11.0 | 08.25.2025 | Implemented use of ActionFilter on CreateCityAsync. Prevents city with matching and same state name from being created.|
+| 1.12.0 | 10.01.2026 | Upgraded to .NET 10. All packages updated to .NET 10 compatible versions. |
+|  |  | Replaced Swashbuckle / Swagger with the built-in ASP.NET Core OpenAPI support and Scalar. The API reference is now at /scalar/v1 and the raw OpenAPI document at /openapi/v1.json. |
+|  |  | Errors such as 401 and 404 now return ProblemDetails. The duplicate city name check is now async. |
+|  |  | Cleaned up startup (MapControllers, single Serilog configuration, nullable warnings). |

@@ -35,6 +35,9 @@ public class CityDto : LinkedResourcesDto
     /// </summary>
     public StateDto? State { get; set; }
 
+    /// <summary>
+    /// city code (not populated yet, always empty)
+    /// </summary>
     public string CityCode => "";
 
     /// <summary>

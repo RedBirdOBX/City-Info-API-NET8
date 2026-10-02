@@ -93,10 +93,9 @@ public class FilesController : Controller
         }
     }
 
-    /// <summary>Deprecated Annotation Example</summary>
-    /// <param name="fileId"></param>
-    /// <returns>file found by id</returns>
-    /// <example>{baseUrl}/api/files/{fileId}</example>
+    // Deprecated Annotation Example
+    // fileId: file found by id
+    // example: {baseUrl}/api/files/{fileId}
     //[HttpGet("legacy/{fileId}", Name = "GetFileLegacy")]
     //[ApiVersion(0.1, Deprecated = true)]
     //public ActionResult GetFileLegacy([FromRoute] string fileId)

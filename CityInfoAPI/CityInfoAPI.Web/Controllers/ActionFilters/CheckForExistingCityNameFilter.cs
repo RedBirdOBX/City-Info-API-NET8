@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using CityInfoAPI.Dtos;
 using CityInfoAPI.Service;
 using CityInfoAPI.Dtos.RequestModels;
@@ -14,22 +15,26 @@ public class CheckForExistingCityNameFilter : ActionFilterAttribute
 {
 
     private readonly ICityService _service;
+    private readonly ProblemDetailsFactory _problemDetailsFactory;
 
     /// <summary>
     /// constructor
     /// </summary>
     /// <param name="service"></param>
+    /// <param name="problemDetailsFactory"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public CheckForExistingCityNameFilter(ICityService service)
+    public CheckForExistingCityNameFilter(ICityService service, ProblemDetailsFactory problemDetailsFactory)
     {
-        _service = service ?? throw new ArgumentNullException(nameof(_service));
+        _service = service ?? throw new ArgumentNullException(nameof(service));
+        _problemDetailsFactory = problemDetailsFactory ?? throw new ArgumentNullException(nameof(problemDetailsFactory));
     }
 
     /// <summary>
     /// execution of action filter.
     /// </summary>
     /// <param name="context"></param>
-    public override void OnActionExecuting(ActionExecutingContext context)
+    /// <param name="next"></param>
+    public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         if (context.ActionArguments.TryGetValue("request", out var value) && value is CityCreateDto dto)
         {
@@ -38,22 +43,24 @@ public class CheckForExistingCityNameFilter : ActionFilterAttribute
                 Name = dto.Name
             };
 
-            var matchingCity = _service.GetCitiesAsync(requestParams).Result;
+            var matchingCity = await _service.GetCitiesAsync(requestParams);
             if (matchingCity.Any())
             {
                 var modelState = new ModelStateDictionary();
                 modelState.AddModelError("Name", $"A city with the name {requestParams.Name.ToLower()} already exists.");
 
-                var problemDetails = new ValidationProblemDetails(modelState)
-                {
-                    Status = StatusCodes.Status409Conflict,
-                    Title = "One or more validation errors occurred.",
-                    Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
-                };
+                // the factory applies the same defaults and customizations (type, traceId, MachineName) as the framework's own errors
+                var problemDetails = _problemDetailsFactory.CreateValidationProblemDetails(
+                    context.HttpContext,
+                    modelState,
+                    statusCode: StatusCodes.Status409Conflict,
+                    title: "One or more validation errors occurred.");
 
-                 context.Result = new ConflictObjectResult(problemDetails);
+                context.Result = new ConflictObjectResult(problemDetails);
+                return;
             }
         }
-        base.OnActionExecuting(context);
+
+        await next();
     }
 }
